@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.prototype.dao.PrototypeAttachmentDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="PrototypeAttachmentResultMap" type="com.haier.isales.prototype.domain.PrototypeAttachmentDomain">
+		<result column="barcode" property="barcode"  jdbcType="VARCHAR"  />
+		<result column="attachment_id" property="attachmentId"  jdbcType="BIGINT"  />
+	</resultMap>
+	
+	<!-- 根据条码查询实体类的方法 -->
+	<select id="findByBarcode" resultMap="PrototypeAttachmentResultMap"
+		parameterType="String">
+		select *
+		from isales_app.t_isales_propertype_attachment_ref	
+		where barcode = #{barcode}
+	</select>
+	
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.prototype.domain.PrototypeAttachmentDomain" >
+		insert into isales_app.t_isales_propertype_attachment_ref
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="domain.barcode != null and domain.barcode != '' ">
+				barcode	,
+			</if>
+			<if test="domain.attachmentId != null and domain.attachmentId !='' ">
+				attachment_id		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="domain.barcode != null and domain.barcode != '' ">
+				#{domain.barcode}	,
+			</if>
+			<if test="domain.attachmentId != null and domain.attachmentId !='' ">
+				#{domain.attachmentId}		
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<!-- 根据参数查询所有的对象内容 -->
+	<select id="findByParams" resultMap="PrototypeAttachmentResultMap" >
+		select *
+		from isales_app.t_isales_propertype_attachment_ref	
+		where  1 = 1
+		<if test="domain.barcode != null and domain.barcode != '' ">
+			and barcode = #{domain.barcode}
+		</if>
+		<if test="domain.attachmentId != null and domain.attachmentId !='' ">
+			and attachment_id = #{domain.attachmentId}		
+		</if>
+	</select>
+</mapper>

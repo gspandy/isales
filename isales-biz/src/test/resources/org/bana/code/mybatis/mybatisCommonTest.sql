@@ -1,0 +1,1 @@
+INSERT INTO isales_sys.t_qn_role (role_code, role_name, status, operator_id, create_time) VALUES ('test_code', 'test_name', 'test_status', 1, now());

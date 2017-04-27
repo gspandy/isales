@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.SysUserDAO">
+	<!-- 根据工号、姓名、手机、固话获取用户信息  如果没有查询条件暂定100条记录 -->
+	<select id="findSysUser" resultMap="AddrbookResultMap">
+		select user_code , user_name, ELT(INTERVAL(CONV(HEX(left(CONVERT(trim(user_name) USING gbk),1)),16,10),
+		0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,0xC0AC,
+		0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+		'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','S','T','W','X','Y','Z') as NAMELETTER,
+		user_mail, phone, mobile, photo_url
+		from isales_sys.t_sys_user
+		where 1=1
+		<if test="queryDTO.querySearchKey!=null">
+			and (UPPER(user_code) like UPPER(CONCAT('%', #{queryDTO.querySearchKey},'%')) or user_name like CONCAT('%',#{queryDTO.querySearchKey},'%'))
+			order by NAMELETTER, user_name
+			<include refid="pagination_Tail"/>
+		</if>
+		<!-- <if test="entity.userName!=null and entity.userName != ''">
+			and user_name like CONCAT('%',#{entity.userName},'%')
+		</if>
+		<if test="entity.phone!=null and entity.phone != ''">
+			and phone like CONCAT('%',#{entity.phone},'%')
+		</if>
+		<if test="entity.mobile!=null and entity.mobile != ''">
+			and mobile like CONCAT('%',#{entity.mobile},'%')
+		</if> -->
+		<!-- 如果没有查询条件，默认在每个首字母查询几个用户 -->
+		<if test="queryDTO.querySearchKey==null">
+			and remark = '1'
+			order by NAMELETTER, user_name
+		</if>
+		
+	</select>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="getSysUserCount" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_user
+		where 1=1
+		<if test="queryDTO.querySearchKey!=null">
+			and (UPPER(user_code) like UPPER(CONCAT('%', #{queryDTO.querySearchKey},'%')) or user_name like CONCAT('%',#{queryDTO.querySearchKey},'%'))
+		</if>
+		<!-- <if test="entity.userCode!=null and entity.userCode != ''">
+			and UPPER(user_code) like UPPER(CONCAT('%', #{entity.userCode},'%'))
+		</if>
+		<if test="entity.userName!=null and entity.userName != ''">
+			and user_name like CONCAT('%',#{entity.userName},'%')
+		</if>
+		<if test="entity.phone!=null and entity.phone != ''">
+			and phone like CONCAT('%',#{entity.phone},'%')
+		</if>
+		<if test="entity.mobile!=null and entity.mobile != ''">
+			and mobile like CONCAT('%',#{entity.mobile},'%')
+		</if> -->
+		<!-- 如果没有查询条件，默认在每个首字母查询几个用户 -->
+		<if test="queryDTO.querySearchKey==null">
+			and remark = '1'
+		</if>
+	</select>
+	
+	<!-- 根据工号获取通讯录信息  -->
+	<select id="findSysUserInfo" resultMap="SysUserResultMap" 
+		parameterType="com.haier.isales.app.domain.SysUserDomain">
+		select user_code , user_name, ELT(INTERVAL(CONV(HEX(left(CONVERT(trim(user_name) USING gbk),1)),16,10),
+		0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,0xC0AC,
+		0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+		'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','S','T','W','X','Y','Z') as NAMELETTER,
+		user_mail, phone, mobile, photo_url, user_ou
+		from isales_sys.t_sys_user
+		where 1=1
+		<if test="entity.userCode!=null and entity.userCode != ''">
+			and user_code = #{entity.userCode}
+		</if>
+	</select>
+	
+	<!-- 根据工号查询收藏联系人记录 -->
+	<select id="findFavoriteContacts" resultMap="AddrbookResultMap">
+		SELECT user_code , user_name, ELT(INTERVAL(CONV(HEX(left(CONVERT(trim(user_name) USING gbk),1)),16,10),
+		0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,0xC0AC,
+		0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+		'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','S','T','W','X','Y','Z') as NAMELETTER,
+		user_mail, phone, mobile 
+		 FROM isales_sys.t_sys_user  WHERE user_code in 
+ 			( SELECT collect_user_code FROM isales_sys.t_sys_user_collect 
+ 				WHERE 1=1 and ref_status = '1'
+		<if test="queryDTO.userCode!=null and queryDTO.userCode != ''">
+			and UPPER(user_code) = UPPER(#{queryDTO.userCode})
+		</if>
+		<![CDATA[
+			)
+		]]>
+		order by NAMELETTER, user_name
+	</select>
+	
+	<!-- 根据号码更新头像 --> 
+	<update id="updatePhotoUrl" parameterType="com.haier.isales.app.domain.SysUserDomain">
+		update isales_sys.t_sys_user
+		<set>
+			PHOTO_URL = #{entity.photoUrl}
+		</set>
+		where user_code = #{entity.userCode}
+	</update>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.reportretail.dao.BtbSjcjScrmAllDAO">
+	<select id="findByShopCode" resultMap="BtbSjcjScrmAllResultMap">
+		select ID	,
+		MONTHS	,
+		ORG_CODE	,
+		ORG_NAME	,
+		CHAN_CODE	,
+		CHAN_NAME	,
+		SHOP_CODE	,
+		SHOP_NAME	,
+		PROLINE_CODE	,
+		PROLINE_NAME	,
+		sum(RETAIL_PLAN) RETAIL_PLAN	,
+		sum(RETAIL_ACTUAL) RETAIL_ACTUAL	,
+		sum(MEMBER_NEW) MEMBER_NEW	,
+		sum(MEMBER_TOTAL) MEMBER_TOTAL	,
+		sum(MEMBER_DIFF) MEMBER_DIFF,
+		SYNCHRONOUS_TIME	,
+		REMARK from isales_app.t_isales_btb_sjcj_scrm_all 
+		where shop_code = #{shopCode} 
+		<if test="prolineCode != null and prolineCode != ''">
+			and proline_code = #{prolineCode}
+		</if>
+	</select>
+</mapper>

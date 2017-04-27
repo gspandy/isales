@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.productsfaqapp.dao.ProductsFAQAppDAO">
+	<select id="searchProductsFAQs" resultMap="ProductsFAQAppResultMap">
+	select <include refid="all_Column_List"/>
+	from isales_app.t_isales_products_faq
+	where 1=1
+	and metadataid = #{metadataid}
+	order by faqmetadataid asc
+	</select>
+</mapper>

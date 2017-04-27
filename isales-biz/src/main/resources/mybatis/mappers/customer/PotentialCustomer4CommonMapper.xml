@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.customer.dao.PotentialCustomerDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="PotentialCustomerResultMap" type="com.haier.isales.customer.domain.PotentialCustomerDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="user_id" property="userId"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="shop_code" property="shopCode"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="customer_name" property="customerName"  jdbcType="VARCHAR"  />
+		<result column="customer_add" property="customerAdd"  jdbcType="VARCHAR"  />
+		<result column="customer_mobile" property="customerMobile"  jdbcType="VARCHAR"  />
+		<result column="customer_phone" property="customerPhone"  jdbcType="VARCHAR"  />
+		<result column="customer_IDno" property="customerIdno"  jdbcType="VARCHAR"  />
+		<result column="customer_birthday" property="customerBirthday"  jdbcType="VARCHAR"  />
+		<result column="customer_features" property="customerFeatures"  jdbcType="VARCHAR"  />
+		<result column="customer_status" property="customerStatus"  jdbcType="VARCHAR"  />
+		<result column="expected_buy_date" property="expectedBuyDate"  jdbcType="TIMESTAMP"  />
+		<result column="remind_time" property="remindTime"  jdbcType="TIMESTAMP"  />
+		<result column="product_code" property="productCode"  jdbcType="VARCHAR"  />
+		<result column="product_name" property="productName"  jdbcType="VARCHAR"  />
+		<result column="product_series_code" property="productSeriesCode"  jdbcType="VARCHAR"  />
+		<result column="product_series_name" property="productSeriesName"  jdbcType="VARCHAR"  />
+		<result column="buy_use_id" property="buyUseId"  jdbcType="VARCHAR"  />
+		<result column="buy_use" property="buyUse"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	USER_ID	,
+	USER_CODE	,
+	SHOP_CODE	,
+	SHOP_NAME	,
+	UPDATE_TIME	,
+	CREATE_TIME	,
+	CUSTOMER_NAME	,
+	CUSTOMER_ADD	,
+	CUSTOMER_MOBILE	,
+	CUSTOMER_PHONE	,
+	CUSTOMER_IDNO	,
+	CUSTOMER_BIRTHDAY	,
+	CUSTOMER_FEATURES	,
+	CUSTOMER_STATUS	,
+	EXPECTED_BUY_DATE	,
+	REMIND_TIME	,
+	PRODUCT_CODE	,
+	PRODUCT_NAME	,
+	PRODUCT_SERIES_CODE	,
+	PRODUCT_SERIES_NAME	,
+	BUY_USE_ID	,
+	BUY_USE	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.userId!=null">and user_id=#{entity.userId}</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.shopCode!=null">and shop_code like CONCAT('%',#{entity.shopCode},'%')</if>
+		<if test="entity.shopName!=null">and shop_name like CONCAT('%',#{entity.shopName},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.customerName!=null">and customer_name like CONCAT('%',#{entity.customerName},'%')</if>
+		<if test="entity.customerAdd!=null">and customer_add like CONCAT('%',#{entity.customerAdd},'%')</if>
+		<if test="entity.customerMobile!=null">and customer_mobile like CONCAT('%',#{entity.customerMobile},'%')</if>
+		<if test="entity.customerPhone!=null">and customer_phone like CONCAT('%',#{entity.customerPhone},'%')</if>
+		<if test="entity.customerIdno!=null">and customer_IDno like CONCAT('%',#{entity.customerIdno},'%')</if>
+		<if test="entity.customerBirthday!=null">and customer_birthday like CONCAT('%',#{entity.customerBirthday},'%')</if>
+		<if test="entity.customerFeatures!=null">and customer_features like CONCAT('%',#{entity.customerFeatures},'%')</if>
+		<if test="entity.customerStatus!=null">and customer_status like CONCAT('%',#{entity.customerStatus},'%')</if>
+		<!-- java.util.Date expected_buy_date has been ignored!!! -->
+		<!-- java.util.Date remind_time has been ignored!!! -->
+		<if test="entity.productCode!=null">and product_code like CONCAT('%',#{entity.productCode},'%')</if>
+		<if test="entity.productName!=null">and product_name like CONCAT('%',#{entity.productName},'%')</if>
+		<if test="entity.productSeriesCode!=null">and product_series_code like CONCAT('%',#{entity.productSeriesCode},'%')</if>
+		<if test="entity.productSeriesName!=null">and product_series_name like CONCAT('%',#{entity.productSeriesName},'%')</if>
+		<if test="entity.buyUseId!=null">and buy_use_id like CONCAT('%',#{entity.buyUseId},'%')</if>
+		<if test="entity.buyUse!=null">and buy_use like CONCAT('%',#{entity.buyUse},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="PotentialCustomerResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_customer_potential
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_customer_potential
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.customer.domain.PotentialCustomerDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_customer_potential
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				USER_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="shopCode!=null">
+				SHOP_CODE	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="customerName!=null">
+				CUSTOMER_NAME	,
+			</if>
+			<if test="customerAdd!=null">
+				CUSTOMER_ADD	,
+			</if>
+			<if test="customerMobile!=null">
+				CUSTOMER_MOBILE	,
+			</if>
+			<if test="customerPhone!=null">
+				CUSTOMER_PHONE	,
+			</if>
+			<if test="customerIdno!=null">
+				CUSTOMER_IDNO	,
+			</if>
+			<if test="customerBirthday!=null">
+				CUSTOMER_BIRTHDAY	,
+			</if>
+			<if test="customerFeatures!=null">
+				CUSTOMER_FEATURES	,
+			</if>
+			<if test="customerStatus!=null">
+				CUSTOMER_STATUS	,
+			</if>
+			<if test="expectedBuyDate!=null">
+				EXPECTED_BUY_DATE	,
+			</if>
+			<if test="remindTime!=null">
+				REMIND_TIME	,
+			</if>
+			<if test="productCode!=null">
+				PRODUCT_CODE	,
+			</if>
+			<if test="productName!=null">
+				PRODUCT_NAME	,
+			</if>
+			<if test="productSeriesCode!=null">
+				PRODUCT_SERIES_CODE	,
+			</if>
+			<if test="productSeriesName!=null">
+				PRODUCT_SERIES_NAME	,
+			</if>
+			<if test="buyUseId!=null">
+				BUY_USE_ID	,
+			</if>
+			<if test="buyUse!=null">
+				BUY_USE	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				#{userId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="shopCode!=null">
+				#{shopCode}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="customerName!=null">
+				#{customerName}	,
+			</if>
+			<if test="customerAdd!=null">
+				#{customerAdd}	,
+			</if>
+			<if test="customerMobile!=null">
+				#{customerMobile}	,
+			</if>
+			<if test="customerPhone!=null">
+				#{customerPhone}	,
+			</if>
+			<if test="customerIdno!=null">
+				#{customerIdno}	,
+			</if>
+			<if test="customerBirthday!=null">
+				#{customerBirthday}	,
+			</if>
+			<if test="customerFeatures!=null">
+				#{customerFeatures}	,
+			</if>
+			<if test="customerStatus!=null">
+				#{customerStatus}	,
+			</if>
+			<if test="expectedBuyDate!=null">
+				#{expectedBuyDate}	,
+			</if>
+			<if test="remindTime!=null">
+				#{remindTime}	,
+			</if>
+			<if test="productCode!=null">
+				#{productCode}	,
+			</if>
+			<if test="productName!=null">
+				#{productName}	,
+			</if>
+			<if test="productSeriesCode!=null">
+				#{productSeriesCode}	,
+			</if>
+			<if test="productSeriesName!=null">
+				#{productSeriesName}	,
+			</if>
+			<if test="buyUseId!=null">
+				#{buyUseId}	,
+			</if>
+			<if test="buyUse!=null">
+				#{buyUse}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.customer.domain.PotentialCustomerDomain">
+		update isales_app.t_isales_customer_potential
+		<set>
+			USER_ID = #{userId},
+			USER_CODE = #{userCode},
+			SHOP_CODE = #{shopCode},
+			SHOP_NAME = #{shopName},
+			UPDATE_TIME = #{updateTime},
+			CREATE_TIME = #{createTime},
+			CUSTOMER_NAME = #{customerName},
+			CUSTOMER_ADD = #{customerAdd},
+			CUSTOMER_MOBILE = #{customerMobile},
+			CUSTOMER_PHONE = #{customerPhone},
+			CUSTOMER_IDNO = #{customerIdno},
+			CUSTOMER_BIRTHDAY = #{customerBirthday},
+			CUSTOMER_FEATURES = #{customerFeatures},
+			CUSTOMER_STATUS = #{customerStatus},
+			EXPECTED_BUY_DATE = #{expectedBuyDate},
+			REMIND_TIME = #{remindTime},
+			PRODUCT_CODE = #{productCode},
+			PRODUCT_NAME = #{productName},
+			PRODUCT_SERIES_CODE = #{productSeriesCode},
+			PRODUCT_SERIES_NAME = #{productSeriesName},
+			BUY_USE_ID = #{buyUseId},
+			BUY_USE = #{buyUse},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_customer_potential 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="PotentialCustomerResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_customer_potential
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_customer_potential
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

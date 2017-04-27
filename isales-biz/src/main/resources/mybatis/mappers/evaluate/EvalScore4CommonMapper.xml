@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.evaluate.dao.EvalScoreDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="EvalScoreResultMap" type="com.haier.isales.evaluate.domain.EvalScoreDomain">
+		<id column="ue_id" property="ueId"  jdbcType="BIGINT"  />
+		<result column="uec_seq" property="uecSeq"  jdbcType="INTEGER"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="score" property="score"  jdbcType="INTEGER"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<resultMap id="EvalScoretMap" type="com.haier.isales.evaluate.domain.EvalScoreDomain">
+		<result column="uec_seq" property="uecSeq"  jdbcType="INTEGER"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="avg_score" property="avgScore"  jdbcType="DOUBLE"  />
+		<result column="uec_content" property="uecContent"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	UE_ID	,
+	UEC_SEQ	,
+	USER_CODE	,
+	SCORE	,
+	CREATE_TIME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.ueId!=null">and ue_id=#{entity.ueId}</if>
+		<if test="entity.uecSeq!=null">and uec_seq=#{entity.uecSeq}</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.score!=null">and score=#{entity.score}</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="EvalScoreResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_user_evaluate_score
+		where ue_id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_user_evaluate_score
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.evaluate.domain.EvalScoreDomain"  useGeneratedKeys="true" keyProperty="ueId" >
+		insert into isales_app.t_user_evaluate_score
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="uecSeq!=null">
+				UEC_SEQ	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="score!=null">
+				SCORE	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="uecSeq!=null">
+				#{uecSeq}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="score!=null">
+				#{score}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.evaluate.domain.EvalScoreDomain">
+		update isales_app.t_user_evaluate_score
+		<set>
+			UEC_SEQ = #{uecSeq},
+			USER_CODE = #{userCode},
+			SCORE = #{score},
+			CREATE_TIME = #{createTime},
+		</set>
+		where ue_id = #{ueId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_user_evaluate_score 
+		where ue_id = #{ueId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="EvalScoreResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_user_evaluate_score
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_user_evaluate_score
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

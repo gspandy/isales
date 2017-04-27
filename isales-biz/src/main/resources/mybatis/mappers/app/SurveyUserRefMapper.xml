@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.SurveyUserRefDAO">
+	<!-- 根据工号更新token及userId -->
+	<update id="updateSurveyRefStatus" parameterType="com.haier.isales.app.dto.SurveyQuestionDTO">
+		update isales_app.t_survey_user_ref
+		<set>
+			status = '0'
+		</set>
+		where 1=1
+		<if test="queryDTO.researchid!=null and queryDTO.researchid != ''">
+			and research_id = #{queryDTO.researchid}
+		</if>
+		<if test="queryDTO.userCode!=null and queryDTO.userCode != ''">
+			and user_code = #{queryDTO.userCode}
+		</if>
+		<if test="queryDTO.strCreateTime!=null and queryDTO.strCreateTime != ''">
+			and DATE_FORMAT(create_time,'%Y-%m-%d %T') = #{queryDTO.strCreateTime}
+		</if>
+	</update>
+	
+	<!-- 根据条件查询调查问卷 -->
+	<select id="findSurveyUserList" resultType="Integer"
+		parameterType="com.haier.isales.app.dto.SurveyQuestionDTO">
+		select id
+		from isales_app.t_survey_user_ref
+		where 1=1
+		 and status = '1'
+		<if test="queryDTO.userCode!=null and queryDTO.userCode != ''">
+		 and user_code = #{queryDTO.userCode}
+		</if>
+		<if test="queryDTO.researchid!=null and queryDTO.researchid != ''">
+		 and research_id = #{queryDTO.researchid}
+		</if>
+		<if test="queryDTO.strCreateTime!=null and queryDTO.strCreateTime != ''">
+		 and DATE_FORMAT(create_time,'%Y-%m-%d %T') = #{queryDTO.strCreateTime}
+		</if>
+		
+	</select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.legalholiday.dao.LegalholidayDAO">
+	<!-- 查询假期信息  -->
+	<select id="findHolidayInfoByTypeMonth" resultMap="LegalholidayResultMap">
+		SELECT *
+		FROM
+		  isales_app.t_isales_dailymgt_legalholiday dl
+		  where 1 = 1
+		   <if test="holidayTime !=null and holidayTime != '' ">
+				and date_format(dl.holiday_time,'%Y-%m') =#{holidayTime}
+		  </if>
+		  <if test="holidayType !=null and holidayType != '' ">
+			  and dl.holiday_type = #{holidayType}
+		  </if>
+		  order by date_format(dl.holiday_time,'%Y-%m-%d') asc,id asc
+	</select>
+	<!-- 按日期获取节假日和调休信息  -->
+	<select id="findHolidayInfoByTypeDate" resultMap="LegalholidayResultMap">
+		SELECT *
+		FROM
+		  isales_app.t_isales_dailymgt_legalholiday dl
+		  where 1 = 1
+		   <if test="holidayTime !=null and holidayTime != '' ">
+				and date_format(dl.holiday_time,'%Y-%m-%d') =#{holidayTime}
+		  </if>
+		  order by date_format(dl.holiday_time,'%Y-%m-%d') asc,id asc
+	</select>
+</mapper>

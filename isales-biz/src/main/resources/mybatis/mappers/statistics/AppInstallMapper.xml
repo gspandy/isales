@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.statistics.appinstall.dao.AppInstallDao">
+
+	<!-- =========================================================== -->
+	<resultMap id="AppInstallResultMap" type="com.haier.isales.statistics.appinstall.domain.AppInstall">
+		<result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="totalEmp" property="totalEmp" jdbcType="INTEGER" />
+		<result column="loginEmp" property="loginEmp" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+		org_code ,
+		org_name ,
+		totalEmp ,
+		loginEmp
+	</sql>
+
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+
+	<!-- 获取所有中心安装并登录的人数统计 -->
+	<select id="searchAllAppInstall" resultMap="AppInstallResultMap">
+		SELECT a1.org_code
+		, a1.org_name
+		, a3.sum AS totalEmp
+		,
+		count(a2.user_id) AS loginEmp
+		FROM
+		(SELECT DISTINCT (shop.org_code) org_code
+		, shop.org_name
+		FROM
+		isales_app.t_isales_shop
+		shop) a1
+		LEFT JOIN (
+		SELECT org_code
+		, org_name
+		, count(operator_id) AS sum
+		FROM
+		isales_sys.t_sys_employee_summary
+		GROUP BY
+		org_code
+		, org_name
+		) a3
+		ON a3.org_code = a1.org_code
+		LEFT JOIN (
+		SELECT DISTINCT (b.user_id) AS user_id
+		, s.org_code
+		,
+		s.org_name
+		FROM
+		isales_sys.t_sys_login_behaviour b
+		LEFT JOIN isales_sys.t_sys_employee_summary s
+		ON s.operator_id =
+		b.user_id
+		WHERE
+		s.user_code LIKE '%Z%'
+		) a2
+		ON a1.org_code = a2.org_code
+		WHERE a1.org_code is not  null
+		GROUP BY
+		a1.org_code
+		, a1.org_name
+		, a3.sum;
+	</select>
+
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.score.dao.ScoreDetailDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ScoreDetailResultMap" type="com.haier.isales.score.domain.ScoreDetailDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="score_value" property="scoreValue"  jdbcType="BIGINT"  />
+		<result column="score_expression" property="scoreExpression"  jdbcType="VARCHAR"  />
+		<result column="divisor_params" property="divisorParams"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+		<result column="score_rule_id" property="scoreRuleId"  jdbcType="BIGINT"  />
+		<result column="score_source_ids" property="scoreSourceIds"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	OPERATOR_ID	,
+	SCORE_VALUE	,
+	SCORE_EXPRESSION	,
+	DIVISOR_PARAMS	,
+	REMARK	,
+	SCORE_RULE_ID	,
+	SCORE_SOURCE_IDS		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<if test="entity.scoreValue!=null">and score_value=#{entity.scoreValue}</if>
+		<if test="entity.scoreExpression!=null">and score_expression like CONCAT('%',#{entity.scoreExpression},'%')</if>
+		<if test="entity.divisorParams!=null">and divisor_params like CONCAT('%',#{entity.divisorParams},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+		<if test="entity.scoreRuleId!=null">and score_rule_id=#{entity.scoreRuleId}</if>
+		<if test="entity.scoreSourceIds!=null">and score_source_ids like CONCAT('%',#{entity.scoreSourceIds},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ScoreDetailResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_transaction_detail
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_score_transaction_detail
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.score.domain.ScoreDetailDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_score_transaction_detail
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="scoreValue!=null">
+				SCORE_VALUE	,
+			</if>
+			<if test="scoreExpression!=null">
+				SCORE_EXPRESSION	,
+			</if>
+			<if test="divisorParams!=null">
+				DIVISOR_PARAMS	,
+			</if>
+			<if test="remark!=null">
+				REMARK	,
+			</if>
+			<if test="scoreRuleId!=null">
+				SCORE_RULE_ID	,
+			</if>
+			<if test="scoreSourceIds!=null">
+				SCORE_SOURCE_IDS		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="scoreValue!=null">
+				#{scoreValue}	,
+			</if>
+			<if test="scoreExpression!=null">
+				#{scoreExpression}	,
+			</if>
+			<if test="divisorParams!=null">
+				#{divisorParams}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}	,
+			</if>
+			<if test="scoreRuleId!=null">
+				#{scoreRuleId}	,
+			</if>
+			<if test="scoreSourceIds!=null">
+				#{scoreSourceIds}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.score.domain.ScoreDetailDomain">
+		update isales_app.t_isales_score_transaction_detail
+		<set>
+			OPERATOR_ID = #{operatorId},
+			SCORE_VALUE = #{scoreValue},
+			SCORE_EXPRESSION = #{scoreExpression},
+			DIVISOR_PARAMS = #{divisorParams},
+			REMARK = #{remark},
+			SCORE_RULE_ID = #{scoreRuleId},
+			SCORE_SOURCE_IDS = #{scoreSourceIds},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_score_transaction_detail 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ScoreDetailResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_transaction_detail
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_score_transaction_detail
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

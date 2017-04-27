@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.omshandler.dao.OmsHandlerDAO">
+	<!-- 查询所有中心编码 -->
+	<select id="findTradeCodeList" resultType="String">
+		SELECT DISTINCT s.org_code
+		FROM
+		  isales_sys.t_sys_employee_summary s
+		WHERE
+		  s.org_code IS NOT NULL
+		order by s.org_code asc ,s.operator_id asc 
+	</select>
+	<delete id="deleteAllRows">
+		delete from isales_temp.t_isales_bpm_handler_oms_temp;
+	</delete>
+	<!-- 批量保存数据 -->
+	<insert id="saveAfterDeleteOmsHandlerTemp" parameterType="com.haier.isales.app.omshandler.domain.OmsHandlerDomain" >
+		insert into isales_temp.t_isales_bpm_handler_oms_temp
+		(
+				ROW_ID	,
+				RN	,
+				ORG_NO	,
+				BIND_ID	,
+				CREATE_DATE	,
+				CREATE_USER	,
+				UPDATE_DATE	,
+				UPDATE_USER	,
+				WORK_FLOW_ID	,
+				WORK_FLOW_STEP_ID	,
+				IS_END	,
+				TRADE_CODE	,
+				TRADE_NAME	,
+				BU_CODE	,
+				BU_NAME	,
+				LINE_CODE	,
+				LINE_NAME	,
+				USER_CODE	,
+				USER_NAME	,
+				SYNCHRONOUS_TIME	,
+				REMARK		
+		)
+		VALUES
+		<foreach collection="omsHandlerList" item="item" index="index" separator="," >
+       		(
+				<if test="item.rowId!=null">
+					#{item.rowId}	,
+				</if>
+				<if test="item.rn!=null">
+					#{item.rn}	,
+				</if>
+				<if test="item.orgNo!=null">
+					#{item.orgNo}	,
+				</if>
+				<if test="item.bindId!=null">
+					#{item.bindId}	,
+				</if>
+				<if test="item.createDate!=null">
+					#{item.createDate}	,
+				</if>
+				<if test="item.createUser!=null">
+					#{item.createUser}	,
+				</if>
+				<if test="item.updateDate!=null">
+					#{item.updateDate}	,
+				</if>
+				<if test="item.updateUser!=null">
+					#{item.updateUser}	,
+				</if>
+				<if test="item.workFlowId!=null">
+					#{item.workFlowId}	,
+				</if>
+				<if test="item.workFlowStepId!=null">
+					#{item.workFlowStepId}	,
+				</if>
+				<if test="item.isEnd!=null">
+					#{item.isEnd}	,
+				</if>
+				<if test="item.tradeCode!=null">
+					#{item.tradeCode}	,
+				</if>
+				<if test="item.tradeName!=null">
+					#{item.tradeName}	,
+				</if>
+				<if test="item.buCode!=null">
+					#{item.buCode}	,
+				</if>
+				<if test="item.buName!=null">
+					#{item.buName}	,
+				</if>
+				<if test="item.lineCode!=null">
+					#{item.lineCode}	,
+				</if>
+				<if test="item.lineName!=null">
+					#{item.lineName}	,
+				</if>
+				<if test="item.userCode!=null">
+					#{item.userCode}	,
+				</if>
+				<if test="item.userName!=null">
+					#{item.userName}	,
+				</if>
+				now(),
+				''
+			)
+  		</foreach>
+	</insert>
+	
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="BpmQuestionHandlerResultMap" type="com.haier.isales.app.omshandler.domain.OmsHandlerDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	
+	<!-- findByTradeCode -->
+	<select id="findByTradeCode" resultMap="BpmQuestionHandlerResultMap" >
+		SELECT max(id) as id
+	     , min(trade_code) as trade_code
+	     , min(trade_name) as trade_name
+	     , user_code
+	     , user_name
+		from isales_app.t_isales_bpm_question_handler
+		where 1=1
+		<!-- <if test="item.userCode != null and item.userCode != '' ">
+			and user_code = #{item.userCode}
+		</if> -->
+		<if test="item.orgCode != null and item.orgCode != '' ">
+			and trade_code = #{item.orgCode}
+		</if>
+		<if test="item.shopCode != null and item.shopCode != '' ">
+			and shop_code = #{item.shopCode}
+		</if> 
+  		group by user_code,user_name
+	</select>
+</mapper>

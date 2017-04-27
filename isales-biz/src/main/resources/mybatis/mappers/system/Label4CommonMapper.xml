@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.label.dao.LabelDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="LabelResultMap" type="com.haier.isales.system.label.domain.LabelDomain">
+		<id column="label_id" property="labelId" jdbcType="BIGINT" />
+		<result column="label_code" property="labelCode" jdbcType="VARCHAR" />
+		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
+		<result column="parent_org" property="parentOrg" jdbcType="VARCHAR" />
+		<result column="label_level" property="labelLevel" jdbcType="VARCHAR" />
+		<result column="label_seq" property="labelSeq" jdbcType="VARCHAR" />
+		<result column="label_status" property="labelStatus" jdbcType="VARCHAR" />
+		<result column="update_id" property="updateId" jdbcType="BIGINT" />
+		<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_id" property="createId" jdbcType="BIGINT" />
+		<result column="create_name" property="createName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	LABEL_ID	,
+	LABEL_CODE	,
+	LABEL_NAME	,
+	PARENT_ORG	,
+	LABEL_LEVEL	,
+	LABEL_SEQ	,
+	LABEL_STATUS	,
+	UPDATE_ID	,
+	UPDATE_NAME	,
+	UPDATE_TIME	,
+	CREATE_ID	,
+	CREATE_NAME	,
+	CREATE_TIME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.labelId!=null">and label_id=#{entity.labelId}</if>
+		<if test="entity.labelCode!=null">and LABEL_CODE like CONCAT('%',#{entity.labelCode},'%')</if>
+		<if test="entity.labelName!=null">and label_name like CONCAT('%',#{entity.labelName},'%')</if>
+		<if test="entity.parentOrg!=null">and parent_org like CONCAT('%',#{entity.parentOrg},'%')</if>
+		<if test="entity.labelLevel!=null">and label_level like CONCAT('%',#{entity.labelLevel},'%')</if>
+		<if test="entity.labelSeq!=null and entity.labelSeq!=''">
+			and label_seq like CONCAT('%',#{entity.labelSeq},'%')
+		</if>
+		<if test="entity.labelStatus!=null">and label_status like CONCAT('%',#{entity.labelStatus},'%')</if>
+		<if test="entity.updateId!=null">and update_id=#{entity.updateId}</if>
+		<if test="entity.updateName!=null">and update_name like CONCAT('%',#{entity.updateName},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<if test="entity.createId!=null">and create_id=#{entity.createId}</if>
+		<if test="entity.createName!=null">and create_name like CONCAT('%',#{entity.createName},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="LabelResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_label
+		where label_id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_qn_label
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.label.domain.LabelDomain" >
+		insert into isales_sys.t_qn_label
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="labelId!=null">
+				LABEL_ID	,
+			</if>
+			<if test="labelCode!=null">
+				LABEL_CODE	,
+			</if>
+			<if test="labelName!=null">
+				LABEL_NAME	,
+			</if>
+			<if test="parentOrg!=null">
+				PARENT_ORG	,
+			</if>
+			<if test="labelLevel!=null">
+				LABEL_LEVEL	,
+			</if>
+			<if test="labelSeq!=null">
+				LABEL_SEQ	,
+			</if>
+			<if test="labelStatus!=null">
+				LABEL_STATUS	,
+			</if>
+			<if test="updateId!=null">
+				UPDATE_ID	,
+			</if>
+			<if test="updateName!=null">
+				UPDATE_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createId!=null">
+				CREATE_ID	,
+			</if>
+			<if test="createName!=null">
+				CREATE_NAME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="labelId!=null">
+				#{labelId}	,
+			</if>
+			<if test="labelCode!=null">
+				#{labelCode}	,
+			</if>
+			<if test="labelName!=null">
+				#{labelName}	,
+			</if>
+			<if test="parentOrg!=null">
+				#{parentOrg}	,
+			</if>
+			<if test="labelLevel!=null">
+				#{labelLevel}	,
+			</if>
+			<if test="labelSeq!=null">
+				#{labelSeq}	,
+			</if>
+			<if test="labelStatus!=null">
+				#{labelStatus}	,
+			</if>
+			<if test="updateId!=null">
+				#{updateId}	,
+			</if>
+			<if test="updateName!=null">
+				#{updateName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createId!=null">
+				#{createId}	,
+			</if>
+			<if test="createName!=null">
+				#{createName}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.label.domain.LabelDomain">
+		update isales_sys.t_qn_label
+		<set>
+			LABEL_CODE = #{labelCode},
+			LABEL_NAME = #{labelName},
+			PARENT_ORG = #{parentOrg},
+			LABEL_LEVEL = #{labelLevel},
+			LABEL_SEQ = #{labelSeq},
+			LABEL_STATUS = #{labelStatus},
+			UPDATE_ID = #{updateId},
+			UPDATE_NAME = #{updateName},
+			UPDATE_TIME = #{updateTime},
+			CREATE_ID = #{createId},
+			CREATE_NAME = #{createName},
+			CREATE_TIME = #{createTime},
+		</set>
+		where label_id = #{labelId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_sys.t_qn_label 
+		where label_id = #{labelId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="LabelResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_label
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_qn_label
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

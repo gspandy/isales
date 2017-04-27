@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd  "
+	default-lazy-init="true">
+	<!-- MdmHandlerDAO 的spring配置文件 -->
+	<bean id="mdmHandlerDao" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.app.mdmhandler.dao.MdmHandlerDAO" />
+	</bean>
+	
+	<!-- MdmHandlerService 的spring配置文件 和对应的实现类-->
+	<bean id="mdmHandlerService" class="com.haier.isales.app.mdmhandler.service.impl.MdmHandlerServiceImpl">
+		<property name="mdmHandlerDao" ref="mdmHandlerDao"></property>
+		<property name="issueSolver" ref="issueSolver"></property>
+	</bean>
+	
+</beans>

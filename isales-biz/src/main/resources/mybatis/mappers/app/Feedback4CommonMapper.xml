@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.FeedbackDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="FeedbackResultMap" type="com.haier.isales.app.domain.FeedbackDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="operator_name" property="operatorName"  jdbcType="VARCHAR"  />
+		<result column="feedback_type" property="feedbackType"  jdbcType="VARCHAR"  />
+		<result column="feedback_object" property="feedbackObject" />
+		<result column="feedback_content" property="feedbackContent"  />
+		<result column="feedback_time" property="feedbackTime"  jdbcType="TIMESTAMP"  />
+		<result column="contact_information" property="contactInformation"  jdbcType="VARCHAR"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="handler_id" property="handlerId"  jdbcType="BIGINT"  />
+		<result column="handler_name" property="handlerName"  jdbcType="VARCHAR"  />
+		<result column="handler_time" property="handlerTime"  jdbcType="TIMESTAMP"  />
+		<result column="handler_content" property="handlerContent"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	OPERATOR_ID	,
+	USER_CODE	,
+	OPERATOR_NAME	,
+	FEEDBACK_TYPE	,
+	feedback_object ,
+	FEEDBACK_CONTENT	,
+	FEEDBACK_TIME	,
+	CONTACT_INFORMATION	,
+	STATUS	,
+	HANDLER_ID	,
+	HANDLER_NAME	,
+	HANDLER_TIME	,
+	HANDLER_CONTENT	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.operatorName!=null">and operator_name like CONCAT('%',#{entity.operatorName},'%')</if>
+		<if test="entity.feedbackType!=null">and feedback_type like CONCAT('%',#{entity.feedbackType},'%')</if>
+		<if test="entity.feedbackObject!=null">and feedback_object like CONCAT('%',#{entity.feedbackObject},'%')</if>
+		<if test="entity.feedbackContent!=null">and feedback_content like CONCAT('%',#{entity.feedbackContent},'%')</if>
+		<!-- java.util.Date feedback_time has been ignored!!! -->
+		<if test="entity.contactInformation!=null">and contact_information like CONCAT('%',#{entity.contactInformation},'%')</if>
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.handlerId!=null">and handler_id=#{entity.handlerId}</if>
+		<if test="entity.handlerName!=null">and handler_name like CONCAT('%',#{entity.handlerName},'%')</if>
+		<!-- java.util.Date handler_time has been ignored!!! -->
+		<if test="entity.handlerContent!=null">and handler_content like CONCAT('%',#{entity.handlerContent},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="FeedbackResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_feedback
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_feedback
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.app.domain.FeedbackDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_feedback
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="operatorName!=null">
+				OPERATOR_NAME	,
+			</if>
+			<if test="feedbackType!=null">
+				FEEDBACK_TYPE	,
+			</if>
+			<if test="feedbackObject!=null">
+				FEEDBACK_OBJECT	,
+			</if>
+			<if test="feedbackContent!=null">
+				FEEDBACK_CONTENT	,
+			</if>
+			<if test="feedbackTime!=null">
+				FEEDBACK_TIME	,
+			</if>
+			<if test="contactInformation!=null">
+				CONTACT_INFORMATION	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="handlerId!=null">
+				HANDLER_ID	,
+			</if>
+			<if test="handlerName!=null">
+				HANDLER_NAME	,
+			</if>
+			<if test="handlerTime!=null">
+				HANDLER_TIME	,
+			</if>
+			<if test="handlerContent!=null">
+				HANDLER_CONTENT	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="operatorName!=null">
+				#{operatorName}	,
+			</if>
+			<if test="feedbackType!=null">
+				#{feedbackType}	,
+			</if>
+			<if test="feedbackObject!=null">
+				#{feedbackObject}	,
+			</if>
+			<if test="feedbackContent!=null">
+				#{feedbackContent}	,
+			</if>
+			<if test="feedbackTime!=null">
+				#{feedbackTime}	,
+			</if>
+			<if test="contactInformation!=null">
+				#{contactInformation}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="handlerId!=null">
+				#{handlerId}	,
+			</if>
+			<if test="handlerName!=null">
+				#{handlerName}	,
+			</if>
+			<if test="handlerTime!=null">
+				#{handlerTime}	,
+			</if>
+			<if test="handlerContent!=null">
+				#{handlerContent}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.app.domain.FeedbackDomain">
+		update isales_app.t_isales_feedback
+		<set>
+			OPERATOR_ID = #{operatorId},
+			USER_CODE = #{userCode},
+			OPERATOR_NAME = #{operatorName},
+			FEEDBACK_TYPE = #{feedbackType},
+			FEEDBACK_OBJECT = #{feedbackObject},
+			FEEDBACK_CONTENT = #{feedbackContent},
+			FEEDBACK_TIME = #{feedbackTime},
+			CONTACT_INFORMATION = #{contactInformation},
+			STATUS = #{status},
+			HANDLER_ID = #{handlerId},
+			HANDLER_NAME = #{handlerName},
+			HANDLER_TIME = #{handlerTime},
+			HANDLER_CONTENT = #{handlerContent},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_feedback 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="FeedbackResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_feedback
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_feedback
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

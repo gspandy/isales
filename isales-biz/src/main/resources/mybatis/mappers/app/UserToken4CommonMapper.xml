@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.UserTokenDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="UserTokenResultMap" type="com.haier.isales.app.domain.UserTokenDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_id" property="userId"  jdbcType="VARCHAR" />
+		<result column="user_token" property="userToken"  jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	USER_CODE	,
+	USER_ID	,
+	USER_TOKEN 	,
+	CREATE_TIME	,
+	UPDATE_TIME	
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.userCode!=null">and user_code = #{entity.userCode}</if>
+		<if test="entity.userId!=null">and user_id = #{entity.userId}</if>
+		<if test="entity.userToken!=null">and user_token like CONCAT('%',#{entity.userToken},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="UserTokenResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_user_token
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_user_token
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.app.domain.UserTokenDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_sys.t_sys_user_token
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userId!=null">
+				USER_ID	,
+			</if>
+			<if test="userToken!=null">
+				USER_TOKEN	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userId!=null">
+				#{userId}	,
+			</if>
+			<if test="userToken!=null">
+				#{userToken}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.app.domain.UserTokenDomain">
+		update isales_sys.t_sys_user_token
+		<set>
+			USER_CODE = #{userCode},
+			USER_ID = #{userId},
+			USER_TOKEN = #{userToken},
+			CREATE_TIME = #{createTime},
+			UPDATE_TIME = #{updateTime},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_sys.t_sys_user_token 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="UserTokenResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_user_token
+		where 1=1
+		<include refid="searchConditions"/>
+		order by user_code
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_user_token
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

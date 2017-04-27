@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.updateretail.dao.TryoutUsersDAO">
+	
+	<select id="searchIfPersonInTable" resultMap="TryoutUsersResultMap">
+	
+	select <include refid="all_Column_List"/>
+	from isales_app.t_isales_sales_tryout_users
+	where 1=1
+	and user_code = #{entity.userCode}
+	</select>
+	
+</mapper>

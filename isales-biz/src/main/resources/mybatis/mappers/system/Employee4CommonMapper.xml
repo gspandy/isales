@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.employee.dao.EmployeeDao">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="EmployeeResultMap" type="com.haier.isales.system.employee.domain.Employee">
+		<id column="employee_sn" property="employeeSn" jdbcType="CHAR" />
+		<result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+		<result column="EnglishName" property="englishname" jdbcType="VARCHAR" />
+		<result column="Gender" property="gender" jdbcType="CHAR" />
+		<result column="Phone" property="phone" jdbcType="VARCHAR" />
+		<result column="MobileNo" property="mobileno" jdbcType="VARCHAR" />
+		<result column="Email" property="email" jdbcType="VARCHAR" />
+		<result column="IdCardNo" property="idcardno" jdbcType="VARCHAR" />
+		<result column="UpdateTime" property="updatetime" />
+		<result column="CreateTime" property="createtime" />
+		<result column="EmpStatuscode" property="empstatuscode" jdbcType="CHAR" />
+		<result column="EmpStatusName" property="empstatusname" jdbcType="VARCHAR" />
+		<result column="CountryName" property="countryname" jdbcType="VARCHAR" />
+		<result column="CompanyName" property="companyname" jdbcType="VARCHAR" />
+		<result column="BUFUname" property="bufuname" jdbcType="VARCHAR" />
+		<result column="DepartmentName" property="departmentname" jdbcType="VARCHAR" />
+		<result column="EmpGroupName" property="empgroupname" jdbcType="VARCHAR" />
+		<result column="EmpSubGroupName" property="empsubgroupname" jdbcType="VARCHAR" />
+		<result column="notesmail" property="notesmail" jdbcType="VARCHAR" />
+		<result column="PersonelSubAreaName" property="personelsubareaname" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	EMPLOYEE_SN	,
+	EMPLOYEE_NAME	,
+	ENGLISHNAME	,
+	GENDER	,
+	PHONE	,
+	MOBILENO	,
+	EMAIL	,
+	IDCARDNO	,
+	UPDATETIME	,
+	CREATETIME	,
+	EMPSTATUSCODE	,
+	EMPSTATUSNAME	,
+	COUNTRYNAME	,
+	COMPANYNAME	,
+	BUFUNAME	,
+	DEPARTMENTNAME	,
+	EMPGROUPNAME	,
+	EMPSUBGROUPNAME	,
+	NOTESMAIL	,
+	PERSONELSUBAREANAME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.employeeSn!=null">and employee_sn like CONCAT('%',#{entity.employeeSn},'%')</if>
+		<if test="entity.employeeName!=null">and employee_name like CONCAT('%',#{entity.employeeName},'%')</if>
+		<if test="entity.englishname!=null">and EnglishName like CONCAT('%',#{entity.englishname},'%')</if>
+		<if test="entity.gender!=null">and Gender like CONCAT('%',#{entity.gender},'%')</if>
+		<if test="entity.phone!=null">and Phone like CONCAT('%',#{entity.phone},'%')</if>
+		<if test="entity.mobileno!=null">and MobileNo like CONCAT('%',#{entity.mobileno},'%')</if>
+		<if test="entity.email!=null">and Email like CONCAT('%',#{entity.email},'%')</if>
+		<if test="entity.idcardno!=null">and IdCardNo like CONCAT('%',#{entity.idcardno},'%')</if>
+		<!-- java.util.Date UpdateTime has been ignored!!! -->
+		<!-- java.util.Date CreateTime has been ignored!!! -->
+		<if test="entity.empstatuscode!=null">and EmpStatuscode like CONCAT('%',#{entity.empstatuscode},'%')</if>
+		<if test="entity.empstatusname!=null">and EmpStatusName like CONCAT('%',#{entity.empstatusname},'%')</if>
+		<if test="entity.countryname!=null">and CountryName like CONCAT('%',#{entity.countryname},'%')</if>
+		<if test="entity.companyname!=null">and CompanyName like CONCAT('%',#{entity.companyname},'%')</if>
+		<if test="entity.bufuname!=null">and BUFUname like CONCAT('%',#{entity.bufuname},'%')</if>
+		<if test="entity.departmentname!=null">and DepartmentName like CONCAT('%',#{entity.departmentname},'%')</if>
+		<if test="entity.empgroupname!=null">and EmpGroupName like CONCAT('%',#{entity.empgroupname},'%')</if>
+		<if test="entity.empsubgroupname!=null">and EmpSubGroupName like CONCAT('%',#{entity.empsubgroupname},'%')</if>
+		<if test="entity.notesmail!=null">and notesmail like CONCAT('%',#{entity.notesmail},'%')</if>
+		<if test="entity.personelsubareaname!=null">and PersonelSubAreaName like CONCAT('%',#{entity.personelsubareaname},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="EmployeeResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee
+		where employee_sn = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_employee
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.employee.domain.Employee" >
+		insert into isales_sys.t_sys_employee
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="employeeSn!=null">
+				EMPLOYEE_SN	,
+			</if>
+			<if test="employeeName!=null">
+				EMPLOYEE_NAME	,
+			</if>
+			<if test="englishname!=null">
+				ENGLISHNAME	,
+			</if>
+			<if test="gender!=null">
+				GENDER	,
+			</if>
+			<if test="phone!=null">
+				PHONE	,
+			</if>
+			<if test="mobileno!=null">
+				MOBILENO	,
+			</if>
+			<if test="email!=null">
+				EMAIL	,
+			</if>
+			<if test="idcardno!=null">
+				IDCARDNO	,
+			</if>
+			<if test="updatetime!=null">
+				UPDATETIME	,
+			</if>
+			<if test="createtime!=null">
+				CREATETIME	,
+			</if>
+			<if test="empstatuscode!=null">
+				EMPSTATUSCODE	,
+			</if>
+			<if test="empstatusname!=null">
+				EMPSTATUSNAME	,
+			</if>
+			<if test="countryname!=null">
+				COUNTRYNAME	,
+			</if>
+			<if test="companyname!=null">
+				COMPANYNAME	,
+			</if>
+			<if test="bufuname!=null">
+				BUFUNAME	,
+			</if>
+			<if test="departmentname!=null">
+				DEPARTMENTNAME	,
+			</if>
+			<if test="empgroupname!=null">
+				EMPGROUPNAME	,
+			</if>
+			<if test="empsubgroupname!=null">
+				EMPSUBGROUPNAME	,
+			</if>
+			<if test="notesmail!=null">
+				NOTESMAIL	,
+			</if>
+			<if test="personelsubareaname!=null">
+				PERSONELSUBAREANAME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="employeeSn!=null">
+				#{employeeSn}	,
+			</if>
+			<if test="employeeName!=null">
+				#{employeeName}	,
+			</if>
+			<if test="englishname!=null">
+				#{englishname}	,
+			</if>
+			<if test="gender!=null">
+				#{gender}	,
+			</if>
+			<if test="phone!=null">
+				#{phone}	,
+			</if>
+			<if test="mobileno!=null">
+				#{mobileno}	,
+			</if>
+			<if test="email!=null">
+				#{email}	,
+			</if>
+			<if test="idcardno!=null">
+				#{idcardno}	,
+			</if>
+			<if test="updatetime!=null">
+				#{updatetime}	,
+			</if>
+			<if test="createtime!=null">
+				#{createtime}	,
+			</if>
+			<if test="empstatuscode!=null">
+				#{empstatuscode}	,
+			</if>
+			<if test="empstatusname!=null">
+				#{empstatusname}	,
+			</if>
+			<if test="countryname!=null">
+				#{countryname}	,
+			</if>
+			<if test="companyname!=null">
+				#{companyname}	,
+			</if>
+			<if test="bufuname!=null">
+				#{bufuname}	,
+			</if>
+			<if test="departmentname!=null">
+				#{departmentname}	,
+			</if>
+			<if test="empgroupname!=null">
+				#{empgroupname}	,
+			</if>
+			<if test="empsubgroupname!=null">
+				#{empsubgroupname}	,
+			</if>
+			<if test="notesmail!=null">
+				#{notesmail}	,
+			</if>
+			<if test="personelsubareaname!=null">
+				#{personelsubareaname}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.employee.domain.Employee">
+		update isales_sys.t_sys_employee
+		<set>
+			EMPLOYEE_NAME = #{employeeName},
+			ENGLISHNAME = #{englishname},
+			GENDER = #{gender},
+			PHONE = #{phone},
+			MOBILENO = #{mobileno},
+			EMAIL = #{email},
+			IDCARDNO = #{idcardno},
+			UPDATETIME = #{updatetime},
+			CREATETIME = #{createtime},
+			EMPSTATUSCODE = #{empstatuscode},
+			EMPSTATUSNAME = #{empstatusname},
+			COUNTRYNAME = #{countryname},
+			COMPANYNAME = #{companyname},
+			BUFUNAME = #{bufuname},
+			DEPARTMENTNAME = #{departmentname},
+			EMPGROUPNAME = #{empgroupname},
+			EMPSUBGROUPNAME = #{empsubgroupname},
+			NOTESMAIL = #{notesmail},
+			PERSONELSUBAREANAME = #{personelsubareaname},
+		</set>
+		where employee_sn = #{employeeSn}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_sys_employee 
+		where employee_sn = #{employeeSn}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="EmployeeResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_employee
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+</mapper>

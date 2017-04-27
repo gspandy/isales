@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!-- 权益卡套餐率 -->
+	<bean id="cardSetRateTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/cardSetRate-transform.xml"></property>
+	</bean>
+	
+	<!-- 会员注册率（未验证） -->
+	<bean id="registRateUnverifiedTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/registRateUnverified-transform.xml"></property>
+	</bean>
+	<!-- 会员注册率（已验证） -->	
+	<bean id="registRateVerifiedTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/registRateVerified-transform.xml"></property>
+	</bean>
+	
+	<!-- 员工每月所属门店转换数据同步 -->	
+	<bean id="employeeShopRefTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/shop-month-transform.xml"></property>
+	</bean>
+	
+	<!-- 每月销量与会员数据 已验证的数据同步 -->	
+	<bean id="sjcjScrmTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/sjcj-scrm-transform.xml"></property>
+	</bean>
+	
+	<!-- 每月销量与会员数据 全部的数据同步 -->	
+	<bean id="sjcjScrmAllTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/sjcj-scrm-all-transform.xml"></property>
+	</bean>
+	
+	<!-- 每月销量与会员数据 客户的联网量的数据同步 -->	
+	<bean id="sjcjCustTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/sjcj-cust-transform.xml"></property>
+	</bean>
+	
+	<!-- 当月销量详情数据（销量、销额、提成） 国美、苏宁的数据同步 -->	
+	<bean id="userXlCstDetailTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/user-xl-cst-detail-transform.xml"></property>
+	</bean>
+	
+	<!-- 当月销量详情数据（销量、销额、提成） 直销员录入的数据同步 -->	
+	<bean id="userXlAllDetailTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/user-xl-all-detail-transform.xml"></property>
+	</bean>
+	
+	<!-- T-1日销量详情数据（销量、销额、提成） 国美、苏宁的数据同步 -->	
+	<bean id="userXlCstDetailLstdayTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/user-xl-cst-detail-lstday-transform.xml"></property>
+	</bean>
+	
+	<!-- T-1日销量详情数据（销量、销额、提成） 直销员录入的数据同步 -->	
+	<bean id="userXlAllDetailLstdayTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="zzjytDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/zzjyt/user-xl-all-detail-lstday-transform.xml"></property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.shopposition.dao.PositionDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ShopPositionResultMap" type="com.haier.isales.dailymgt.shopposition.domain.ShopPositionDomain">
+		<result column="shop_code" property="shopCode"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="customer_code" property="customerCode"  jdbcType="VARCHAR"  />
+		<result column="customer_name" property="customerName"  jdbcType="VARCHAR"  />
+		<result column="shop_longitude" property="shopLongitude"  jdbcType="BIGINT"  />
+		<result column="shop_latitude" property="shopLatitude"  jdbcType="BIGINT"  />
+		<result column="shop_address" property="shopAddress"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	shop_code, 
+	shop_name, 
+	customer_code, 
+	customer_name,
+	shop_longitude,
+	shop_latitude, 
+	shop_address
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findByShopCode" resultMap="ShopPositionResultMap">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop_position
+		where shop_code = #{shopCode}
+	</select>
+	
+</mapper>

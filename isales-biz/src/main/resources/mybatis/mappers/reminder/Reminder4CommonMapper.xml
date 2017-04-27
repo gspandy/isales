@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.reminder.dao.ReminderDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ReminderResultMap" type="com.haier.isales.reminder.domain.ReminderDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="app_name" property="appName"  jdbcType="VARCHAR"  />
+		<result column="push_type" property="pushType"  jdbcType="VARCHAR"  />
+		<result column="type_code" property="typeCode"  jdbcType="VARCHAR"  />
+		<result column="title" property="title"  jdbcType="VARCHAR"  />
+		<result column="content" property="content"  />
+		<result column="alive_time" property="aliveTime"  jdbcType="BIGINT"  />
+		<result column="user" property="user"  />
+		<result column="user_group" property="userGroup"  />
+		<result column="has_user_group_child" property="hasUserGroupChild"  jdbcType="BIT"  />
+		<result column="excluded_user_group" property="excludedUserGroup"  />
+		<result column="has_excluded_user_group_child" property="hasExcludedUserGroupChild"  jdbcType="BIT"  />
+		<result column="pusher" property="pusher"  jdbcType="VARCHAR"  />
+		<result column="pusher_group" property="pusherGroup"  jdbcType="VARCHAR"  />
+		<result column="type" property="type"  jdbcType="VARCHAR"  />
+		<result column="source_id" property="sourceId"  jdbcType="VARCHAR"  />
+		<result column="source_type" property="sourceType"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="send_status" property="sendStatus"  jdbcType="VARCHAR"  />
+		<result column="extended_field" property="extendedField"  />
+		<result column="link_url" property="linkUrl"  jdbcType="VARCHAR"  />
+		<result column="expected_send_time" property="expectedSendTime"  jdbcType="TIMESTAMP"  />
+		<result column="send_time" property="sendTime"  jdbcType="TIMESTAMP"  />
+		<result column="return_data" property="returnData"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	APP_NAME	,
+	PUSH_TYPE	,
+	TYPE_CODE	,
+	TITLE	,
+	CONTENT	,
+	ALIVE_TIME	,
+	USER	,
+	USER_GROUP	,
+	HAS_USER_GROUP_CHILD	,
+	EXCLUDED_USER_GROUP	,
+	HAS_EXCLUDED_USER_GROUP_CHILD	,
+	PUSHER	,
+	PUSHER_GROUP	,
+	TYPE	,
+	SOURCE_ID	,
+	SOURCE_TYPE	,
+	CREATE_TIME	,
+	SEND_STATUS	,
+	EXTENDED_FIELD	,
+	LINK_URL	,
+	EXPECTED_SEND_TIME	,
+	SEND_TIME	,
+	RETURN_DATA		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.appName!=null">and app_name like CONCAT('%',#{entity.appName},'%')</if>
+		<if test="entity.pushType!=null">and push_type like CONCAT('%',#{entity.pushType},'%')</if>
+		<if test="entity.typeCode!=null">and type_code like CONCAT('%',#{entity.typeCode},'%')</if>
+		<if test="entity.title!=null">and title like CONCAT('%',#{entity.title},'%')</if>
+		<if test="entity.content!=null">and content like CONCAT('%',#{entity.content},'%')</if>
+		<if test="entity.aliveTime!=null">and alive_time=#{entity.aliveTime}</if>
+		<if test="entity.user!=null">and user like CONCAT('%',#{entity.user},'%')</if>
+		<if test="entity.userGroup!=null">and user_group like CONCAT('%',#{entity.userGroup},'%')</if>
+		<if test="entity.hasUserGroupChild!=null">and has_user_group_child=#{entity.hasUserGroupChild}</if>
+		<if test="entity.excludedUserGroup!=null">and excluded_user_group like CONCAT('%',#{entity.excludedUserGroup},'%')</if>
+		<if test="entity.hasExcludedUserGroupChild!=null">and has_excluded_user_group_child=#{entity.hasExcludedUserGroupChild}</if>
+		<if test="entity.pusher!=null">and pusher like CONCAT('%',#{entity.pusher},'%')</if>
+		<if test="entity.pusherGroup!=null">and pusher_group like CONCAT('%',#{entity.pusherGroup},'%')</if>
+		<if test="entity.type!=null">and type like CONCAT('%',#{entity.type},'%')</if>
+		<if test="entity.sourceId!=null">and source_id like CONCAT('%',#{entity.sourceId},'%')</if>
+		<if test="entity.sourceType!=null">and source_type like CONCAT('%',#{entity.sourceType},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.sendStatus!=null">and send_status like CONCAT('%',#{entity.sendStatus},'%')</if>
+		<if test="entity.extendedField!=null">and extended_field like CONCAT('%',#{entity.extendedField},'%')</if>
+		<if test="entity.linkUrl!=null">and link_url like CONCAT('%',#{entity.linkUrl},'%')</if>
+		<!-- java.util.Date expected_send_time has been ignored!!! -->
+		<!-- java.util.Date send_time has been ignored!!! -->
+		<if test="entity.returnData!=null">and return_data like CONCAT('%',#{entity.returnData},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ReminderResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_reminder
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_reminder
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.reminder.domain.ReminderDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_reminder
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appName!=null">
+				APP_NAME	,
+			</if>
+			<if test="pushType!=null">
+				PUSH_TYPE	,
+			</if>
+			<if test="typeCode!=null">
+				TYPE_CODE	,
+			</if>
+			<if test="title!=null">
+				TITLE	,
+			</if>
+			<if test="content!=null">
+				CONTENT	,
+			</if>
+			<if test="aliveTime!=null">
+				ALIVE_TIME	,
+			</if>
+			<if test="user!=null">
+				USER	,
+			</if>
+			<if test="userGroup!=null">
+				USER_GROUP	,
+			</if>
+			<if test="hasUserGroupChild!=null">
+				HAS_USER_GROUP_CHILD	,
+			</if>
+			<if test="excludedUserGroup!=null">
+				EXCLUDED_USER_GROUP	,
+			</if>
+			<if test="hasExcludedUserGroupChild!=null">
+				HAS_EXCLUDED_USER_GROUP_CHILD	,
+			</if>
+			<if test="pusher!=null">
+				PUSHER	,
+			</if>
+			<if test="pusherGroup!=null">
+				PUSHER_GROUP	,
+			</if>
+			<if test="type!=null">
+				TYPE	,
+			</if>
+			<if test="sourceId!=null">
+				SOURCE_ID	,
+			</if>
+			<if test="sourceType!=null">
+				SOURCE_TYPE	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="sendStatus!=null">
+				SEND_STATUS	,
+			</if>
+			<if test="extendedField!=null">
+				EXTENDED_FIELD	,
+			</if>
+			<if test="linkUrl!=null">
+				LINK_URL	,
+			</if>
+			<if test="expectedSendTime!=null">
+				EXPECTED_SEND_TIME	,
+			</if>
+			<if test="sendTime!=null">
+				SEND_TIME	,
+			</if>
+			<if test="returnData!=null">
+				RETURN_DATA		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appName!=null">
+				#{appName}	,
+			</if>
+			<if test="pushType!=null">
+				#{pushType}	,
+			</if>
+			<if test="typeCode!=null">
+				#{typeCode}	,
+			</if>
+			<if test="title!=null">
+				#{title}	,
+			</if>
+			<if test="content!=null">
+				#{content}	,
+			</if>
+			<if test="aliveTime!=null">
+				#{aliveTime}	,
+			</if>
+			<if test="user!=null">
+				#{user}	,
+			</if>
+			<if test="userGroup!=null">
+				#{userGroup}	,
+			</if>
+			<if test="hasUserGroupChild!=null">
+				#{hasUserGroupChild}	,
+			</if>
+			<if test="excludedUserGroup!=null">
+				#{excludedUserGroup}	,
+			</if>
+			<if test="hasExcludedUserGroupChild!=null">
+				#{hasExcludedUserGroupChild}	,
+			</if>
+			<if test="pusher!=null">
+				#{pusher}	,
+			</if>
+			<if test="pusherGroup!=null">
+				#{pusherGroup}	,
+			</if>
+			<if test="type!=null">
+				#{type}	,
+			</if>
+			<if test="sourceId!=null">
+				#{sourceId}	,
+			</if>
+			<if test="sourceType!=null">
+				#{sourceType}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="sendStatus!=null">
+				#{sendStatus}	,
+			</if>
+			<if test="extendedField!=null">
+				#{extendedField}	,
+			</if>
+			<if test="linkUrl!=null">
+				#{linkUrl}	,
+			</if>
+			<if test="expectedSendTime!=null">
+				#{expectedSendTime}	,
+			</if>
+			<if test="sendTime!=null">
+				#{sendTime}	,
+			</if>
+			<if test="returnData!=null">
+				#{returnData}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.reminder.domain.ReminderDomain">
+		update isales_app.t_isales_reminder
+		<set>
+			APP_NAME = #{appName},
+			PUSH_TYPE = #{pushType},
+			TYPE_CODE = #{typeCode},
+			TITLE = #{title},
+			CONTENT = #{content},
+			ALIVE_TIME = #{aliveTime},
+			USER = #{user},
+			USER_GROUP = #{userGroup},
+			HAS_USER_GROUP_CHILD = #{hasUserGroupChild},
+			EXCLUDED_USER_GROUP = #{excludedUserGroup},
+			HAS_EXCLUDED_USER_GROUP_CHILD = #{hasExcludedUserGroupChild},
+			PUSHER = #{pusher},
+			PUSHER_GROUP = #{pusherGroup},
+			TYPE = #{type},
+			SOURCE_ID = #{sourceId},
+			SOURCE_TYPE = #{sourceType},
+			CREATE_TIME = #{createTime},
+			SEND_STATUS = #{sendStatus},
+			EXTENDED_FIELD = #{extendedField},
+			LINK_URL = #{linkUrl},
+			EXPECTED_SEND_TIME = #{expectedSendTime},
+			SEND_TIME = #{sendTime},
+			RETURN_DATA = #{returnData},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_reminder 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ReminderResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_reminder
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_reminder
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.reportretail.dao.BtbSjcjScrmDAO">
+	<select id="findByShopCode" resultMap="BtbSjcjScrmResultMap">
+		select ID	,
+		MONTHS	,
+		ORG_CODE	,
+		ORG_NAME	,
+		CHAN_CODE	,
+		CHAN_NAME	,
+		SHOP_CODE	,
+		SHOP_NAME	,
+		PROLINE_CODE	,
+		PROLINE_NAME	,
+		sum(RETAIL_PLAN) RETAIL_PLAN	,
+		sum(RETAIL_ACTUAL) RETAIL_ACTUAL	,
+		ifnull (sum(MEMBER_NEW), 0) MEMBER_NEW	,
+		sum(MEMBER_TOTAL) MEMBER_TOTAL	,
+		ifnull (sum(MEMBER_DIFF), 0) MEMBER_DIFF,
+		SYNCHRONOUS_TIME	,
+		REMARK 
+		from isales_app.t_isales_btb_sjcj_scrm 
+		where shop_code = #{shopCode} 
+		<if test="prolineCode != null and prolineCode != ''">
+			and proline_code = #{prolineCode}
+		</if>
+		<!-- 
+		where 1 = 1 
+		<if test="shopCode != null">
+			and shop_code = #{shopCode} 
+		</if>
+		<if test="prolineCode != null">
+			and proline_code = #{prolineCode}
+		</if>
+		 -->
+	</select>
+	
+	<resultMap id="shopRetailChartResultMap" type="retailDTO">
+		<result column="months" property="yearMonth" jdbcType="VARCHAR" />
+		<result column="shop_code" property="shopId" jdbcType="VARCHAR" />
+		<result column="proline_code" property="proLineId" jdbcType="VARCHAR" />
+		<result column="RETAIL_PLAN" property="target" jdbcType="VARCHAR" />
+		<result column="RETAIL_ACTUAL" property="actual" jdbcType="VARCHAR" />
+		<result column="retail_bonus" property="bonus" jdbcType="VARCHAR" />
+		<result column="mem_cnts" property="memCnts" jdbcType="VARCHAR" />
+		<result column="before_retail_plan" property="befTargetRetail" jdbcType="VARCHAR"/>
+		<result column="before_retail" property="befRetail" jdbcType="VARCHAR"/>
+		<result column="before_reward" property="befReward" jdbcType="VARCHAR"/>
+		<result column="target_money" property="targetMoney" jdbcType="VARCHAR" />
+		<result column="actual_money" property="actualMoney" jdbcType="VARCHAR" />
+		<result column="bef_target_money" property="befTargetMoney" jdbcType="VARCHAR" />
+		<result column="bef_actual_money" property="befActualMoney" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="shopRetailBonusResultMap" type="retailDTO">
+		<result column="shop_code" property="shopId" jdbcType="VARCHAR" />
+		<result column="total_retail" property="totalRetail" jdbcType="VARCHAR" />
+		<result column="before_retail" property="befRetail" jdbcType="VARCHAR" />
+		<result column="total_bonus" property="totalBonus" jdbcType="VARCHAR" />
+		<result column="before_bonus" property="befBonus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 业绩 销量查询个人销量  修改成查询门店销量 modified by lizhenwei 2016-04-26-->
+	<select id="findShopBtbRetail" resultMap="shopRetailChartResultMap" parameterType="retailDTO">
+		select MONTHS	,
+		SHOP_CODE	,
+		truncate(sum(ifnull(RETAIL_PLAN,0)),0) as RETAIL_PLAN	,
+		truncate(sum(ifnull(RETAIL_ACTUAL,0)),0) as RETAIL_ACTUAL	,
+		truncate(sum(ifnull(retail_bonus,0)),0) as retail_bonus,
+		truncate(sum(ifnull(mem_cnts,0)),0) as mem_cnts,
+		 truncate(IFNULL(sum(retail_plan/30),0),0) as before_retail_plan,
+	    truncate(IFNULL(sum(lst_day_cnts),0),0) as before_retail,
+	    truncate(IFNULL(SUM(lst_day_tc),0),0) as before_reward,
+	    truncate(IFNULL(SUM(retail_plan_money),0),0) as target_money,
+		  truncate(IFNULL(SUM(retail_actual_money),0),0) as actual_money,
+			truncate(IFNULL(SUM(retail_plan_money)/30,0),0) AS bef_target_money,
+			truncate(IFNULL(sum(retail_actual_money)/30,0),0) AS bef_actual_money
+		from isales_app.t_isales_btb_sjcj_scrm_complete br
+		where 1 = 1
+		<if
+			test="model.yearMonth != null and model.yearMonth != '' and model.yearMonthBegin != null and model.yearMonthBegin != ''">
+			<![CDATA[
+				and (br.MONTHS between #{model.yearMonthBegin} and #{model.yearMonth})
+			]]>
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and br.proline_code = #{model.proLineId}
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and br.SHOP_CODE = #{model.shopId}
+		</if>
+		group by br.MONTHS
+		order by br.MONTHS asc
+	</select>
+	
+	<!-- 业绩-销量 查询门店T-1日销量、当月累计销量，个人T-1日提成、当月累计提成 -->
+	<select id="findShopBtbRetailBonus" resultMap="shopRetailBonusResultMap" parameterType="retailDTO">
+		SELECT IFNULL(sum(retail_actual), 0) as total_retail, 
+		IFNULL(sum(lst_day_cnts),0) as before_retail,
+		 IFNULL(sum(retail_bonus)/mem_cnts,0) as total_bonus, 
+		 IFNULL(sum(lst_day_tc)/mem_cnts,0) as before_bonus
+		 FROM isales_app.t_isales_btb_sjcj_scrm_complete
+		where 1 = 1
+		<if
+			test="model.yearMonth != null and model.yearMonth != ''">
+			<![CDATA[
+				and MONTHS = #{model.yearMonth}
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and SHOP_CODE = #{model.shopId}
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and proline_code = #{model.proLineId}
+		</if>
+	</select>
+</mapper>

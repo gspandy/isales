@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.organization.dao.OrganizationDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="OrganizationResultMap" type="com.haier.isales.system.organization.domain.OrganizationDomain">
+		<id column="org_code" property="orgCode" jdbcType="VARCHAR" />
+		<result column="org_name" property="orgName" jdbcType="VARCHAR" />
+		<result column="parent_org" property="parentOrg" jdbcType="VARCHAR" />
+		<result column="org_level" property="orgLevel" jdbcType="VARCHAR" />
+		<result column="org_seq" property="orgSeq" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ORG_CODE	,
+	ORG_NAME	,
+	PARENT_ORG	,
+	ORG_LEVEL	,
+	ORG_SEQ		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.orgCode!=null">and org_code like CONCAT('%',#{entity.orgCode},'%')</if>
+		<if test="entity.orgName!=null">and org_name like CONCAT('%',#{entity.orgName},'%')</if>
+		<if test="entity.parentOrg!=null">and parent_org like CONCAT('%',#{entity.parentOrg},'%')</if>
+		<if test="entity.orgLevel!=null">and org_level like CONCAT('%',#{entity.orgLevel},'%')</if>
+		<if test="entity.orgSeq!=null">and org_seq like CONCAT('%',#{entity.orgSeq},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="OrganizationResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_organization
+		where org_code = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_qn_organization
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.organization.domain.OrganizationDomain" >
+		insert into isales_sys.t_qn_organization
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="orgCode!=null">
+				ORG_CODE	,
+			</if>
+			<if test="orgName!=null">
+				ORG_NAME	,
+			</if>
+			<if test="parentOrg!=null">
+				PARENT_ORG	,
+			</if>
+			<if test="orgLevel!=null">
+				ORG_LEVEL	,
+			</if>
+			<if test="orgSeq!=null">
+				ORG_SEQ		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="orgCode!=null">
+				#{orgCode}	,
+			</if>
+			<if test="orgName!=null">
+				#{orgName}	,
+			</if>
+			<if test="parentOrg!=null">
+				#{parentOrg}	,
+			</if>
+			<if test="orgLevel!=null">
+				#{orgLevel}	,
+			</if>
+			<if test="orgSeq!=null">
+				#{orgSeq}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.organization.domain.OrganizationDomain">
+		update isales_sys.t_qn_organization
+		<set>
+			ORG_NAME = #{orgName},
+			PARENT_ORG = #{parentOrg},
+			ORG_LEVEL = #{orgLevel},
+			ORG_SEQ = #{orgSeq},
+		</set>
+		where org_code = #{orgCode}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_qn_organization 
+		where org_code = #{orgCode}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="OrganizationResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_organization
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_qn_organization
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

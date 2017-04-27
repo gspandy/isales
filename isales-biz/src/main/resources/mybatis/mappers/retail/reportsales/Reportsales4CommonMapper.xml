@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.reportsales.dao.ReportsalesDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ReportsalesResultMap" type="com.haier.isales.retail.reportsales.domain.ReportsalesDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="YGID" property="ygid"  jdbcType="VARCHAR"  />
+		<result column="GJTIME" property="gjtime"  jdbcType="VARCHAR"  />
+		<result column="FPNUM" property="fpnum"  jdbcType="VARCHAR"  />
+		<result column="CPZNO" property="cpzno"  jdbcType="VARCHAR"  />
+		<result column="CPZNAME" property="cpzname"  jdbcType="VARCHAR"  />
+		<result column="PRODUCTTYPE" property="producttype"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT" property="product"  jdbcType="VARCHAR"  />
+		<result column="COUNTS" property="counts"  jdbcType="VARCHAR"  />
+		<result column="BARCODE" property="barcode"  jdbcType="VARCHAR"  />
+		<result column="PRICE" property="price"  jdbcType="VARCHAR"  />
+		<result column="NEWPRICE" property="newprice"  jdbcType="VARCHAR"  />
+		<result column="PRESENT" property="present"  jdbcType="VARCHAR"  />
+		<result column="PRESENTNUM" property="presentnum"  jdbcType="VARCHAR"  />
+		<result column="ISYJ" property="isyj"  jdbcType="VARCHAR"  />
+		<result column="YHNAME" property="yhname"  jdbcType="VARCHAR"  />
+		<result column="YHPHONE" property="yhphone"  jdbcType="VARCHAR"  />
+		<result column="SHADDRESS" property="shaddress"  jdbcType="VARCHAR"  />
+		<result column="HISHFRESULT" property="hishfresult"  jdbcType="VARCHAR"  />
+		<result column="PADBJ" property="padbj"  jdbcType="VARCHAR"  />
+		<result column="PADIMG" property="padimg"  jdbcType="VARCHAR"  />
+		<result column="HAIERMAIL" property="haiermail"  jdbcType="VARCHAR"  />
+		<result column="QYKID" property="qykid"  jdbcType="VARCHAR"  />
+		<result column="HYZC" property="hyzc"  jdbcType="VARCHAR"  />
+		<result column="MDID" property="mdid"  jdbcType="VARCHAR"  />
+		<result column="MDNAME" property="mdname"  jdbcType="VARCHAR"  />
+		<result column="Telephone" property="telephone"  jdbcType="VARCHAR"  />
+		<result column="LRFS" property="lrfs"  jdbcType="VARCHAR"  />
+		<result column="report_type" property="reportType"  jdbcType="VARCHAR"  />
+		<result column="synchronous_state" property="synchronousState"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="customer_IDno" property="customerIdno"  jdbcType="VARCHAR"  />
+		<result column="customer_birthday" property="customerBirthday"  jdbcType="VARCHAR"  />
+		<result column="customer_features" property="customerFeatures"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+		<result column="synchronous_result" property="synchronousResult"  />
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="share_type" property="shareType"  jdbcType="VARCHAR"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="ehub_data_id" property="ehubDataId"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	YGID	,
+	GJTIME	,
+	FPNUM	,
+	CPZNO	,
+	CPZNAME	,
+	PRODUCTTYPE	,
+	PRODUCT	,
+	COUNTS	,
+	BARCODE	,
+	PRICE	,
+	NEWPRICE	,
+	PRESENT	,
+	PRESENTNUM	,
+	ISYJ	,
+	YHNAME	,
+	YHPHONE	,
+	SHADDRESS	,
+	HISHFRESULT	,
+	PADBJ	,
+	PADIMG	,
+	HAIERMAIL	,
+	QYKID	,
+	HYZC	,
+	MDID	,
+	MDNAME	,
+	TELEPHONE	,
+	LRFS	,
+	REPORT_TYPE	,
+	SYNCHRONOUS_STATE	,
+	UPDATE_TIME	,
+	CREATE_TIME	,
+	CUSTOMER_IDNO	,
+	CUSTOMER_BIRTHDAY	,
+	CUSTOMER_FEATURES	,
+	REMARK	,
+	SYNCHRONOUS_RESULT	,
+	OPERATOR_ID	,
+	SHARE_TYPE,
+	STATUS,
+	EHUB_DATA_ID		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<!-- 查询时，不包含无效的数据 -->
+		<![CDATA[and status <> '102']]>
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.ygid!=null">and YGID = #{entity.ygid}</if>
+		<if test="entity.gjtime!=null">and GJTIME like CONCAT('%',#{entity.gjtime},'%')</if>
+		<if test="entity.fpnum!=null">and FPNUM like CONCAT('%',#{entity.fpnum},'%')</if>
+		<if test="entity.cpzno!=null">and CPZNO like CONCAT('%',#{entity.cpzno},'%')</if>
+		<if test="entity.cpzname!=null">and CPZNAME like CONCAT('%',#{entity.cpzname},'%')</if>
+		<if test="entity.producttype!=null">and PRODUCTTYPE like CONCAT('%',#{entity.producttype},'%')</if>
+		<if test="entity.product!=null">and PRODUCT like CONCAT('%',#{entity.product},'%')</if>
+		<if test="entity.counts!=null">and COUNTS like CONCAT('%',#{entity.counts},'%')</if>
+		<if test="entity.barcode!=null">and BARCODE like CONCAT('%',#{entity.barcode},'%')</if>
+		<if test="entity.price!=null">and PRICE like CONCAT('%',#{entity.price},'%')</if>
+		<if test="entity.newprice!=null">and NEWPRICE like CONCAT('%',#{entity.newprice},'%')</if>
+		<if test="entity.present!=null">and PRESENT like CONCAT('%',#{entity.present},'%')</if>
+		<if test="entity.presentnum!=null">and PRESENTNUM like CONCAT('%',#{entity.presentnum},'%')</if>
+		<if test="entity.isyj!=null">and ISYJ like CONCAT('%',#{entity.isyj},'%')</if>
+		<if test="entity.yhname!=null">and YHNAME like CONCAT('%',#{entity.yhname},'%')</if>
+		<if test="entity.yhphone!=null">and YHPHONE like CONCAT('%',#{entity.yhphone},'%')</if>
+		<if test="entity.shaddress!=null">and SHADDRESS like CONCAT('%',#{entity.shaddress},'%')</if>
+		<if test="entity.hishfresult!=null">and HISHFRESULT like CONCAT('%',#{entity.hishfresult},'%')</if>
+		<if test="entity.padbj!=null">and PADBJ like CONCAT('%',#{entity.padbj},'%')</if>
+		<if test="entity.padimg!=null">and PADIMG like CONCAT('%',#{entity.padimg},'%')</if>
+		<if test="entity.haiermail!=null">and HAIERMAIL like CONCAT('%',#{entity.haiermail},'%')</if>
+		<if test="entity.qykid!=null">and QYKID like CONCAT('%',#{entity.qykid},'%')</if>
+		<if test="entity.hyzc!=null">and HYZC like CONCAT('%',#{entity.hyzc},'%')</if>
+		<if test="entity.mdid!=null">and MDID like CONCAT('%',#{entity.mdid},'%')</if>
+		<if test="entity.mdname!=null">and MDNAME like CONCAT('%',#{entity.mdname},'%')</if>
+		<if test="entity.telephone!=null">and Telephone like CONCAT('%',#{entity.telephone},'%')</if>
+		<if test="entity.lrfs!=null">and LRFS like CONCAT('%',#{entity.lrfs},'%')</if>
+		<if test="entity.reportType!=null">and report_type like CONCAT('%',#{entity.reportType},'%')</if>
+		<if test="entity.synchronousState!=null">and synchronous_state like CONCAT('%',#{entity.synchronousState},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.customerIdno!=null">and customer_IDno like CONCAT('%',#{entity.customerIdno},'%')</if>
+		<if test="entity.customerBirthday!=null">and customer_birthday like CONCAT('%',#{entity.customerBirthday},'%')</if>
+		<if test="entity.customerFeatures!=null">and customer_features like CONCAT('%',#{entity.customerFeatures},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+		<if test="entity.synchronousResult!=null">and synchronous_result like CONCAT('%',#{entity.synchronousResult},'%')</if>
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<if test="entity.shareType!=null">and share_type like CONCAT('%',#{entity.shareType},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ReportsalesResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_sales_diary
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_sales_diary
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.retail.reportsales.domain.ReportsalesDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_sales_diary
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="ygid!=null">
+				YGID	,
+			</if>
+			<if test="gjtime!=null">
+				GJTIME	,
+			</if>
+			<if test="fpnum!=null">
+				FPNUM	,
+			</if>
+			<if test="cpzno!=null">
+				CPZNO	,
+			</if>
+			<if test="cpzname!=null">
+				CPZNAME	,
+			</if>
+			<if test="producttype!=null">
+				PRODUCTTYPE	,
+			</if>
+			<if test="product!=null">
+				PRODUCT	,
+			</if>
+			<if test="counts!=null">
+				COUNTS	,
+			</if>
+			<if test="barcode!=null">
+				BARCODE	,
+			</if>
+			<if test="price!=null">
+				PRICE	,
+			</if>
+			<if test="newprice!=null">
+				NEWPRICE	,
+			</if>
+			<if test="present!=null">
+				PRESENT	,
+			</if>
+			<if test="presentnum!=null">
+				PRESENTNUM	,
+			</if>
+			<if test="isyj!=null">
+				ISYJ	,
+			</if>
+			<if test="yhname!=null">
+				YHNAME	,
+			</if>
+			<if test="yhphone!=null">
+				YHPHONE	,
+			</if>
+			<if test="shaddress!=null">
+				SHADDRESS	,
+			</if>
+			<if test="hishfresult!=null">
+				HISHFRESULT	,
+			</if>
+			<if test="padbj!=null">
+				PADBJ	,
+			</if>
+			<if test="padimg!=null">
+				PADIMG	,
+			</if>
+			<if test="haiermail!=null">
+				HAIERMAIL	,
+			</if>
+			<if test="qykid!=null">
+				QYKID	,
+			</if>
+			<if test="hyzc!=null">
+				HYZC	,
+			</if>
+			<if test="mdid!=null">
+				MDID	,
+			</if>
+			<if test="mdname!=null">
+				MDNAME	,
+			</if>
+			<if test="telephone!=null">
+				TELEPHONE	,
+			</if>
+			<if test="lrfs!=null">
+				LRFS	,
+			</if>
+			<if test="reportType!=null">
+				REPORT_TYPE	,
+			</if>
+			<if test="synchronousState!=null">
+				SYNCHRONOUS_STATE	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="customerIdno!=null">
+				CUSTOMER_IDNO	,
+			</if>
+			<if test="customerBirthday!=null">
+				CUSTOMER_BIRTHDAY	,
+			</if>
+			<if test="customerFeatures!=null">
+				CUSTOMER_FEATURES	,
+			</if>
+			<if test="remark!=null">
+				REMARK	,
+			</if>
+			<if test="synchronousResult!=null">
+				SYNCHRONOUS_RESULT	,
+			</if>
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="shareType!=null">
+				SHARE_TYPE		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="ygid!=null">
+				#{ygid}	,
+			</if>
+			<if test="gjtime!=null">
+				#{gjtime}	,
+			</if>
+			<if test="fpnum!=null">
+				#{fpnum}	,
+			</if>
+			<if test="cpzno!=null">
+				#{cpzno}	,
+			</if>
+			<if test="cpzname!=null">
+				#{cpzname}	,
+			</if>
+			<if test="producttype!=null">
+				#{producttype}	,
+			</if>
+			<if test="product!=null">
+				#{product}	,
+			</if>
+			<if test="counts!=null">
+				#{counts}	,
+			</if>
+			<if test="barcode!=null">
+				#{barcode}	,
+			</if>
+			<if test="price!=null">
+				#{price}	,
+			</if>
+			<if test="newprice!=null">
+				#{newprice}	,
+			</if>
+			<if test="present!=null">
+				#{present}	,
+			</if>
+			<if test="presentnum!=null">
+				#{presentnum}	,
+			</if>
+			<if test="isyj!=null">
+				#{isyj}	,
+			</if>
+			<if test="yhname!=null">
+				#{yhname}	,
+			</if>
+			<if test="yhphone!=null">
+				#{yhphone}	,
+			</if>
+			<if test="shaddress!=null">
+				#{shaddress}	,
+			</if>
+			<if test="hishfresult!=null">
+				#{hishfresult}	,
+			</if>
+			<if test="padbj!=null">
+				#{padbj}	,
+			</if>
+			<if test="padimg!=null">
+				#{padimg}	,
+			</if>
+			<if test="haiermail!=null">
+				#{haiermail}	,
+			</if>
+			<if test="qykid!=null">
+				#{qykid}	,
+			</if>
+			<if test="hyzc!=null">
+				#{hyzc}	,
+			</if>
+			<if test="mdid!=null">
+				#{mdid}	,
+			</if>
+			<if test="mdname!=null">
+				#{mdname}	,
+			</if>
+			<if test="telephone!=null">
+				#{telephone}	,
+			</if>
+			<if test="lrfs!=null">
+				#{lrfs}	,
+			</if>
+			<if test="reportType!=null">
+				#{reportType}	,
+			</if>
+			<if test="synchronousState!=null">
+				#{synchronousState}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="customerIdno!=null">
+				#{customerIdno}	,
+			</if>
+			<if test="customerBirthday!=null">
+				#{customerBirthday}	,
+			</if>
+			<if test="customerFeatures!=null">
+				#{customerFeatures}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}	,
+			</if>
+			<if test="synchronousResult!=null">
+				#{synchronousResult}	,
+			</if>
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="shareType!=null">
+				#{shareType}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.retail.reportsales.domain.ReportsalesDomain">
+		update isales_app.t_isales_sales_diary
+		<set>
+			YGID = #{ygid},
+			GJTIME = #{gjtime},
+			FPNUM = #{fpnum},
+			CPZNO = #{cpzno},
+			CPZNAME = #{cpzname},
+			PRODUCTTYPE = #{producttype},
+			PRODUCT = #{product},
+			COUNTS = #{counts},
+			BARCODE = #{barcode},
+			PRICE = #{price},
+			NEWPRICE = #{newprice},
+			PRESENT = #{present},
+			PRESENTNUM = #{presentnum},
+			ISYJ = #{isyj},
+			YHNAME = #{yhname},
+			YHPHONE = #{yhphone},
+			SHADDRESS = #{shaddress},
+			HISHFRESULT = #{hishfresult},
+			PADBJ = #{padbj},
+			PADIMG = #{padimg},
+			HAIERMAIL = #{haiermail},
+			QYKID = #{qykid},
+			HYZC = #{hyzc},
+			MDID = #{mdid},
+			MDNAME = #{mdname},
+			TELEPHONE = #{telephone},
+			LRFS = #{lrfs},
+			REPORT_TYPE = #{reportType},
+			SYNCHRONOUS_STATE = #{synchronousState},
+			UPDATE_TIME = #{updateTime},
+			CREATE_TIME = #{createTime},
+			CUSTOMER_IDNO = #{customerIdno},
+			CUSTOMER_BIRTHDAY = #{customerBirthday},
+			CUSTOMER_FEATURES = #{customerFeatures},
+			REMARK = #{remark},
+			SYNCHRONOUS_RESULT = #{synchronousResult},
+			OPERATOR_ID = #{operatorId},
+			SHARE_TYPE = #{shareType},
+			STATUS = #{status},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_sales_diary 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ReportsalesResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_sales_diary
+		where 1=1
+		<include refid="searchConditions"/>
+		ORDER BY date_format(GJTIME,'%Y-%m-%d') desc,CREATE_TIME desc,ID desc
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_sales_diary
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

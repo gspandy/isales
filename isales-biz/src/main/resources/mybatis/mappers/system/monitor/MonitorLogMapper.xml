@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.system.monitor.dao.SysMonitorLogDao">
+	<sql id="pagination_Head" >
+		<![CDATA[select * from ( select row_.*, rownum rownum_ from ( ]]>
+	</sql>
+	 <!-- oracle 分页尾 -->
+	<sql id="pagination_Tail">
+	  <![CDATA[) row_ where rownum <= #{pager.pageSize} * #{pager.currentPage} ) where rownum_ >= #{pager.firstResult} + 1]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+		<![CDATA[select count(*) from ( ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+		<![CDATA[)]]>
+	</sql>
+	<resultMap id="monitorLogMap" type="com.haier.isales.system.monitor.domain.SysMonitorLog">
+		<id property="logId" column="id" javaType="Long" jdbcType="BIGINT" />
+		<result property="userId" column="user_id" jdbcType="BIGINT"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="userInfoJson" column="user_info_json" jdbcType="VARCHAR" />
+		<result property="userIp" column="user_ip" jdbcType="VARCHAR" />
+		<result property="operateDate" column="OPERATE_DATE" jdbcType="TIMESTAMP"/>
+		<result property="operateType" column="OPERATE_TYPE" jdbcType="VARCHAR" />
+		<result property="operationId" column="OPERATION_ID" jdbcType="VARCHAR" />
+		<result property="operationName" column="OPERATION_NAME" jdbcType="VARCHAR" />
+		<result property="executeClass" column="execute_class" jdbcType="VARCHAR" />
+		<result property="executeFunction" column="execute_function" jdbcType="VARCHAR" />
+		<result property="executeParamsJson" column="execute_Params_json" jdbcType="VARCHAR" />
+		<result property="orgCode" column="REMARK" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="selectAllColumn">
+		select t.id,
+		       t.user_id,
+		       t.user_name,
+		       t.user_info_json,
+		       t.user_ip,
+		       t.OPERATE_DATE,
+		       t.OPERATE_TYPE,
+		       t.OPERATION_ID,
+		       t.OPERATION_NAME,
+		       t.execute_class,
+		       t.execute_function,
+		       t.execute_Params_json,
+		       t.REMARK
+	</sql>
+	
+	<!-- 根据条件查询日志-->
+	<select id="getLogByParam" parameterType="com.haier.isales.system.monitor.domain.SysMonitorLog" 
+		resultMap="monitorLogMap">
+		<include refid="selectAllColumn"/>
+		<![CDATA[
+			  from isales_sys.t_sys_monitor_log t
+			  where 1=1 
+		]]>
+	</select>
+	
+	<select id="getToalNumbers" resultType="long">
+		select count(*) from t_sys_monitor_log where 1=1
+	</select>
+	
+	
+	<!-- 添加日志-->
+	<insert id="addMonitorLog" parameterType="com.haier.isales.system.monitor.domain.SysMonitorLog">
+		<![CDATA[
+		insert into isales_sys.t_sys_monitor_log
+		  (
+		       user_id,
+		       user_name,
+		       user_info_json,
+		       user_ip,
+		       OPERATE_DATE,
+		       OPERATE_TYPE,
+		       OPERATION_ID,
+		       OPERATION_NAME,
+		       execute_class,
+		       execute_function,
+		       execute_Params_json,
+		       REMARK
+		   )
+		values
+		  (
+		  	#{userId},
+			#{userName},
+			#{userInfoJson},
+			#{userIp},
+			#{operateDate},
+			#{operateType},
+			#{operationId},
+			#{operationName},
+			#{executeClass},
+			#{executeFunction},
+			#{executeParamsJson},
+			#{remark} 
+		 )
+		]]>
+	</insert>
+	
+</mapper>

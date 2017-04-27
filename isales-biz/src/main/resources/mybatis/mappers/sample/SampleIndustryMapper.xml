@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.sample.sampleindustry.dao.SampleIndustryDAO">
+	<!-- 根据参数查询查询所有的对象内容 -->
+	<select id="searchIndustryByProductId" resultMap="SampleIndustryResultMap" 
+		parameterType="com.haier.isales.sample.sampleindustry.domain.SampleIndustryDomain">
+		select id, industry_code, industry_name, product_id, product_name
+		from isales_app.t_isales_sample_pro_line
+		where 1=1
+		<if test="productId != null and productId != ''">
+			and product_id = #{productId}
+		</if>
+		<if test="industryCode != null and industryCode != ''">
+			and industry_code = #{industryCode}
+		</if>
+		
+		order by industry_code
+	</select>
+</mapper>

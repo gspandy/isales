@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.retail.dao.RetaiStructurelDAO">
+
+	<resultMap id="retailStructureDTOResultMap" type="retailStructureDTO">
+		<result column="months" property="months" jdbcType="VARCHAR" />
+		<result column="shop_code" property="shopId" jdbcType="VARCHAR" />
+		<result column="proline_code" property="proLineId" jdbcType="VARCHAR" />
+		<result column="prod_code" property="prodCode" jdbcType="VARCHAR" />
+		<result column="prod_name" property="prodName" jdbcType="VARCHAR" />
+		<result column="qty" property="qty" jdbcType="VARCHAR" />
+		<result column="tc" property="tc" jdbcType="VARCHAR" />
+		<result column="structionType" property="structionType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 月销量、月累计(个人)提成、月销额 详情 -->
+	<select id="findShopBtbRetailStructure" resultMap="retailStructureDTOResultMap" parameterType="retailStructureDTO">
+		SELECT months, shop_code, proline_code, proline_name, 
+		IFNULL(qty,0) AS qty, IFNULL(tc,0) AS tc,structionType
+		from isales_app.t_isales_btb_sjcj_structure br
+				where 1 = 1
+		<if
+			test="model.months != null and model.months != ''">
+			<![CDATA[
+				and br.months = #{model.months}
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and br.shop_code = #{model.shopId}
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and br.proline_code = #{model.proLineId}
+		</if>
+	</select>
+</mapper>

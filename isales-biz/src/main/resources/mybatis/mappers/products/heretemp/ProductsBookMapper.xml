@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.heretemp.productsbook.dao.ProductsBookDAO">
+
+	<insert id="saveAllProductsBook">
+		INSERT INTO isales_temp.t_isales_products_book_temp
+		(
+			metadataid,
+			bookmetadataid,
+			dfilepath,
+			gname,
+			gfile,
+			remark
+		)
+		VALUES
+		<foreach item="item" index="index" collection="list" separator=",">
+			(
+			#{item.metadataid} ,
+			#{item.bookmetadataid} ,
+			#{item.dfilepath} ,
+			#{item.gname} ,
+			#{item.gfile} ,
+			#{item.remark}
+			)
+		</foreach>
+	</insert>
+	
+	<delete id="deleteAllProductsBook">
+	delete from isales_temp.t_isales_products_book_temp
+	</delete>
+</mapper>

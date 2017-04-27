@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">isales_sys</property>
+		<property name="name">t_idm_user_addr</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_sys</property>
+		<property name="name">t_sys_user</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="Usercode" dest="user_code" type="String" />
+		<mapping source="Fullname" dest="user_name" type="String" />
+		<mapping source="Usermail" dest="user_mail" type="String" />
+		<mapping source="HaierUserDeptCode" dest="user_dept_code" type="String" />
+		<mapping source="Phone" dest="phone" type="String" />
+		<mapping source="Mobile" dest="mobile" type="String" />
+		<mapping source="UserOU" dest="user_ou" type="String" />
+	</mappings>
+	<where>
+		<source>
+			UserState = '1'
+		</source>
+	</where>
+	<procedures>
+		<procedure name="p_updatedata_from_sys_user" />
+	</procedures>
+</transform>

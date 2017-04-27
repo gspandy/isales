@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.dao.DailyAttendanceDAO">
+	<resultMap id="attendanceTypeResultMap" type="com.haier.isales.dailymgt.domain.AttendanceTypeDomain">
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="sign_status" property="signStatus"  jdbcType="VARCHAR"  />
+		<result column="sign_date" property="signDate"  jdbcType="VARCHAR"  />
+		<result column="sign_in_time" property="signInTime"  jdbcType="TIMESTAMP"  />
+		<result column="sign_out_time" property="signOutTime"  jdbcType="TIMESTAMP"  />
+		<result column="work_time" property="workTime"  jdbcType="BIGINT"  />
+	</resultMap>
+	
+	<!-- 根据用户ID + 时间 按天获取签到&签退条数 -->
+	<select id="checkIsAttendanced" resultType="integer" >
+		select count(distinct type) 
+		from isales_app.t_isales_dailymgt_attendance_${tableNameSuffix}
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(sign_time,'%Y-%m-%d')= DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and status = '101'
+	</select>
+	
+	<!-- 根据用户ID + 时间 + 类型  按天获取签到&签退条数 -->
+	<select id="checkIsAttendancedByType" resultType="integer" >
+		select count(distinct type) 
+		from isales_app.t_isales_dailymgt_attendance
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(sign_time,'%Y-%m-%d')= DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and type=#{signType}
+		and status = '101'
+	</select>
+	
+	<!-- 根据用户ID + 时间  获取当天签到时间 -->
+	<select id="findSignIn" resultMap="DailyAttendanceResultMap" >
+		select sign_time 
+		from isales_app.t_isales_dailymgt_attendance_${tableNameSuffix}
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(sign_time,'%Y-%m-%d')= DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and type= '101'
+		and status = '101'
+		order by id 
+		limit 0,1
+	</select>
+	
+	<!-- 根据用户ID + 时间 获取当天签退时间 -->
+	<select id="findDuration" resultMap="DailyAttendanceResultMap" >
+		select duration 
+		from isales_app.t_isales_dailymgt_attendance_${tableNameSuffix}
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(sign_time,'%Y-%m-%d')= DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and type= '102'
+		and status = '101'
+		order by id desc
+		limit 0,1
+	</select>
+	
+	<!-- 根据用户ID + 时间获取签到 状态 -->
+	<select id="findAttendStatus" resultMap="attendanceTypeResultMap" >
+		SELECT max(da.operator_id) AS operator_id
+		     , max(da.user_code) AS user_code
+		     , max(da.user_name) AS user_name
+		     , (
+		          case when (min(da.type) = '101' and max(da.type)='102') then '101'
+		          when (min(da.type) = '101' and max(da.type) = '101') then '102'
+		           else '110'
+		            end
+		      ) as sign_status
+		     , date_format(da.sign_time,'%Y-%m-%d') as sign_date
+		FROM
+		  isales_app.t_isales_dailymgt_attendance_${tableNameSuffix} da
+		  where 1 = 1 
+		  and da.status = '101'
+		  <if test="operatorId!=null and operatorId != '' ">
+		  	  and da.operator_id = #{operatorId}
+		  </if>
+		  <if test="signDate !=null and signDate != '' ">
+			  and date_format(da.sign_time,'%Y-%m') = #{signDate}
+		  </if>
+		  group by date_format(da.sign_time,'%Y-%m-%d')
+		  order by date_format(da.sign_time,'%Y-%m-%d') asc,da.operator_id asc
+	</select>
+	<!-- 根据用户ID + 日期  获取签到 状态 -->
+	<select id="findDailyAttendStatus" resultMap="attendanceTypeResultMap" >
+		<![CDATA[  SELECT max(da.operator_id) AS operator_id
+		     , max(da.user_code) AS user_code
+		     , max(da.user_name) AS user_name
+		     , (
+		          case when (MIN(da.type) = '101' and max(da.type)='102') then '101'
+		          when (MIN(da.type) = '101' and max(da.type) = '101') then '102'
+		           else '110'
+		            end
+		      ) as sign_status
+		     , date_format(da.sign_time,'%Y-%m-%d') as sign_date
+		     , (
+		          case when  (MIN(da.type) = '101')  then MIN(da.sign_time)
+		           else null
+		            end
+		      )  as sign_in_time
+		     , (
+		          case when MIN(da.sign_time) < max(da.sign_time)
+                        and (MIN(da.type) = '101' and max(da.type)='102')  then max(da.sign_time)
+		           else null
+		            end
+		      ) as sign_out_time
+		FROM
+		  isales_app.t_isales_dailymgt_attendance_${tableNameSuffix} da
+		  where 1 = 1 
+		  and da.status = '101'
+		 ]]>  
+		  <if test="operatorId!=null and operatorId != '' ">
+		  	  and da.operator_id = #{operatorId}
+		  </if>
+		  <if test="signDate !=null and signDate != '' ">
+			  and date_format(da.sign_time,'%Y-%m-%d') = #{signDate}
+		  </if>
+		  group by date_format(da.sign_time,'%Y-%m-%d')
+		  order by date_format(da.sign_time,'%Y-%m-%d') asc,da.operator_id asc
+	</select>
+	
+	
+	<!-- 实体的保存法方法 -按中心分表 -->
+	<insert id="saveWithTableNameSuffix" parameterType="com.haier.isales.dailymgt.domain.DailyAttendanceDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_dailymgt_attendance_${userOrgCode}	
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userName!=null">
+				USER_NAME	,
+			</if>
+			<if test="shopCode!=null">
+				SHOP_CODE	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="type!=null">
+				TYPE	,
+			</if>
+			<if test="signTime!=null">
+				SIGN_TIME	,
+			</if>
+			<if test="signAddress!=null">
+				SIGN_ADDRESS	,
+			</if>
+			<if test="signLongitude!=null">
+				SIGN_LONGITUDE	,
+			</if>
+			<if test="signLatitude!=null">
+				SIGN_LATITUDE	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="createId!=null">
+				CREATE_ID	,
+			</if>
+			<if test="createName!=null">
+				CREATE_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="updateId!=null">
+				UPDATE_ID	,
+			</if>
+			<if test="updateName!=null">
+				UPDATE_NAME	,
+			</if>
+			<if test="duration!=null">
+				duration	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userName!=null">
+				#{userName}	,
+			</if>
+			<if test="shopCode!=null">
+				#{shopCode}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="type!=null">
+				#{type}	,
+			</if>
+			<if test="signTime!=null">
+				#{signTime}	,
+			</if>
+			<if test="signAddress!=null">
+				#{signAddress}	,
+			</if>
+			<if test="signLongitude!=null">
+				#{signLongitude}	,
+			</if>
+			<if test="signLatitude!=null">
+				#{signLatitude}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="createId!=null">
+				#{createId}	,
+			</if>
+			<if test="createName!=null">
+				#{createName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="updateId!=null">
+				#{updateId}	,
+			</if>
+			<if test="updateName!=null">
+				#{updateName}	,
+			</if>
+			<if test="duration!=null">
+				#{duration}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>

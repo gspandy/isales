@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.moments.dao.MomentsLikeRecordDAO">
+	
+	<!-- 实体的更新方法；取消点赞，将原来赞过的记录更改状态 -->
+	<update id="updateToDislike" parameterType="com.haier.isales.moments.domain.MomentsLikeRecordDomain">
+		update isales_app.t_isales_moments_like_record
+		<set>
+			STATUS = #{status},
+			UPDATE_TIME = #{updateTime},
+		</set>
+		where MOMENTS_ID = #{momentsId}
+		and OPERATOR_ID = #{operatorId}
+		and STATUS = #{status}
+	</update>
+	
+</mapper>

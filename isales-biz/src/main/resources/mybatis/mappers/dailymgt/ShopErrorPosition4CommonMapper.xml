@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.shoperrorposition.dao.ShopErrorPositionDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ShopErrorPositionResultMap" type="com.haier.isales.dailymgt.shoperrorposition.domain.ShopErrorPositionDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="shop_code" property="shopCode"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="current_longitude" property="currentLongitude"  jdbcType="VARCHAR"  />
+		<result column="current_latitude" property="currentLatitude"  jdbcType="VARCHAR"  />
+		<result column="shop_longitude" property="shopLongitude"  jdbcType="VARCHAR"  />
+		<result column="shop_latitude" property="shopLatitude"  jdbcType="VARCHAR"  />
+		<result column="error_distance" property="errorDistance"  jdbcType="VARCHAR"  />
+		<result column="shop_address" property="shopAddress"  jdbcType="VARCHAR"  />
+		<result column="execute_result" property="executeResult"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	SHOP_CODE	,
+	SHOP_NAME	,
+	CURRENT_LONGITUDE	,
+	CURRENT_LATITUDE	,
+	SHOP_LONGITUDE	,
+	SHOP_LATITUDE	,
+	ERROR_DISTANCE	,
+	SHOP_ADDRESS	,
+	EXECUTE_RESULT	,
+	CREATE_TIME	,
+	OPERATOR_ID	,
+	USER_CODE	,
+	USER_NAME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.shopCode!=null">and shop_code like CONCAT('%',#{entity.shopCode},'%')</if>
+		<if test="entity.shopName!=null">and shop_name like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.currentLongitude!=null">and current_longitude like CONCAT('%',#{entity.currentLongitude},'%')</if>
+		<if test="entity.currentLatitude!=null">and current_latitude like CONCAT('%',#{entity.currentLatitude},'%')</if>
+		<if test="entity.shopLongitude!=null">and shop_longitude like CONCAT('%',#{entity.shopLongitude},'%')</if>
+		<if test="entity.shopLatitude!=null">and shop_latitude like CONCAT('%',#{entity.shopLatitude},'%')</if>
+		<if test="entity.errorDistance!=null">and error_distance like CONCAT('%',#{entity.errorDistance},'%')</if>
+		<if test="entity.shopAddress!=null">and shop_address like CONCAT('%',#{entity.shopAddress},'%')</if>
+		<if test="entity.executeResult!=null">and execute_result like CONCAT('%',#{entity.executeResult},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.userName!=null">and user_name like CONCAT('%',#{entity.userName},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ShopErrorPositionResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop_error_position
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_shop_error_position
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.dailymgt.shoperrorposition.domain.ShopErrorPositionDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_shop_error_position
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="shopCode!=null">
+				SHOP_CODE	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="currentLongitude!=null">
+				CURRENT_LONGITUDE	,
+			</if>
+			<if test="currentLatitude!=null">
+				CURRENT_LATITUDE	,
+			</if>
+			<if test="shopLongitude!=null">
+				SHOP_LONGITUDE	,
+			</if>
+			<if test="shopLatitude!=null">
+				SHOP_LATITUDE	,
+			</if>
+			<if test="errorDistance!=null">
+				ERROR_DISTANCE	,
+			</if>
+			<if test="shopAddress!=null">
+				SHOP_ADDRESS	,
+			</if>
+			<if test="executeResult!=null">
+				EXECUTE_RESULT	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userName!=null">
+				USER_NAME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="shopCode!=null">
+				#{shopCode}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="currentLongitude!=null">
+				#{currentLongitude}	,
+			</if>
+			<if test="currentLatitude!=null">
+				#{currentLatitude}	,
+			</if>
+			<if test="shopLongitude!=null">
+				#{shopLongitude}	,
+			</if>
+			<if test="shopLatitude!=null">
+				#{shopLatitude}	,
+			</if>
+			<if test="errorDistance!=null">
+				#{errorDistance}	,
+			</if>
+			<if test="shopAddress!=null">
+				#{shopAddress}	,
+			</if>
+			<if test="executeResult!=null">
+				#{executeResult}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userName!=null">
+				#{userName}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.dailymgt.shoperrorposition.domain.ShopErrorPositionDomain">
+		update isales_app.t_isales_shop_error_position
+		<set>
+			SHOP_CODE = #{shopCode},
+			SHOP_NAME = #{shopName},
+			CURRENT_LONGITUDE = #{currentLongitude},
+			CURRENT_LATITUDE = #{currentLatitude},
+			SHOP_LONGITUDE = #{shopLongitude},
+			SHOP_LATITUDE = #{shopLatitude},
+			ERROR_DISTANCE = #{errorDistance},
+			SHOP_ADDRESS = #{shopAddress},
+			EXECUTE_RESULT = #{executeResult},
+			CREATE_TIME = #{createTime},
+			OPERATOR_ID = #{operatorId},
+			USER_CODE = #{userCode},
+			USER_NAME = #{userName},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_shop_error_position 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ShopErrorPositionResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop_error_position
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_shop_error_position
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+	
+	<!-- 一个小时之内是否有提交-->
+	<select id="findInLastHour" resultType="integer" >
+		SELECT count(1)
+		FROM isales_app.t_isales_shop_error_position
+		WHERE 1 = 1
+  		AND create_time > date_sub(now(), INTERVAL 1 HOUR)
+  		AND user_code = #{userCode}
+	</select>
+	
+</mapper>

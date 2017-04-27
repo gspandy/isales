@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="5000" trancateTable="true" batchSize="5000" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">V_BTB_USER_ZCL</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_zzjyt_regist_rate_verified_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="MONTHS" dest="MONTH" type="String" />
+		<mapping source="FZXID" dest="FZXID" type="String" />
+		<mapping source="FZXNAME" dest="FZXNAME" type="String" />
+		<mapping source="MDID" dest="MDID" type="String" />
+		<mapping source="MDNAME" dest="MDNAME" type="String" />
+		<mapping source="CPXID" dest="CPXID" type="String" />
+		<mapping source="CPXNAME" dest="CPXNAME" type="String" />
+		<mapping source="XL" dest="XL" type="String" />
+		<mapping source="ZCS" dest="ZCS" type="String" />
+		<mapping source="RATE" dest="RATE" type="String" />
+	</mappings>
+
+	<procedures>
+		<procedure name="p_insertdata_from_regist_rate_verified" />
+	</procedures> 
+</transform>

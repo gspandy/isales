@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="false" batchSize="500" stageCommint="false">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">isales_sys</property>
+		<property name="name">t_sys_login_behaviour</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_sys_login_behaviour_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="ID" dest="ID" type="String" />
+		<mapping source="user_id" dest="user_id" type="String" />
+		<mapping source="login_name" dest="login_name" type="String" />
+		<mapping source="session_id" dest="session_id" type="String" />
+		<mapping source="LOGIN_TIME" dest="LOGIN_TIME" type="String" />
+		<mapping source="USER_IP" dest="USER_IP" type="String" />
+		<mapping source="USER_DEVICE" dest="USER_DEVICE" type="String" />
+		<mapping source="client_mac" dest="client_mac" type="String" />
+		<mapping source="client_type" dest="client_type" type="String" />
+		<mapping source="client_version" dest="client_version" type="String" />
+		<mapping source="client_os_type" dest="client_os_type" type="String" />
+		<mapping source="client_os_version" dest="client_os_version" type="String" />
+		<mapping source="ONLINE_TIME" dest="ONLINE_TIME" type="String" />
+		<mapping source="LOGOUT_TIME" dest="LOGOUT_TIME" type="String" />
+		<mapping source="LOGOUT_TYPE" dest="LOGOUT_TYPE" type="String" />
+		<mapping source="client_info" dest="client_info" type="String" />
+		<mapping source="REMARK" dest="remark" type="String" />
+	</mappings>
+	<where>
+		<source>
+			date_format(LOGIN_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW() - interval 1 day,'%Y-%m-%d') 
+		</source>
+	</where>
+	<procedures>
+<!-- 		<procedure name="p_insertdata_from_temp_emp" /> -->
+	</procedures>
+</transform>

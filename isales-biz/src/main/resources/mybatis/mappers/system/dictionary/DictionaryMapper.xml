@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.system.dictionary.dao.DictionaryDAO">
+	<!-- mysql 分页尾 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+		<![CDATA[select count(*) from ( ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+		<![CDATA[) count_]]>
+	</sql>
+	
+	<resultMap id="businTypeMapper" type="dictionaryType">
+		<id property="busintypeId" column="BUSINTYPE_ID" />
+		<result property="saveFileName" column="BUSINTYPE_NAME"/>
+	</resultMap>
+	
+	<resultMap id="dictionaryMapper" type="dictionary">
+		<id property="dictionaryPK.businTypeId" column="BUSINTYPE_ID" />
+		<id property="dictionaryPK.businId" column="BUSIN_ID"/>
+		<result property="businTypeName" column="BUSINTYPE_NAME"/>
+		<result property="businName" column="BUSIN_NAME"/>
+		<result property="privilege" column="privilege"/>
+		<result property="status" column="status"/>
+		<result property="keyword" column="keyword"/>
+	</resultMap>
+	
+	
+	
+	<!-- 根据字典组编号查询所有字典项 -->
+	<select id="findByBusinTypeId" parameterType="String" resultMap="dictionaryMapper">
+		<![CDATA[
+			  select * 
+			  from isales_sys.t_qn_dictionary d
+			  where d.BUSINTYPE_ID = #{businTypeId}
+			  and d.status='1'
+			  order by d.privilege
+		]]>
+	</select>
+	<!-- 根据字典组编号查询所有字典项编号 -->
+	<select id="findBusinIdsByBusinTypeId" parameterType="String" resultType="String">
+		<![CDATA[
+			  select d.BUSIN_ID
+			  from isales_sys.t_qn_dictionary d 
+			  where 1= 1
+			  and d.BUSINTYPE_ID = #{businTypeId}
+			  and d.status='1'
+		]]>
+	</select>
+	
+	<!-- 根据字典组编号和字典项名称查询所有字典项 -->
+	<select id="findDictionaryByTypeIdBusinName" parameterType="String" resultMap="dictionaryMapper">
+		<![CDATA[
+			  select * 
+			  from isales_sys.t_qn_dictionary d
+			  where d.BUSINTYPE_ID = #{businTypeId}
+			  and d.BUSIN_NAME = #{businName}
+		]]>
+	</select>
+	<!-- 根据字典组id和字典项id查询所有字典项 -->
+	<select id="findDictionaryByTypeIdBusinId" parameterType="String" resultMap="dictionaryMapper">
+		<![CDATA[
+			  select * 
+			  from isales_sys.t_qn_dictionary d
+			  where d.BUSINTYPE_ID = #{businTypeId}
+			  and d.BUSIN_ID = #{businId}
+		]]>
+	</select>
+	
+	<!-- 新增文件 -->
+	<insert id="save" parameterType="uploadFile">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			SELECT SEQ_UPLOAD_FILE_ID.NEXTVAL AS ID FROM DUAL 
+		</selectKey>
+		<![CDATA[
+		insert into upload_file
+		  (id,
+		   file_name,
+		   save_file_name,
+		   file_path_1,
+		   file_path_2,
+		   status,
+		   type,
+		   remarks,
+		   last_upd_by,
+		   last_upd_dt,
+		   created_by,
+		   created_dt)
+		values
+		  (#{id},
+		   #{fileName},
+		   #{saveFileName},
+		   #{filePath1},
+		   #{filePath2},
+		   #{status},
+		   #{type},
+		   #{remarks},
+		   #{lastModifiedBy},
+		   sysdate,
+		   #{createBy},
+		   sysdate)
+		]]>
+	</insert>
+	
+	<!-- 更行信息 -->
+	<update id="update" parameterType="uploadFile">
+		<![CDATA[
+		update upload_file
+		   set file_name             = #{fileName},
+		       save_file_name        = #{saveFileName},
+		       file_path_1           = #{filePath1},
+		       file_path_2           = #{filePath2},
+		       status                = #{status},
+		       type                  = #{type},
+		       remarks               = #{remarks},
+		       last_upd_by           = #{lastModifiedBy},
+		       last_upd_dt           = sysdate
+		 where id = #{id}
+		]]>
+	</update>
+</mapper>

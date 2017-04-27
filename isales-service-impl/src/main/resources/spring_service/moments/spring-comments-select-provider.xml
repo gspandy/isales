@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+ 	<!-- 使用dubbo协议暴露服务 -->
+ 	
+ 	<!-- 朋友圈评论、赞、踩等信息查询的dubbo -->
+    <bean id="commentsSelectClient" class="com.haier.isales.moments.service.impl.CommentsClientImpl">
+   		 <property name="commentsService" ref="commentsService" /> 
+    </bean>  
+    <dubbo:service interface="com.haier.isales.moments.service.CommentsSelectClient" owner="isales" ref="commentsSelectClient" version="${project.version}"  protocol="dubbo" delay="-1" registry="isalesRegistry"/>
+
+</beans>

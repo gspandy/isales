@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.SurveyQuestionDAO">
+	<!-- 根据工号、姓名、手机、固话获取用户信息  如果没有查询条件暂定100条记录 -->
+	<select id="findSurveyQuestionList" resultMap="SurveyQuestionResultMap">
+		select a.research_id, a.title, a.content, a.url, b.create_time
+		from isales_app.t_survey_question a LEFT JOIN isales_app.t_survey_user_ref b
+			on a.research_id = b.research_id
+		where 1=1
+		 and b.status = '1'
+		<if test="queryDTO.userCode!=null">
+			and b.user_code = #{queryDTO.userCode}
+		</if>
+		order by b.create_time
+		<!-- <if test="entity.userName!=null and entity.userName != ''">
+			and user_name like CONCAT('%',#{entity.userName},'%')
+		</if>
+		<if test="entity.phone!=null and entity.phone != ''">
+			and phone like CONCAT('%',#{entity.phone},'%')
+		</if>
+		<if test="entity.mobile!=null and entity.mobile != ''">
+			and mobile like CONCAT('%',#{entity.mobile},'%')
+		</if> -->
+		
+	</select>
+	
+</mapper>

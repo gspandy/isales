@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.mdmhandler.dao.MdmHandlerDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="MdmHandlerResultMap" type="com.haier.isales.app.mdmhandler.domain.MdmHandlerDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="row_id" property="rowId"  jdbcType="VARCHAR"  />
+		<result column="rn" property="rn"  jdbcType="VARCHAR"  />
+		<result column="org_no" property="orgNo"  jdbcType="VARCHAR"  />
+		<result column="bind_id" property="bindId"  jdbcType="VARCHAR"  />
+		<result column="create_date" property="createDate"  jdbcType="VARCHAR"  />
+		<result column="create_user" property="createUser"  jdbcType="VARCHAR"  />
+		<result column="update_date" property="updateDate"  jdbcType="VARCHAR"  />
+		<result column="update_user" property="updateUser"  jdbcType="VARCHAR"  />
+		<result column="work_flow_id" property="workFlowId"  jdbcType="VARCHAR"  />
+		<result column="work_flow_step_id" property="workFlowStepId"  jdbcType="VARCHAR"  />
+		<result column="is_end" property="isEnd"  jdbcType="VARCHAR"  />
+		<result column="trade_code" property="tradeCode"  jdbcType="VARCHAR"  />
+		<result column="trade_name" property="tradeName"  jdbcType="VARCHAR"  />
+		<result column="cust_row_id" property="custRowId"  jdbcType="VARCHAR"  />
+		<result column="customer_code" property="customerCode"  jdbcType="VARCHAR"  />
+		<result column="customer_name1" property="customerName1"  jdbcType="VARCHAR"  />
+		<result column="customer_category" property="customerCategory"  jdbcType="VARCHAR"  />
+		<result column="industry_class" property="industryClass"  jdbcType="VARCHAR"  />
+		<result column="customer_number_sh" property="customerNumberSh"  jdbcType="VARCHAR"  />
+		<result column="sub_customer_name1" property="subCustomerName1"  jdbcType="VARCHAR"  />
+		<result column="first_area_code" property="firstAreaCode"  jdbcType="VARCHAR"  />
+		<result column="first_area_name" property="firstAreaName"  jdbcType="VARCHAR"  />
+		<result column="branch_company_code" property="branchCompanyCode"  jdbcType="VARCHAR"  />
+		<result column="branch_company_name" property="branchCompanyName"  jdbcType="VARCHAR"  />
+		<result column="branch_code" property="branchCode"  jdbcType="VARCHAR"  />
+		<result column="smb_manager" property="smbManager"  jdbcType="VARCHAR"  />
+		<result column="smb_manager_name" property="smbManagerName"  jdbcType="VARCHAR"  />
+		<result column="last_upd" property="lastUpd"  jdbcType="VARCHAR"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	ROW_ID	,
+	RN	,
+	ORG_NO	,
+	BIND_ID	,
+	CREATE_DATE	,
+	CREATE_USER	,
+	UPDATE_DATE	,
+	UPDATE_USER	,
+	WORK_FLOW_ID	,
+	WORK_FLOW_STEP_ID	,
+	IS_END	,
+	TRADE_CODE	,
+	TRADE_NAME	,
+	CUST_ROW_ID	,
+	CUSTOMER_CODE	,
+	CUSTOMER_NAME1	,
+	CUSTOMER_CATEGORY	,
+	INDUSTRY_CLASS	,
+	CUSTOMER_NUMBER_SH	,
+	SUB_CUSTOMER_NAME1	,
+	FIRST_AREA_CODE	,
+	FIRST_AREA_NAME	,
+	BRANCH_COMPANY_CODE	,
+	BRANCH_COMPANY_NAME	,
+	BRANCH_CODE	,
+	SMB_MANAGER	,
+	SMB_MANAGER_NAME	,
+	LAST_UPD	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.rowId!=null">and row_id like CONCAT('%',#{entity.rowId},'%')</if>
+		<if test="entity.rn!=null">and rn like CONCAT('%',#{entity.rn},'%')</if>
+		<if test="entity.orgNo!=null">and org_no like CONCAT('%',#{entity.orgNo},'%')</if>
+		<if test="entity.bindId!=null">and bind_id like CONCAT('%',#{entity.bindId},'%')</if>
+		<if test="entity.createDate!=null">and create_date like CONCAT('%',#{entity.createDate},'%')</if>
+		<if test="entity.createUser!=null">and create_user like CONCAT('%',#{entity.createUser},'%')</if>
+		<if test="entity.updateDate!=null">and update_date like CONCAT('%',#{entity.updateDate},'%')</if>
+		<if test="entity.updateUser!=null">and update_user like CONCAT('%',#{entity.updateUser},'%')</if>
+		<if test="entity.workFlowId!=null">and work_flow_id like CONCAT('%',#{entity.workFlowId},'%')</if>
+		<if test="entity.workFlowStepId!=null">and work_flow_step_id like CONCAT('%',#{entity.workFlowStepId},'%')</if>
+		<if test="entity.isEnd!=null">and is_end like CONCAT('%',#{entity.isEnd},'%')</if>
+		<if test="entity.tradeCode!=null">and trade_code like CONCAT('%',#{entity.tradeCode},'%')</if>
+		<if test="entity.tradeName!=null">and trade_name like CONCAT('%',#{entity.tradeName},'%')</if>
+		<if test="entity.custRowId!=null">and cust_row_id like CONCAT('%',#{entity.custRowId},'%')</if>
+		<if test="entity.customerCode!=null">and customer_code like CONCAT('%',#{entity.customerCode},'%')</if>
+		<if test="entity.customerName1!=null">and customer_name1 like CONCAT('%',#{entity.customerName1},'%')</if>
+		<if test="entity.customerCategory!=null">and customer_category like CONCAT('%',#{entity.customerCategory},'%')</if>
+		<if test="entity.industryClass!=null">and industry_class like CONCAT('%',#{entity.industryClass},'%')</if>
+		<if test="entity.customerNumberSh!=null">and customer_number_sh like CONCAT('%',#{entity.customerNumberSh},'%')</if>
+		<if test="entity.subCustomerName1!=null">and sub_customer_name1 like CONCAT('%',#{entity.subCustomerName1},'%')</if>
+		<if test="entity.firstAreaCode!=null">and first_area_code like CONCAT('%',#{entity.firstAreaCode},'%')</if>
+		<if test="entity.firstAreaName!=null">and first_area_name like CONCAT('%',#{entity.firstAreaName},'%')</if>
+		<if test="entity.branchCompanyCode!=null">and branch_company_code like CONCAT('%',#{entity.branchCompanyCode},'%')</if>
+		<if test="entity.branchCompanyName!=null">and branch_company_name like CONCAT('%',#{entity.branchCompanyName},'%')</if>
+		<if test="entity.branchCode!=null">and branch_code like CONCAT('%',#{entity.branchCode},'%')</if>
+		<if test="entity.smbManager!=null">and smb_manager like CONCAT('%',#{entity.smbManager},'%')</if>
+		<if test="entity.smbManagerName!=null">and smb_manager_name like CONCAT('%',#{entity.smbManagerName},'%')</if>
+		<if test="entity.lastUpd!=null">and last_upd like CONCAT('%',#{entity.lastUpd},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="MdmHandlerResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_bpm_handler_mdm_temp
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_bpm_handler_mdm_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.app.mdmhandler.domain.MdmHandlerDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_temp.t_isales_bpm_handler_mdm_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				ROW_ID	,
+			</if>
+			<if test="rn!=null">
+				RN	,
+			</if>
+			<if test="orgNo!=null">
+				ORG_NO	,
+			</if>
+			<if test="bindId!=null">
+				BIND_ID	,
+			</if>
+			<if test="createDate!=null">
+				CREATE_DATE	,
+			</if>
+			<if test="createUser!=null">
+				CREATE_USER	,
+			</if>
+			<if test="updateDate!=null">
+				UPDATE_DATE	,
+			</if>
+			<if test="updateUser!=null">
+				UPDATE_USER	,
+			</if>
+			<if test="workFlowId!=null">
+				WORK_FLOW_ID	,
+			</if>
+			<if test="workFlowStepId!=null">
+				WORK_FLOW_STEP_ID	,
+			</if>
+			<if test="isEnd!=null">
+				IS_END	,
+			</if>
+			<if test="tradeCode!=null">
+				TRADE_CODE	,
+			</if>
+			<if test="tradeName!=null">
+				TRADE_NAME	,
+			</if>
+			<if test="custRowId!=null">
+				CUST_ROW_ID	,
+			</if>
+			<if test="customerCode!=null">
+				CUSTOMER_CODE	,
+			</if>
+			<if test="customerName1!=null">
+				CUSTOMER_NAME1	,
+			</if>
+			<if test="customerCategory!=null">
+				CUSTOMER_CATEGORY	,
+			</if>
+			<if test="industryClass!=null">
+				INDUSTRY_CLASS	,
+			</if>
+			<if test="customerNumberSh!=null">
+				CUSTOMER_NUMBER_SH	,
+			</if>
+			<if test="subCustomerName1!=null">
+				SUB_CUSTOMER_NAME1	,
+			</if>
+			<if test="firstAreaCode!=null">
+				FIRST_AREA_CODE	,
+			</if>
+			<if test="firstAreaName!=null">
+				FIRST_AREA_NAME	,
+			</if>
+			<if test="branchCompanyCode!=null">
+				BRANCH_COMPANY_CODE	,
+			</if>
+			<if test="branchCompanyName!=null">
+				BRANCH_COMPANY_NAME	,
+			</if>
+			<if test="branchCode!=null">
+				BRANCH_CODE	,
+			</if>
+			<if test="smbManager!=null">
+				SMB_MANAGER	,
+			</if>
+			<if test="smbManagerName!=null">
+				SMB_MANAGER_NAME	,
+			</if>
+			<if test="lastUpd!=null">
+				LAST_UPD	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				#{rowId}	,
+			</if>
+			<if test="rn!=null">
+				#{rn}	,
+			</if>
+			<if test="orgNo!=null">
+				#{orgNo}	,
+			</if>
+			<if test="bindId!=null">
+				#{bindId}	,
+			</if>
+			<if test="createDate!=null">
+				#{createDate}	,
+			</if>
+			<if test="createUser!=null">
+				#{createUser}	,
+			</if>
+			<if test="updateDate!=null">
+				#{updateDate}	,
+			</if>
+			<if test="updateUser!=null">
+				#{updateUser}	,
+			</if>
+			<if test="workFlowId!=null">
+				#{workFlowId}	,
+			</if>
+			<if test="workFlowStepId!=null">
+				#{workFlowStepId}	,
+			</if>
+			<if test="isEnd!=null">
+				#{isEnd}	,
+			</if>
+			<if test="tradeCode!=null">
+				#{tradeCode}	,
+			</if>
+			<if test="tradeName!=null">
+				#{tradeName}	,
+			</if>
+			<if test="custRowId!=null">
+				#{custRowId}	,
+			</if>
+			<if test="customerCode!=null">
+				#{customerCode}	,
+			</if>
+			<if test="customerName1!=null">
+				#{customerName1}	,
+			</if>
+			<if test="customerCategory!=null">
+				#{customerCategory}	,
+			</if>
+			<if test="industryClass!=null">
+				#{industryClass}	,
+			</if>
+			<if test="customerNumberSh!=null">
+				#{customerNumberSh}	,
+			</if>
+			<if test="subCustomerName1!=null">
+				#{subCustomerName1}	,
+			</if>
+			<if test="firstAreaCode!=null">
+				#{firstAreaCode}	,
+			</if>
+			<if test="firstAreaName!=null">
+				#{firstAreaName}	,
+			</if>
+			<if test="branchCompanyCode!=null">
+				#{branchCompanyCode}	,
+			</if>
+			<if test="branchCompanyName!=null">
+				#{branchCompanyName}	,
+			</if>
+			<if test="branchCode!=null">
+				#{branchCode}	,
+			</if>
+			<if test="smbManager!=null">
+				#{smbManager}	,
+			</if>
+			<if test="smbManagerName!=null">
+				#{smbManagerName}	,
+			</if>
+			<if test="lastUpd!=null">
+				#{lastUpd}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.app.mdmhandler.domain.MdmHandlerDomain">
+		update isales_temp.t_isales_bpm_handler_mdm_temp
+		<set>
+			ROW_ID = #{rowId},
+			RN = #{rn},
+			ORG_NO = #{orgNo},
+			BIND_ID = #{bindId},
+			CREATE_DATE = #{createDate},
+			CREATE_USER = #{createUser},
+			UPDATE_DATE = #{updateDate},
+			UPDATE_USER = #{updateUser},
+			WORK_FLOW_ID = #{workFlowId},
+			WORK_FLOW_STEP_ID = #{workFlowStepId},
+			IS_END = #{isEnd},
+			TRADE_CODE = #{tradeCode},
+			TRADE_NAME = #{tradeName},
+			CUST_ROW_ID = #{custRowId},
+			CUSTOMER_CODE = #{customerCode},
+			CUSTOMER_NAME1 = #{customerName1},
+			CUSTOMER_CATEGORY = #{customerCategory},
+			INDUSTRY_CLASS = #{industryClass},
+			CUSTOMER_NUMBER_SH = #{customerNumberSh},
+			SUB_CUSTOMER_NAME1 = #{subCustomerName1},
+			FIRST_AREA_CODE = #{firstAreaCode},
+			FIRST_AREA_NAME = #{firstAreaName},
+			BRANCH_COMPANY_CODE = #{branchCompanyCode},
+			BRANCH_COMPANY_NAME = #{branchCompanyName},
+			BRANCH_CODE = #{branchCode},
+			SMB_MANAGER = #{smbManager},
+			SMB_MANAGER_NAME = #{smbManagerName},
+			LAST_UPD = #{lastUpd},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_bpm_handler_mdm_temp 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="MdmHandlerResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_bpm_handler_mdm_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_bpm_handler_mdm_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

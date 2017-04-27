@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.basicinfo.shop.dao.ShopDAO">
+	<select id="findPaCodeByShopCode" resultType="String"
+		parameterType="String">
+		select PA_CODE
+		from isales_app.t_isales_shop
+		where shop_code = #{shopCode}
+	</select>
+</mapper>

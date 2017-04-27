@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="false" batchSize="500" stageCommint="false">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">isales_sys</property>
+		<property name="name">t_sys_user_behaviour</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_sys_user_behaviour_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="ID" dest="ID" type="String" />
+		<mapping source="user_id" dest="user_id" type="String" />
+		<mapping source="login_name" dest="login_name" type="String" />
+		<mapping source="OPERATE_DATE" dest="OPERATE_DATE" type="String" />
+		<mapping source="OPERATE_TYPE" dest="OPERATE_TYPE" type="String" />
+		<mapping source="OPERATION_ID" dest="OPERATION_ID" type="String" />
+		<mapping source="OPERATION_NAME" dest="OPERATION_NAME" type="String" />
+		<mapping source="USER_IP" dest="USER_IP" type="String" />
+		<mapping source="USER_DEVICE" dest="USER_DEVICE" type="String" />
+		<mapping source="device_name" dest="device_name" type="String" />
+		<mapping source="device_model" dest="device_model" type="String" />
+		<mapping source="device_mac" dest="device_mac" type="String" />
+		<mapping source="client_os_type" dest="client_os_type" type="String" />
+		<mapping source="client_os_version" dest="client_os_version" type="String" />
+		<mapping source="browser_kernel" dest="browser_kernel" type="String" />
+		<mapping source="browser_version" dest="browser_version" type="String" />
+		<mapping source="CALL_TIME" dest="CALL_TIME" type="String" />
+		<mapping source="device_brand" dest="device_brand" type="String" />
+		<mapping source="device_resolution" dest="device_resolution" type="String" />
+		<mapping source="app_version" dest="app_version" type="String" />
+		<mapping source="cordova_version" dest="cordova_version" type="String" />
+		<mapping source="pixel_height" dest="pixel_height" type="String" />
+		<mapping source="pixel_width" dest="pixel_width" type="String" />
+		<mapping source="pixel_ratio" dest="pixel_ratio" type="String" />
+		<mapping source="client_info" dest="client_info" type="String" />
+		<mapping source="REMARK" dest="REMARK" type="String" />
+	</mappings>
+	<where>
+		<source>
+			date_format(OPERATE_DATE,'%Y-%m-%d') = DATE_FORMAT(NOW() - interval 1 day,'%Y-%m-%d') 
+		</source>
+	</where>
+	<procedures>
+<!-- 		<procedure name="p_insertdata_from_temp_emp" /> -->
+	</procedures>
+</transform>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.legalholiday.dao.LegalholidayDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="LegalholidayResultMap" type="com.haier.isales.dailymgt.legalholiday.domain.LegalholidayDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="holiday_time" property="holidayTime"  jdbcType="TIMESTAMP"  />
+		<result column="holiday_type" property="holidayType"  jdbcType="VARCHAR"  />
+		<result column="holiday_desc" property="holidayDesc"  jdbcType="VARCHAR"  />
+		<result column="holiday_duration" property="holidayDuration"  jdbcType="INTEGER"  />
+		<result column="number_of_days" property="numberOfDays"  jdbcType="INTEGER"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_id" property="createId"  jdbcType="BIGINT"  />
+		<result column="create_name" property="createName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="update_id" property="updateId"  jdbcType="BIGINT"  />
+		<result column="update_name" property="updateName"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	HOLIDAY_TIME	,
+	HOLIDAY_TYPE	,
+	HOLIDAY_DESC	,
+	HOLIDAY_DURATION	,
+	NUMBER_OF_DAYS	,
+	CREATE_TIME	,
+	CREATE_ID	,
+	CREATE_NAME	,
+	UPDATE_TIME	,
+	UPDATE_ID	,
+	UPDATE_NAME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<!-- java.util.Date holiday_time has been ignored!!! -->
+		<if test="entity.holidayType!=null">and holiday_type like CONCAT('%',#{entity.holidayType},'%')</if>
+		<if test="entity.holidayDesc!=null">and holiday_desc like CONCAT('%',#{entity.holidayDesc},'%')</if>
+		<if test="entity.holidayDuration!=null">and holiday_duration=#{entity.holidayDuration}</if>
+		<if test="entity.numberOfDays!=null">and number_of_days=#{entity.numberOfDays}</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.createId!=null">and create_id=#{entity.createId}</if>
+		<if test="entity.createName!=null">and create_name like CONCAT('%',#{entity.createName},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<if test="entity.updateId!=null">and update_id=#{entity.updateId}</if>
+		<if test="entity.updateName!=null">and update_name like CONCAT('%',#{entity.updateName},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="LegalholidayResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_dailymgt_legalholiday
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_dailymgt_legalholiday
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.dailymgt.legalholiday.domain.LegalholidayDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_dailymgt_legalholiday
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="holidayTime!=null">
+				HOLIDAY_TIME	,
+			</if>
+			<if test="holidayType!=null">
+				HOLIDAY_TYPE	,
+			</if>
+			<if test="holidayDesc!=null">
+				HOLIDAY_DESC	,
+			</if>
+			<if test="holidayDuration!=null">
+				HOLIDAY_DURATION	,
+			</if>
+			<if test="numberOfDays!=null">
+				NUMBER_OF_DAYS	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="createId!=null">
+				CREATE_ID	,
+			</if>
+			<if test="createName!=null">
+				CREATE_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="updateId!=null">
+				UPDATE_ID	,
+			</if>
+			<if test="updateName!=null">
+				UPDATE_NAME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="holidayTime!=null">
+				#{holidayTime}	,
+			</if>
+			<if test="holidayType!=null">
+				#{holidayType}	,
+			</if>
+			<if test="holidayDesc!=null">
+				#{holidayDesc}	,
+			</if>
+			<if test="holidayDuration!=null">
+				#{holidayDuration}	,
+			</if>
+			<if test="numberOfDays!=null">
+				#{numberOfDays}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="createId!=null">
+				#{createId}	,
+			</if>
+			<if test="createName!=null">
+				#{createName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="updateId!=null">
+				#{updateId}	,
+			</if>
+			<if test="updateName!=null">
+				#{updateName}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.dailymgt.legalholiday.domain.LegalholidayDomain">
+		update isales_app.t_isales_dailymgt_legalholiday
+		<set>
+			HOLIDAY_TIME = #{holidayTime},
+			HOLIDAY_TYPE = #{holidayType},
+			HOLIDAY_DESC = #{holidayDesc},
+			HOLIDAY_DURATION = #{holidayDuration},
+			NUMBER_OF_DAYS = #{numberOfDays},
+			CREATE_TIME = #{createTime},
+			CREATE_ID = #{createId},
+			CREATE_NAME = #{createName},
+			UPDATE_TIME = #{updateTime},
+			UPDATE_ID = #{updateId},
+			UPDATE_NAME = #{updateName},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_dailymgt_legalholiday 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="LegalholidayResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_dailymgt_legalholiday
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_dailymgt_legalholiday
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

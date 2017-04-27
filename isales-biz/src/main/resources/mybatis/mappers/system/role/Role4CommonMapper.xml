@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.role.dao.RoleDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="RoleResultMap" type="com.haier.isales.system.role.domain.RoleDomain">
+		<id column="role_code" property="roleCode" jdbcType="VARCHAR" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="operator_id" property="operatorId" jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ROLE_CODE	,
+	ROLE_NAME	,
+	STATUS	,
+	OPERATOR_ID	,
+	CREATE_TIME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.roleCode!=null">and role_code like CONCAT('%',#{entity.roleCode},'%')</if>
+		<if test="entity.roleName!=null">and role_name like CONCAT('%',#{entity.roleName},'%')</if>
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="RoleResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_role
+		where role_code = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_qn_role
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.role.domain.RoleDomain" >
+		insert into isales_sys.t_qn_role
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="roleCode!=null">
+				ROLE_CODE	,
+			</if>
+			<if test="roleName!=null">
+				ROLE_NAME	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="roleCode!=null">
+				#{roleCode}	,
+			</if>
+			<if test="roleName!=null">
+				#{roleName}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.role.domain.RoleDomain">
+		update isales_sys.t_qn_role
+		<set>
+			ROLE_NAME = #{roleName},
+			STATUS = #{status},
+			OPERATOR_ID = #{operatorId},
+			CREATE_TIME = #{createTime},
+		</set>
+		where role_code = #{roleCode}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_qn_role 
+		where role_code = #{roleCode}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="RoleResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_role
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_qn_role
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

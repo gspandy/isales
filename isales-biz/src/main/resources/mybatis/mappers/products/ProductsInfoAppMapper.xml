@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.productsinfoapp.dao.ProductsInfoAppDAO">
+
+	<!-- 产业线resultmap -->
+	<resultMap id="ProductsLineResultMap" type="com.haier.isales.products.productsinfoapp.domain.ProductLineDomain">
+		<result column="zzjyt_proline" property="proLineCode"  jdbcType="VARCHAR"  />
+		<result column="zzjyt_proline_name" property="proLineName"  jdbcType="VARCHAR"  />
+	</resultMap>
+	<!--查询产业线list  -->
+	<select id="searchProductLineList" resultMap="ProductsLineResultMap">
+<!-- 	SELECT DISTINCT zzjyt_proline, zzjyt_proline_name
+	FROM isales_app.t_isales_zzjyt_hmms_proline
+	ORDER BY  convert(zzjyt_proline, SIGNED) ASC  -->
+	
+	select DISTINCT a.zzjyt_proline as zzjyt_proline
+	,a.zzjyt_proline_name as zzjyt_proline_name 
+	from (select zhpl.zzjyt_proline,zhpl.zzjyt_proline_name, 
+	case when pl.cpxtype is null then 53 
+	else pl.cpxtype end cpxtype 
+	from (select DISTINCT zzjyt_proline,zzjyt_proline_name from isales_app.t_isales_zzjyt_hmms_proline)zhpl 
+	left join (select PRODUCTID,cpxtype from isales_app.t_isales_pro_line where hmcid=#{userCode})pl 
+	on zhpl.zzjyt_proline=pl.PRODUCTID ) a 
+	order by a.cpxtype asc, a.zzjyt_proline asc
+	
+	</select>
+
+	<!-- 查询的所有变量判断 -->
+	<sql id="listSearchConditions">
+		<if test="searchDTO.proLineCode!=null">and pro_line_code = #{searchDTO.proLineCode} </if>
+		<if test="searchDTO.salesChannel!=null">and sales_channel like CONCAT('%',#{searchDTO.salesChannel},'%')</if>
+	</sql>
+
+	<select id="searchProductsInfoList" resultMap="ProductsInfoAppResultMap">
+	select <include refid="all_Column_List"/>
+	from isales_app.t_isales_products_info_summary
+	where 1=1
+	<include refid="listSearchConditions"/>
+	<if test="productsNoNameList!=null and productsNoNameList!=''">
+	and 
+		<foreach collection="productsNoNameList" item="item" index="index" open="((" separator=" and " close=")">
+			 <![CDATA[  UPPER(modelno) like UPPER(CONCAT('%', #{item},'%')) ]]>
+		</foreach>
+	</if>
+	<if test="productsNoNameList!=null and productsNoNameList!=''">
+	or
+		<foreach collection="productsNoNameList" item="item" index="index" open="(" separator=" and " close="))">
+			 <![CDATA[  UPPER(modelcode) like UPPER(CONCAT('%', #{item},'%')) ]]>
+		</foreach>
+	</if>
+	order by metadataid desc
+	<include refid="pagination_Tail"/>
+	</select>
+	
+	<select id="searchProductsInfoByModuleCode" resultMap="ProductsInfoAppResultMap">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_products_info_summary
+		where modelcode = #{moduleCode}
+		limit 1
+	</select>
+</mapper>

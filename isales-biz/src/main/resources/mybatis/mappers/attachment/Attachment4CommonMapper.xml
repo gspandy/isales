@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.attachment.dao.AttachmentDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="AttachmentResultMap" type="com.haier.isales.attachment.domain.AttachmentDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="display_name" property="displayName"  jdbcType="VARCHAR"  />
+		<result column="attachment_id" property="attachmentId"  jdbcType="VARCHAR"  />
+		<result column="attachment_name" property="attachmentName"  jdbcType="VARCHAR"  />
+		<result column="attachment_size" property="attachmentSize"  jdbcType="BIGINT"  />
+		<result column="attachment_url" property="attachmentUrl"  />
+		<result column="update_id" property="updateId"  jdbcType="VARCHAR"  />
+		<result column="update_name" property="updateName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_id" property="createId"  jdbcType="VARCHAR"  />
+		<result column="create_name" property="createName"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="share_type" property="shareType"  jdbcType="INTEGER"  />
+		<result column="attachment_type" property="attachmentType"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	DISPLAY_NAME	,
+	ATTACHMENT_ID	,
+	ATTACHMENT_NAME	,
+	ATTACHMENT_SIZE	,
+	ATTACHMENT_URL	,
+	UPDATE_ID	,
+	UPDATE_NAME	,
+	UPDATE_TIME	,
+	CREATE_ID	,
+	CREATE_NAME	,
+	CREATE_TIME	,
+	SHARE_TYPE	,
+	ATTACHMENT_TYPE		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.displayName!=null">and display_name like CONCAT('%',#{entity.displayName},'%')</if>
+		<if test="entity.attachmentId!=null">and attachment_id like CONCAT('%',#{entity.attachmentId},'%')</if>
+		<if test="entity.attachmentName!=null">and attachment_name like CONCAT('%',#{entity.attachmentName},'%')</if>
+		<if test="entity.attachmentSize!=null">and attachment_size=#{entity.attachmentSize}</if>
+		<if test="entity.attachmentUrl!=null">and attachment_url like CONCAT('%',#{entity.attachmentUrl},'%')</if>
+		<if test="entity.updateId!=null">and update_id like CONCAT('%',#{entity.updateId},'%')</if>
+		<if test="entity.updateName!=null">and update_name like CONCAT('%',#{entity.updateName},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<if test="entity.createId!=null">and create_id like CONCAT('%',#{entity.createId},'%')</if>
+		<if test="entity.createName!=null">and create_name like CONCAT('%',#{entity.createName},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.shareType!=null">and share_type=#{entity.shareType}</if>
+		<if test="entity.attachmentType!=null">and attachment_type like CONCAT('%',#{entity.attachmentType},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="AttachmentResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_attachment
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_attachment
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.attachment.domain.AttachmentDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_attachment
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="displayName!=null">
+				DISPLAY_NAME	,
+			</if>
+			<if test="attachmentId!=null">
+				ATTACHMENT_ID	,
+			</if>
+			<if test="attachmentName!=null">
+				ATTACHMENT_NAME	,
+			</if>
+			<if test="attachmentSize!=null">
+				ATTACHMENT_SIZE	,
+			</if>
+			<if test="attachmentUrl!=null">
+				ATTACHMENT_URL	,
+			</if>
+			<if test="updateId!=null">
+				UPDATE_ID	,
+			</if>
+			<if test="updateName!=null">
+				UPDATE_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createId!=null">
+				CREATE_ID	,
+			</if>
+			<if test="createName!=null">
+				CREATE_NAME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="shareType!=null">
+				SHARE_TYPE	,
+			</if>
+			<if test="attachmentType!=null">
+				ATTACHMENT_TYPE		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="displayName!=null">
+				#{displayName}	,
+			</if>
+			<if test="attachmentId!=null">
+				#{attachmentId}	,
+			</if>
+			<if test="attachmentName!=null">
+				#{attachmentName}	,
+			</if>
+			<if test="attachmentSize!=null">
+				#{attachmentSize}	,
+			</if>
+			<if test="attachmentUrl!=null">
+				#{attachmentUrl}	,
+			</if>
+			<if test="updateId!=null">
+				#{updateId}	,
+			</if>
+			<if test="updateName!=null">
+				#{updateName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createId!=null">
+				#{createId}	,
+			</if>
+			<if test="createName!=null">
+				#{createName}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="shareType!=null">
+				#{shareType}	,
+			</if>
+			<if test="attachmentType!=null">
+				#{attachmentType}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.attachment.domain.AttachmentDomain">
+		update isales_app.t_isales_attachment
+		<set>
+			DISPLAY_NAME = #{displayName},
+			ATTACHMENT_ID = #{attachmentId},
+			ATTACHMENT_NAME = #{attachmentName},
+			ATTACHMENT_SIZE = #{attachmentSize},
+			ATTACHMENT_URL = #{attachmentUrl},
+			UPDATE_ID = #{updateId},
+			UPDATE_NAME = #{updateName},
+			UPDATE_TIME = #{updateTime},
+			CREATE_ID = #{createId},
+			CREATE_NAME = #{createName},
+			CREATE_TIME = #{createTime},
+			SHARE_TYPE = #{shareType},
+			ATTACHMENT_TYPE = #{attachmentType},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_attachment 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="AttachmentResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_attachment
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_attachment
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

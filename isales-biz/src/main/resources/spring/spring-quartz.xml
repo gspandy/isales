@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+	<!-- 过期账号状态更改 -->
+	<bean id="accountExpireJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.haier.openplatform.showcase.quartz.AccountExpireJob" /> 
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="过期账号状态更改任务" />
+	</bean>
+	<bean id="accountExpireCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+		<property name="jobDetail" ref="accountExpireJobDetail" />
+		<property name="cronExpression" value="0 7 23 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 任务调度管理器 -->
+	<bean id="clusterQuartzScheduler"
+		class="com.haier.openplatform.quartz.SchedulerFactoryBeanProxy">
+		<property name="schedulerName" value="#{quartzProperties['org.quartz.scheduler.instanceName']}"/>
+		<!-- Job接受applicationContext的成员变量名 -->
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+		<!-- 是否覆盖已有的任务 -->
+		<property name="overwriteExistingJobs" value="true" />
+		<property name="quartzProperties" ref="quartzProperties" />
+		<property name="triggers">
+			<list>
+				<!-- 
+				<ref bean="sendAppInstallEmailTriggerBean"/>
+				<ref bean="sendAppLoginEmailTriggerBean"/>
+				 -->
+				<!-- 
+				<ref bean="reminderSendCronTriggerBean"/>
+				 -->
+				<ref bean="employeeTransformTriggerBean"/>
+				<ref bean="goodbaseTransformTriggerBean"/>
+				<ref bean="organizationTransformTriggerBean"/>
+				<ref bean="proLineTransformTriggerBean"/>
+				<!-- eai 份额 -->
+				<ref bean="quotientMonthTransformTriggerBean"/>
+				<!-- zzjyt 注册率-->
+				<ref bean="cardSetRateTransformTriggerBean"/>
+				<ref bean="registRateUnverifiedTransformTriggerBean"/>
+				<ref bean="registRateVerifiedTransformTriggerBean"/>
+				<!-- zzjyt 员工每月所在门店-->
+				<ref bean="employeeShopRefTransformTriggerBean"/>
+				<!-- zzjyt 按照门店和产业的销量及会员数据_已验证、全部(全部包含未验证) -->
+				<ref bean="sjcjScrmTransformTriggerBean"/>
+				<ref bean="sjcjScrmAllTransformTriggerBean"/>
+				<!-- edw -->
+				<ref bean="queryYeRet690TransformTriggerBean"/>
+				<ref bean="queryBTBRatailTransformTriggerBean"/>
+				<!-- hmms 样机 -->
+				<ref bean="prototypeTransformTriggerBean"/>
+				<!-- MDM销售样表同步 -->
+				<ref bean="productsTransformTriggerBean"/>
+				<!-- here官网 产品百科 -->
+				<ref bean="productsViewSyncTriggerBean"/>
+				<ref bean="productsClassifyParamsSyncTriggerBean"/>
+				<ref bean="productsParamsSyncTriggerBean"/>
+				<ref bean="productsDetailSyncTriggerBean"/>
+				<ref bean="productsBookSyncTriggerBean"/>
+				<ref bean="productsFAQSyncTriggerBean"/>
+				<!-- 门店经纬度同步转换 -->
+				<ref bean="shopCoordinateTriggerBean"/>
+				<!-- 同步OMS系统问题第一级处理人 -->
+				<ref bean="bpmIssueHanlerFormOmsTriggerBean"/>
+				<!-- 同步user/login behavior 表 -->
+				<ref bean="userBehaviourTransformTriggerBean"/>
+				<ref bean="loginBehaviourTransformTriggerBean"/>
+				<!-- 同步人力表 -->
+				<ref bean="sysUserTransformTriggerBean"/>
+				<!-- 同步sjcjscrm_complete -->
+				<ref bean="sjcjScrmCompTransformTriggerBean"/>
+				<!-- 同步 zzjyt 按照门店和产业的销量及会员数据-客户联网量 -->
+				<ref bean="sjcjCustTransformTriggerBean"/>
+				<!-- 同步 zzjyt 当月直销员录入销量详情 (销量、销额、提成)-->
+				<ref bean="userXlAllDetailTransformTriggerBean"/>
+				<!-- 同步 zzjyt 当月联网销量详情 (销量、销额、提成)-->
+				<ref bean="userXlCstDetailTransformTriggerBean"/>
+				<!-- 同步  当月所有渠道销量详情 (销量、销额、提成)-->
+				<ref bean="userXlCompDetailTransformTriggerBean"/>
+				<!-- 同步 zzjyt T-1日直销员录入销量详情 (销量、销额、提成)-->
+				<ref bean="userXlAllDetailLstdayTransformTriggerBean"/>
+				<!-- 同步 zzjyt T-1日联网销量详情 (销量、销额、提成)-->
+				<ref bean="userXlCstDetailLstdayTransformTriggerBean"/>
+				<!-- 同步  T-1日所有渠道销量详情 (销量、销额、提成)-->
+				<ref bean="userXlCompDetailLstdayTransformTriggerBean"/>
+			</list>
+		</property>
+		<!-- 定时任务是否启动开关,为true则启动,为false则不启动 -->
+		<property name="startFlag" value="${quartz.enable}"/>
+	</bean>
+
+	<!-- quartz属性配置 -->
+	<util:properties id="quartzProperties">
+		<prop key="org.quartz.scheduler.instanceName">${app.name}</prop>
+		<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+		<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+		<!-- 开发环境用RAMJobStore,可加快启动速度 -->
+		<!-- <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop> -->
+		<!-- 生产、测试环境要用TerracottaJobStore -->
+		<prop key="org.quartz.jobStore.class">org.terracotta.quartz.TerracottaJobStore</prop>
+		<prop key="org.quartz.jobStore.tcConfigUrl">${quartz.server}</prop>
+		<prop key="org.quartz.scheduler.instanceIdGenerator.class">com.haier.openplatform.quartz.HostNameTimestampInstanceIdGenerator</prop>
+		<prop key="org.quartz.plugin.triggHistory.class">org.quartz.plugins.history.LoggingTriggerHistoryPlugin</prop>
+		<prop key="org.quartz.scheduler.jmx.export">true</prop>
+	</util:properties>
+</beans>

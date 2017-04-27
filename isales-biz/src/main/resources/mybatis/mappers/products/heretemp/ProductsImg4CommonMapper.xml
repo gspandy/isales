@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.heretemp.productsimg.dao.ProductsImgDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ProductsImgResultMap" type="com.haier.isales.products.heretemp.productsimg.domain.ProductsImgDomain">
+		<id column="appendixid" property="appendixid"  jdbcType="BIGINT"  />
+		<result column="fileext" property="fileext"  jdbcType="VARCHAR"  />
+		<result column="appfile" property="appfile"  jdbcType="VARCHAR"  />
+		<result column="appdesc" property="appdesc"  jdbcType="VARCHAR"  />
+		<result column="metadataid" property="metadataid"  jdbcType="BIGINT"  />
+		<result column="modelno" property="modelno"  jdbcType="VARCHAR"  />
+		<result column="viewname" property="viewname"  jdbcType="VARCHAR"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	APPENDIXID	,
+	FILEEXT	,
+	APPFILE	,
+	APPDESC	,
+	METADATAID	,
+	MODELNO	,
+	VIEWNAME	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.appendixid!=null">and appendixid=#{entity.appendixid}</if>
+		<if test="entity.fileext!=null">and fileext like CONCAT('%',#{entity.fileext},'%')</if>
+		<if test="entity.appfile!=null">and appfile like CONCAT('%',#{entity.appfile},'%')</if>
+		<if test="entity.appdesc!=null">and appdesc like CONCAT('%',#{entity.appdesc},'%')</if>
+		<if test="entity.metadataid!=null">and metadataid=#{entity.metadataid}</if>
+		<if test="entity.modelno!=null">and modelno like CONCAT('%',#{entity.modelno},'%')</if>
+		<if test="entity.viewname!=null">and viewname like CONCAT('%',#{entity.viewname},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ProductsImgResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_img_temp
+		where appendixid = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_products_img_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.products.heretemp.productsimg.domain.ProductsImgDomain" >
+		insert into isales_temp.t_isales_products_img_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appendixid!=null">
+				APPENDIXID	,
+			</if>
+			<if test="fileext!=null">
+				FILEEXT	,
+			</if>
+			<if test="appfile!=null">
+				APPFILE	,
+			</if>
+			<if test="appdesc!=null">
+				APPDESC	,
+			</if>
+			<if test="metadataid!=null">
+				METADATAID	,
+			</if>
+			<if test="modelno!=null">
+				MODELNO	,
+			</if>
+			<if test="viewname!=null">
+				VIEWNAME	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appendixid!=null">
+				#{appendixid}	,
+			</if>
+			<if test="fileext!=null">
+				#{fileext}	,
+			</if>
+			<if test="appfile!=null">
+				#{appfile}	,
+			</if>
+			<if test="appdesc!=null">
+				#{appdesc}	,
+			</if>
+			<if test="metadataid!=null">
+				#{metadataid}	,
+			</if>
+			<if test="modelno!=null">
+				#{modelno}	,
+			</if>
+			<if test="viewname!=null">
+				#{viewname}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.products.heretemp.productsimg.domain.ProductsImgDomain">
+		update isales_temp.t_isales_products_img_temp
+		<set>
+			FILEEXT = #{fileext},
+			APPFILE = #{appfile},
+			APPDESC = #{appdesc},
+			METADATAID = #{metadataid},
+			MODELNO = #{modelno},
+			VIEWNAME = #{viewname},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where appendixid = #{appendixid}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_products_img_temp 
+		where appendixid = #{appendixid}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ProductsImgResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_img_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_products_img_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

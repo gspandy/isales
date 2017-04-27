@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.menu.dao.MenuDAO">
+	<!-- 根据条件查询菜单 不分页 -->
+	<select id="findByParam" resultMap="MenuResultMap"	parameterType="menuSearchDTO">
+		 select <include refid="all_Column_List"/>
+		 from isales_sys.t_qn_menu t
+		 where 1 = 1
+		 <if test="model.menuId != null and model.menuId != ''">
+		  	  <![CDATA[ and t.menu_id = #{model.menuId}]]>
+		 </if>
+		 <if test="model.menuName != null and model.menuName != ''">
+		  	  <![CDATA[ and t.menu_name like concat('%', #{model.menuName},'%')]]>
+		 </if>
+		 <if test="model.parentsId != null and model.parentsId != ''">
+		  	  <![CDATA[ and t.PARENTS_ID = #{model.parentsId}]]>
+		 </if>
+	</select>
+	
+	<!-- 查询一级菜单 不分页 -->
+	<select id="findTopMenuByParam" resultMap="MenuResultMap"	parameterType="menuSearchDTO">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_menu t
+		where 1 = 1
+		and t.MENU_ID in (
+		    select rmf.menu_id
+		        from isales_sys.t_qn_role_menu_ref rmf
+		    JOIN isales_sys.t_qn_role r
+		    ON r.role_code = rmf.role_code
+		    JOIN isales_sys.t_qn_user_role_ref urr
+		    ON urr.role_code = r.role_code
+		    JOIN isales_sys.t_qn_user u
+		    ON u.operator_id = urr.operator_id
+		    WHERE  1 = 1
+		    <if test="model.loginName != null and model.loginName != ''">
+		  	  <![CDATA[ and u.login_name = #{model.loginName}]]>
+			 </if>
+			 <if test="model.roleList != null and model.roleList.size() > 0 ">
+					and  urr.role_code in 
+					<foreach collection="model.roleList" item="item" index="index" open="(" separator="," close=")">
+			        #{item.roleCode}
+			  		</foreach>
+			</if>
+		  )
+		 <if test="model.menuType != null and model.menuType != ''">
+		  	  <![CDATA[ and t.menu_type = #{model.menuType}]]>
+		 </if>
+		 <if test="model.parentsId != null and model.parentsId != ''">
+		  	  <![CDATA[ and t.PARENTS_ID = #{model.parentsId}]]>
+		 </if>
+	</select>
+	
+	<select id="findUserMenu" resultMap="MenuResultMap"	parameterType="com.haier.isales.system.menu.domain.MenuDomain">
+			select distinct m.*
+			from isales_sys.t_qn_menu m
+			left join isales_sys.t_qn_role_menu_ref rmf
+			on rmf.MENU_ID = m.MENU_ID
+			WHERE
+			  1 = 1
+		 <if test="model.parentsId != null and model.parentsId != ''">
+		  	  <![CDATA[ and m.PARENTS_ID = #{model.parentsId}]]>
+		 </if>
+		 <if test="model.menuType != null and model.menuType != ''">
+		  	  <![CDATA[ and m.menu_type = #{model.menuType}]]>
+		 </if>
+		 <if test="model.menuLevel != null and model.menuLevel != ''">
+		  	  <![CDATA[ and m.menulevel = #{model.menuLevel}]]>
+		 </if>
+		 
+		 <if test="roleList != null and roleList.size() > 0 ">
+				and  rmf.role_code in 
+				<foreach collection="roleList" item="item" index="index" open="(" separator="," close=")">
+		        	#{item.roleCode}
+		  		</foreach>
+		</if>
+		  order by m.DISPLAY_ORDER asc
+	</select>
+	
+	<select id="findWorkguideMenuList" resultMap="MenuResultMap">
+		SELECT 
+		m.MENU_ID as MENU_ID,
+		m.MENU_NAME as MENU_NAME	,
+		m.MENU_ACTION	as MENU_ACTION,
+		m.IS_LEAF as IS_LEAF	,
+		m.MENULEVEL as MENULEVEL ,
+		m.ROOT_ID as ROOT_ID	,
+		m.PARENTS_ID as PARENTS_ID	,
+		m.DISPLAY_ORDER as DISPLAY_ORDER,
+		m.MENU_SEQ as MENU_SEQ	,
+		w.MENU_ICON as MENU_ICON	,
+		m.MENU_URL as MENU_URL	,
+		w.MENU_ICON_SMALL as MENU_ICON_SMALL	,
+		m.MENU_DESC as MENU_DESC	,
+		m.MENU_TYPE as MENU_TYPE	,
+		m.REMARK as REMARK	,
+		m.JUMP_TYPE as JUMP_TYPE	,
+		m.MENU_BGCOLOR as MENU_BGCOLOR		
+		FROM isales_sys.t_qn_menu m 
+		RIGHT JOIN isales_sys.t_qn_menu_workguide w 
+		ON m.MENU_ID = w.MENU_ID 
+		WHERE w.status = 101 
+		ORDER by w.sort
+	</select>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!--  同步userBehaviour -->
+	<bean id="userBehaviourTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.UserBehaviourTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value=" userBehaviour" />
+	</bean>
+	<bean id="userBehaviourTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userBehaviourTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	<!--  同步loginBehaviour -->
+	<bean id="loginBehaviourTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.LoginBehaviourTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="loginBehaviour" />
+	</bean>
+	<bean id="loginBehaviourTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="loginBehaviourTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!--  同步t_sys_user -->
+	<bean id="sysUserTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.SysUserTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="sysUser" />
+	</bean>
+	<bean id="sysUserTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sysUserTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 30 2 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!--  同步isales_app.t_isales_btb_sjcj_scrm_complete -->
+	<bean id="sjcjScrmCompTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.SjcjScrmCompTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量与会员数据_全部" />
+	</bean>
+	<bean id="sjcjScrmCompTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sjcjScrmCompTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 20 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!--  同步isales_app.t_isales_btb_usr_xl_complete_detail -->
+	<bean id="userXlCompDetailTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.UserXlCompDetailTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量详情_全部" />
+	</bean>
+	<bean id="userXlCompDetailTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlCompDetailTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 30 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!--  同步isales_app.t_isales_btb_usr_xl_complete_detail_lstday -->
+	<bean id="userXlCompDetailLstdayTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.isales.UserXlCompDetailLstdayTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="T-1日销量详情_全部" />
+	</bean>
+	<bean id="userXlCompDetailLstdayTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlCompDetailLstdayTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 30 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+</beans>

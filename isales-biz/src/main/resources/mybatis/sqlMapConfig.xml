@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<setting name="defaultExecutorType" value="SIMPLE" /><!-- SIMPLE REUSE BATCH -->
+		<!-- <setting name="defaultExecutorType" value="BATCH" /> -->
+		<setting name="defaultStatementTimeout" value="25000" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<setting name="localCacheScope" value="SESSION" />
+		<!-- <setting name="jdbcTypeForNull" value="OTHER" /> -->
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+	</settings>
+	<typeAliases>
+		<!-- =========================================================== -->
+	    <!-- security模块                                                                                                                                                                             -->
+	    <!-- =========================================================== -->
+		<typeAlias alias="operationLog" type="com.haier.openplatform.log.domain.OperationLog" />
+		<typeAlias alias="operationLogSearchModel" type="com.haier.openplatform.showcase.security.model.OperationLogSearchModel"/>
+		<typeAlias alias="uploadFile" type="com.haier.openplatform.showcase.security.domain.UploadFile"/>
+		<typeAlias alias="fileSearchModel" type="com.haier.openplatform.showcase.security.model.FileSearchModel"/>
+	
+		
+		<!-- =============system 模块  begin ======================== -->		
+		<typeAlias alias="menu" type="com.haier.isales.system.menu.domain.MenuDomain"/>
+		<typeAlias alias="menuDTO" type="com.haier.isales.system.dto.MenuDTO"/>
+		<typeAlias alias="menuSearchDTO" type="com.haier.isales.system.dto.MenuSearchDTO"/>
+		<typeAlias alias="dictionary" type="com.haier.isales.system.dto.Dictionary"/>
+		<typeAlias alias="dictionaryPK" type="com.haier.isales.system.dto.DictionaryPK"/>
+		<typeAlias alias="dictionaryType" type="com.haier.isales.system.dto.DictionaryType"/>
+		<typeAlias alias="dictionarySearchModel" type="com.haier.isales.system.dictionary.model.DictionarySearchModel"/>
+		<typeAlias alias="employee" type="com.haier.isales.system.employee.domain.Employee"/>
+		<typeAlias alias="employeeSearchModel" type="com.haier.isales.system.employee.model.EmployeeSearchModel"/>
+		<typeAlias alias="user" type="com.haier.isales.system.user.domain.User"/>
+		<typeAlias alias="userSearchModel" type="com.haier.isales.system.user.model.UserSearchModel"/>
+		
+	    <!-- =============system 模块  end=========================== -->
+		<!-- =============performance 模块  begin ======================== -->		
+		<typeAlias alias="registDTO" type="com.haier.isales.performance.leaguer.dto.RegistDTO"/>
+		<typeAlias alias="retailDTO" type="com.haier.isales.performance.retail.dto.RetailDTO"/>
+		<typeAlias alias="retailStructureDTO" type="com.haier.isales.performance.retail.dto.RetailStructureDTO"/>
+	    <!-- =============performance 模块  end=========================== -->
+	    
+	    
+	    <!-- =============我的业绩模块 begin=========================== -->
+	    <typeAlias alias="cyclesDTO" type="com.haier.isales.performance.retail.dto.CyclesDTO"/>
+	    <!-- =============我的业绩模块  end=========================== -->
+		
+	</typeAliases>
+	
+	<typeHandlers>
+	  <typeHandler handler="com.haier.openplatform.dao.mybatis.SerializableTypeHandler"/>
+	</typeHandlers>
+</configuration>

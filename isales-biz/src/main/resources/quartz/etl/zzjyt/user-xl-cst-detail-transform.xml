@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 --><!-- 业绩-销量详情（国美、苏宁） -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">V_BTB_USR_XL_CST_DETAIL</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_btb_usr_xl_cst_detail_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="MONTHS" dest="months" type="String" />
+		<mapping source="FZXID" dest="fzxid" type="String" />
+		<mapping source="FZXNAME" dest="fzxname" type="String" />
+		<mapping source="QDID" dest="qdid" type="String" />
+		<mapping source="QDNAME" dest="qdname" type="String" />
+		<mapping source="MDID" dest="mdid" type="String" />
+		<mapping source="MDNAME" dest="mdname" type="String" />
+		<mapping source="CPXID" dest="cpxid" type="String" />
+		<mapping source="CPXNAME" dest="cpxname" type="String" />
+		<mapping source="PRODCODE" dest="prodcode" type="String" />
+		<mapping source="PRODNAME" dest="prodname" type="String" />
+		<mapping source="QTY" dest="qty" type="String" />
+		<mapping source="TC" dest="tc" type="String" />
+		<mapping source="MTLCODEMONEY" dest="MTLCODEMONEY" type="String" />
+		<mapping source="MEM_CNTS" dest="mem_cnts" type="String" />
+		<mapping source="CATEGORY_E" dest="category_e" type="String" />
+	</mappings>
+
+	<where>
+		<source>
+			QDID in ('D', 'E')
+		</source>
+	</where>
+</transform>

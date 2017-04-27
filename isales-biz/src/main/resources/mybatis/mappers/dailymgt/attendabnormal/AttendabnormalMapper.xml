@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.abnormal.dao.AttendabnormalDAO">
+	
+	<!-- 根据user_code\attendance_month 查询 abnormal 信息 -->
+	<select id="findByUserCode" resultMap="AttendabnormalResultMap">
+		select id, user_code as userCode, user_name as userName, abnormal_count as abnormalCount, type, 
+		attendance_month as attendanceMonth, 
+		DATE_FORMAT(sign_time,'%Y-%m-%d %T') as signTime, 
+		DATE_FORMAT(create_time,'%Y-%m-%d %T') as createTime, 
+		DATE_FORMAT(update_time,'%Y-%m-%d %T') as updateTime
+		from isales_app.t_isales_dailymgt_attendance_abnormal
+		where user_code = #{entity.userCode}
+		<if test=" entity.userCode != null and entity.userCode != '' ">
+		 	and user_code = #{entity.userCode}
+		</if>
+		<if test=" entity.attendanceMonth != null and entity.attendanceMonth != '' ">
+		 	and attendance_month = #{entity.attendanceMonth}
+		</if>
+		<!-- 排序条件 -->
+		<![CDATA[
+			order by create_time desc
+		]]>
+	</select>
+	
+	<!-- 根据user_code, attendance_month 查询abnormal_count -->
+	<select id="findAbCountByUserCode"  resultType="String" parameterType="java.lang.String">
+		select a.abnormal_count as abnormalCount
+		from isales_app.t_isales_dailymgt_attendance_abnormal a
+		where 1=1
+		<if test=" userCode != null and userCode != '' ">
+		 	and a.user_code = #{userCode}
+		</if>
+		<if test=" attendanceMonth != null and attendanceMonth != '' ">
+		 	and a.attendance_month = #{attendanceMonth}
+		</if>
+	</select>
+	
+	<!--  根据user_code, attendance_month 来更新isales_app.t_isales_dailymgt_attendance_abnormal 表 -->
+	<update id="updateAttendabnormal" parameterType="com.haier.isales.dailymgt.abnormal.domain.AttendabnormalDomain">
+		update isales_app.t_isales_dailymgt_attendance_abnormal
+		<set>
+			<if test=" entity.abnormalCount != null and entity.abnormalCount != '' ">
+				ABNORMAL_COUNT = #{entity.abnormalCount},
+			</if>
+			<if test=" entity.type != null and entity.type != '' ">
+				TYPE = #{entity.type},
+			</if>
+			<if test=" entity.attendanceMonth != null and entity.attendanceMonth != '' ">
+				ATTENDANCE_MONTH = #{entity.attendanceMonth},
+			</if>
+			<if test="entity.signTime!=null">
+				SIGN_TIME = #{entity.signTime}	,	
+			</if>
+			<if test="entity.updateTime!=null">
+				UPDATE_TIME = #{entity.updateTime}		
+			</if>
+		</set>
+		where 1=1
+		<if test=" entity.userCode != null and entity.userCode != '' ">
+		 	and user_code = #{entity.userCode}
+		</if>
+		<if test=" entity.attendanceMonth != null and entity.attendanceMonth != '' ">
+			and attendance_month = #{entity.attendanceMonth}
+		</if>
+	</update>
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.reminder.dao.ReminderDzdtDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ReminderDzdtResultMap" type="com.haier.isales.reminder.domain.ReminderDzdtDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="operator_id" property="operatorId"  jdbcType="VARCHAR"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="shop_code" property="shopCode"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="result" property="result"  jdbcType="VARCHAR"  />
+		<result column="reason" property="reason"  jdbcType="VARCHAR"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	OPERATOR_ID	,
+	USER_CODE	,
+	USER_NAME	,
+	SHOP_CODE	,
+	SHOP_NAME	,
+	RESULT	,
+	REASON	,
+	STATUS	,
+	UPDATE_TIME	,
+	CREATE_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.operatorId!=null">and operator_id like CONCAT('%',#{entity.operatorId},'%')</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.userName!=null">and user_name like CONCAT('%',#{entity.userName},'%')</if>
+		<if test="entity.shopCode!=null">and shop_code like CONCAT('%',#{entity.shopCode},'%')</if>
+		<if test="entity.shopName!=null">and shop_name like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.result!=null">and result like CONCAT('%',#{entity.result},'%')</if>
+		<if test="entity.reason!=null">and reason like CONCAT('%',#{entity.reason},'%')</if>
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ReminderDzdtResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_reminder_dzdt
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_reminder_dzdt
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.reminder.domain.ReminderDzdtDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_reminder_dzdt
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userName!=null">
+				USER_NAME	,
+			</if>
+			<if test="shopCode!=null">
+				SHOP_CODE	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="result!=null">
+				RESULT	,
+			</if>
+			<if test="reason!=null">
+				REASON	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userName!=null">
+				#{userName}	,
+			</if>
+			<if test="shopCode!=null">
+				#{shopCode}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="result!=null">
+				#{result}	,
+			</if>
+			<if test="reason!=null">
+				#{reason}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.reminder.domain.ReminderDzdtDomain">
+		update isales_app.t_isales_reminder_dzdt
+		<set>
+			OPERATOR_ID = #{operatorId},
+			USER_CODE = #{userCode},
+			USER_NAME = #{userName},
+			SHOP_CODE = #{shopCode},
+			SHOP_NAME = #{shopName},
+			RESULT = #{result},
+			REASON = #{reason},
+			STATUS = #{status},
+			UPDATE_TIME = #{updateTime},
+			CREATE_TIME = #{createTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_reminder_dzdt 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ReminderDzdtResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_reminder_dzdt
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_reminder_dzdt
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

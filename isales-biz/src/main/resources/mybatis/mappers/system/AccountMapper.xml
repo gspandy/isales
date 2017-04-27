@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.account.dao.AccountDAO">
+	<!-- 根据登录名查询登录信息的方法 -->
+	<select id="findByAccountName" resultMap="AccountResultMap"
+		parameterType="String">
+		SELECT ua.id
+		     , ua.operator_id
+		     , ua.account_id
+		     , ua.account_name
+		     , ua.password
+		     , ua.create_time
+		     , ua.account_type
+		     , ua.account_status
+		     , u.audit_status AS audit_status
+		     , u.password AS default_password
+		     , u.status AS user_status
+		FROM
+		  isales_sys.t_qn_user_account ua
+		LEFT JOIN isales_sys.t_qn_user u
+		ON u.operator_id = ua.operator_id
+		WHERE
+		  upper(ua.account_name) = upper(#{accountName})
+	    order by ua.account_type ASC
+  	    limit 1  
+	</select>
+	<!-- 根据用户id查询登录信息的方法 -->
+	<select id="findOneByOperatorId" resultMap="AccountResultMap"
+		parameterType="Long">
+		SELECT ua.id
+		     , ua.operator_id
+		     , ua.account_id
+		     , ua.account_name
+		     , ua.password
+		     , ua.create_time
+		     , ua.account_type
+		     , ua.account_status
+		     , u.audit_status AS audit_status
+		     , u.password AS default_password
+		     , u.status AS user_status
+		FROM
+		  isales_sys.t_qn_user_account ua
+		LEFT JOIN isales_sys.t_qn_user u
+		ON u.operator_id = ua.operator_id
+		WHERE
+		 ua.operator_id = #{operatorId}
+		   order by  ua.account_status ASC ,ua.account_type ASC
+			    limit 1 
+	</select>
+	<!-- 根据用户operatorId查询登录信息的方法 -->
+	<select id="findByOperatorId" resultMap="AccountResultMap"
+		parameterType="Long">
+		SELECT ua.id
+		     , ua.operator_id
+		     , ua.account_id
+		     , ua.account_name
+		     , ua.password
+		     , ua.create_time
+		     , ua.account_type
+		     , ua.account_status
+		FROM
+		  isales_sys.t_qn_user_account ua
+		WHERE
+		 ua.operator_id = #{operatorId}
+	</select>
+	<!-- 根据用户operatorId查询登录信息的方法 -->
+	<update id="updateAccountPwdByOperatorId" >
+		update isales_sys.t_qn_user_account
+		set password = #{newPwd}
+		WHERE
+		 operator_id = #{operatorId}
+	</update>
+</mapper>

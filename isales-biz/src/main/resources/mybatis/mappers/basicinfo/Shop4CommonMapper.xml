@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.basicinfo.shop.dao.ShopDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ShopResultMap" type="com.haier.isales.basicinfo.shop.domain.ShopDomain">
+		<id column="shop_code" property="shopCode"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="org_code" property="orgCode"  jdbcType="VARCHAR"  />
+		<result column="org_name" property="orgName"  jdbcType="VARCHAR"  />
+		<result column="DEL_FLAG" property="delFlag"  jdbcType="VARCHAR"  />
+		<result column="POST_CODE" property="postCode"  jdbcType="VARCHAR"  />
+		<result column="PA_CODE" property="paCode"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	SHOP_CODE	,
+	SHOP_NAME	,
+	ORG_CODE	,
+	ORG_NAME	,
+	DEL_FLAG	,
+	POST_CODE	,
+	PA_CODE	
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.shopCode!=null">and shop_code like CONCAT('%',#{entity.shopCode},'%')</if>
+		<if test="entity.shopName!=null">and shop_name like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.orgCode!=null">and org_code like CONCAT('%',#{entity.orgCode},'%')</if>
+		<if test="entity.orgName!=null">and org_name like CONCAT('%',#{entity.orgName},'%')</if>
+		<if test="entity.delFlag!=null">and DEL_FLAG like CONCAT('%',#{entity.delFlag},'%')</if>
+		<if test="entity.postCode!=null">and POST_CODE like CONCAT('%',#{entity.postCode},'%')</if>
+		<if test="entity.paCode!=null">and PA_CODE like CONCAT('%',#{entity.paCode},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ShopResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop
+		where shop_code = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_shop
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.basicinfo.shop.domain.ShopDomain" >
+		insert into isales_app.t_isales_shop
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="shopCode!=null">
+				SHOP_CODE	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="orgCode!=null">
+				ORG_CODE	,
+			</if>
+			<if test="orgName!=null">
+				ORG_NAME	,
+			</if>
+			<if test="delFlag!=null">
+				DEL_FLAG	,
+			</if>
+			<if test="postCode!=null">
+				POST_CODE		
+			</if>
+			<if test="paCode!=null">
+				PA_CODE		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="shopCode!=null">
+				#{shopCode}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="orgCode!=null">
+				#{orgCode}	,
+			</if>
+			<if test="orgName!=null">
+				#{orgName}	,
+			</if>
+			<if test="delFlag!=null">
+				#{delFlag}	,
+			</if>
+			<if test="postCode!=null">
+				#{postCode}		
+			</if>
+			<if test="paCode!=null">
+				#{paCode}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.basicinfo.shop.domain.ShopDomain">
+		update isales_app.t_isales_shop
+		<set>
+			SHOP_NAME = #{shopName},
+			ORG_CODE = #{orgCode},
+			ORG_NAME = #{orgName},
+			DEL_FLAG = #{delFlag},
+			POST_CODE = #{postCode},
+			PA_CODE = #{paCode},
+		</set>
+		where shop_code = #{shopCode}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_app.t_isales_shop 
+		where shop_code = #{shopCode}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ShopResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_shop
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.basicinfo.pubarea.dao.ProvinceDAO">
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findProvinceInfo" resultMap="ProvinceResultMap" 
+		parameterType="com.haier.isales.basicinfo.pubarea.domain.ProvinceDomain">
+		select PA_CODE, PA_NAME, PA_PCODE, PA_LEVEL
+		from isales_app.t_isales_province
+		where 1=1
+		<if test="paCode != null and paCode != ''">
+			and PA_CODE = #{paCode}
+		</if>
+		<if test="paName != null and paName != ''">
+			and PA_NAME like CONCAT('%',#{paName},'%')
+		</if>
+		order by PA_CODE
+	</select>
+</mapper>

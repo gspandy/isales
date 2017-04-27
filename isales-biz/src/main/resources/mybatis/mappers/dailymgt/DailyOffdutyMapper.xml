@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.dailymgt.dao.DailyOffdutyDAO">
+	<!-- 根据用户ID + 时间 按天获取休班条数  -->
+	<select id="checkIsOnDuty" resultType="integer" >
+		select count(1) 
+		from isales_app.t_isales_dailymgt_offduty
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(offduty_date,'%Y-%m-%d')= DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and status = '101'
+	</select>
+	<!-- 根据用户ID + 时间 按月份获取休班列表,当前时间以后的休班返回可以取消休班标志N  -->
+	<select id="searchOffDutyByMonth" resultMap="DailyOffdutyResultMap" >
+		select DATE_FORMAT(offduty_date,'%Y-%m-%d') as date_string,
+		case when offduty_date > now()
+        then 'Y'
+        else 'N' 
+        END CANDELETE
+		from isales_app.t_isales_dailymgt_offduty
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(offduty_date,'%Y-%m')= DATE_FORMAT(#{queryTime},'%Y-%m') 
+		and status = '101'
+		order by offduty_date
+	</select>
+	<!-- 根据用户ID + 时间 取消休班  -->
+	<select id="deleteOffDuty">
+		update isales_app.t_isales_dailymgt_offduty 
+		set status = '102',update_time=now(),update_id = #{operatorId}
+		where operator_id = #{operatorId}
+		and DATE_FORMAT(offduty_date,'%Y-%m-%d') = DATE_FORMAT(#{queryTime},'%Y-%m-%d') 
+		and status = '101'
+	</select>
+
+</mapper>

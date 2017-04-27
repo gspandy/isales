@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.customer.dao.PotentialCustomerDAO">
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="getPotentialCustomerList" resultMap="PotentialCustomerResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_customer_potential
+		where 1=1
+		<include refid="searchConditions"/>
+		<!-- 排序条件 -->
+		<![CDATA[
+		order by abs(DATEDIFF(expected_buy_date , sysdate())),(expected_buy_date < sysdate()),id
+		]]>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="getPotentialCustomerCount" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_customer_potential
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+	
+	<!-- 按照ID主键删除一条记录的功能,逻辑删除 -->
+	<update id="deleteLogical" parameterType="com.haier.isales.customer.domain.PotentialCustomerDomain">
+		update isales_app.t_isales_customer_potential
+		set customer_status = #{entity.customerStatus}
+		where id = #{entity.id}
+	</update>
+	
+	<!-- 查找该用户下，已过提醒日期，未到预购日期的潜客数目。 -->
+	<select id="getCountByOperatorId" parameterType = "long" resultType = "integer">
+		select count(1) from isales_app.t_isales_customer_potential 
+		where user_id = #{userId} 
+		and expected_buy_date &gt;= now() 
+		and remind_time &lt;= now()
+	</select>
+</mapper>

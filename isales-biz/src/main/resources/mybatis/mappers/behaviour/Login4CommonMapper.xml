@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.behaviour.login.dao.LoginDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="LoginResultMap" type="com.haier.isales.behaviour.login.domain.LoginDomain">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+		<result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="USER_IP" property="userIp" jdbcType="VARCHAR" />
+		<result column="USER_DEVICE" property="userDevice" jdbcType="VARCHAR" />
+		<result column="client_mac" property="clientMac" jdbcType="VARCHAR" />
+		<result column="client_type" property="clientType" jdbcType="VARCHAR" />
+		<result column="client_version" property="clientVersion" jdbcType="VARCHAR" />
+		<result column="client_os_type" property="clientOsType" jdbcType="VARCHAR" />
+		<result column="client_os_version" property="clientOsVersion" jdbcType="VARCHAR" />
+		<result column="ONLINE_TIME" property="onlineTime" jdbcType="BIGINT" />
+		<result column="LOGOUT_TIME" property="logoutTime" jdbcType="TIMESTAMP" />
+		<result column="LOGOUT_TYPE" property="logoutType" jdbcType="VARCHAR" />
+		<result column="client_info" property="clientInfo" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	USER_ID	,
+	LOGIN_NAME	,
+	SESSION_ID	,
+	LOGIN_TIME	,
+	USER_IP	,
+	USER_DEVICE	,
+	CLIENT_MAC	,
+	CLIENT_TYPE	,
+	CLIENT_VERSION	,
+	CLIENT_OS_TYPE	,
+	CLIENT_OS_VERSION	,
+	ONLINE_TIME	,
+	LOGOUT_TIME	,
+	LOGOUT_TYPE	,
+	CLIENT_INFO	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and ID=#{entity.id}</if>
+		<if test="entity.userId!=null">and user_id=#{entity.userId}</if>
+		<if test="entity.loginName!=null">and login_name like CONCAT('%',#{entity.loginName},'%')</if>
+		<if test="entity.sessionId!=null">and session_id like CONCAT('%',#{entity.sessionId},'%')</if>
+		<!-- java.util.Date LOGIN_TIME has been ignored!!! -->
+		<if test="entity.userIp!=null">and USER_IP like CONCAT('%',#{entity.userIp},'%')</if>
+		<if test="entity.userDevice!=null">and USER_DEVICE like CONCAT('%',#{entity.userDevice},'%')</if>
+		<if test="entity.clientMac!=null">and client_mac like CONCAT('%',#{entity.clientMac},'%')</if>
+		<if test="entity.clientType!=null">and client_type like CONCAT('%',#{entity.clientType},'%')</if>
+		<if test="entity.clientVersion!=null">and client_version like CONCAT('%',#{entity.clientVersion},'%')</if>
+		<if test="entity.clientOsType!=null">and client_os_type like CONCAT('%',#{entity.clientOsType},'%')</if>
+		<if test="entity.clientOsVersion!=null">and client_os_version like CONCAT('%',#{entity.clientOsVersion},'%')</if>
+		<if test="entity.onlineTime!=null">and ONLINE_TIME=#{entity.onlineTime}</if>
+		<!-- java.util.Date LOGOUT_TIME has been ignored!!! -->
+		<if test="entity.logoutType!=null">and LOGOUT_TYPE like CONCAT('%',#{entity.logoutType},'%')</if>
+		<if test="entity.clientInfo!=null">and client_info like CONCAT('%',#{entity.clientInfo},'%')</if>
+		<if test="entity.remark!=null">and REMARK like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="LoginResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_login_behaviour
+		where ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_login_behaviour
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.behaviour.login.domain.LoginDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_sys.t_sys_login_behaviour
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				USER_ID	,
+			</if>
+			<if test="loginName!=null">
+				LOGIN_NAME	,
+			</if>
+			<if test="sessionId!=null">
+				SESSION_ID	,
+			</if>
+			<if test="loginTime!=null">
+				LOGIN_TIME	,
+			</if>
+			<if test="userIp!=null">
+				USER_IP	,
+			</if>
+			<if test="userDevice!=null">
+				USER_DEVICE	,
+			</if>
+			<if test="clientMac!=null">
+				CLIENT_MAC	,
+			</if>
+			<if test="clientType!=null">
+				CLIENT_TYPE	,
+			</if>
+			<if test="clientVersion!=null">
+				CLIENT_VERSION	,
+			</if>
+			<if test="clientOsType!=null">
+				CLIENT_OS_TYPE	,
+			</if>
+			<if test="clientOsVersion!=null">
+				CLIENT_OS_VERSION	,
+			</if>
+			<if test="onlineTime!=null">
+				ONLINE_TIME	,
+			</if>
+			<if test="logoutTime!=null">
+				LOGOUT_TIME	,
+			</if>
+			<if test="logoutType!=null">
+				LOGOUT_TYPE	,
+			</if>
+			<if test="clientInfo!=null">
+				CLIENT_INFO	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				#{userId}	,
+			</if>
+			<if test="loginName!=null">
+				#{loginName}	,
+			</if>
+			<if test="sessionId!=null">
+				#{sessionId}	,
+			</if>
+			<if test="loginTime!=null">
+				#{loginTime}	,
+			</if>
+			<if test="userIp!=null">
+				#{userIp}	,
+			</if>
+			<if test="userDevice!=null">
+				#{userDevice}	,
+			</if>
+			<if test="clientMac!=null">
+				#{clientMac}	,
+			</if>
+			<if test="clientType!=null">
+				#{clientType}	,
+			</if>
+			<if test="clientVersion!=null">
+				#{clientVersion}	,
+			</if>
+			<if test="clientOsType!=null">
+				#{clientOsType}	,
+			</if>
+			<if test="clientOsVersion!=null">
+				#{clientOsVersion}	,
+			</if>
+			<if test="onlineTime!=null">
+				#{onlineTime}	,
+			</if>
+			<if test="logoutTime!=null">
+				#{logoutTime}	,
+			</if>
+			<if test="logoutType!=null">
+				#{logoutType}	,
+			</if>
+			<if test="clientInfo!=null">
+				#{clientInfo}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.behaviour.login.domain.LoginDomain">
+		update isales_sys.t_sys_login_behaviour
+		<set>
+			USER_ID = #{userId},
+			LOGIN_NAME = #{loginName},
+			SESSION_ID = #{sessionId},
+			LOGIN_TIME = #{loginTime},
+			USER_IP = #{userIp},
+			USER_DEVICE = #{userDevice},
+			CLIENT_MAC = #{clientMac},
+			CLIENT_TYPE = #{clientType},
+			CLIENT_VERSION = #{clientVersion},
+			CLIENT_OS_TYPE = #{clientOsType},
+			CLIENT_OS_VERSION = #{clientOsVersion},
+			ONLINE_TIME = #{onlineTime},
+			LOGOUT_TIME = #{logoutTime},
+			LOGOUT_TYPE = #{logoutType},
+			CLIENT_INFO = #{clientInfo},
+			REMARK = #{remark},
+		</set>
+		where ID = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_sys.t_sys_login_behaviour 
+		where ID = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="LoginResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_login_behaviour
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_login_behaviour
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

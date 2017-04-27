@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.leaguer.cardsetrate.dao.CardSetRateDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="CardSetRateResultMap" type="com.haier.isales.performance.leaguer.cardsetrate.domain.CardSetRateDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="MONTH" property="month"  jdbcType="VARCHAR"  />
+		<result column="ORG_ID" property="orgId"  jdbcType="VARCHAR"  />
+		<result column="ORG_NAME" property="orgName"  jdbcType="VARCHAR"  />
+		<result column="SHOP_ID" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="SHOP_NAME" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT_LINE_ID" property="productLineId"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT_LINE_NAME" property="productLineName"  jdbcType="VARCHAR"  />
+		<result column="COUNTS" property="counts"  jdbcType="DECIMAL"  />
+		<result column="REGIST_QTY" property="registQty"  jdbcType="DECIMAL"  />
+		<result column="REGIST_RATE" property="registRate"  jdbcType="DECIMAL"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	MONTH	,
+	ORG_ID	,
+	ORG_NAME	,
+	SHOP_ID	,
+	SHOP_NAME	,
+	PRODUCT_LINE_ID	,
+	PRODUCT_LINE_NAME	,
+	COUNTS	,
+	REGIST_QTY	,
+	REGIST_RATE	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.month!=null">and MONTH like CONCAT('%',#{entity.month},'%')</if>
+		<if test="entity.orgId!=null">and ORG_ID like CONCAT('%',#{entity.orgId},'%')</if>
+		<if test="entity.orgName!=null">and ORG_NAME like CONCAT('%',#{entity.orgName},'%')</if>
+		<if test="entity.shopId!=null">and SHOP_ID like CONCAT('%',#{entity.shopId},'%')</if>
+		<if test="entity.shopName!=null">and SHOP_NAME like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.productLineId!=null">and PRODUCT_LINE_ID like CONCAT('%',#{entity.productLineId},'%')</if>
+		<if test="entity.productLineName!=null">and PRODUCT_LINE_NAME like CONCAT('%',#{entity.productLineName},'%')</if>
+		<if test="entity.counts!=null">and COUNTS=#{entity.counts}</if>
+		<if test="entity.registQty!=null">and REGIST_QTY=#{entity.registQty}</if>
+		<if test="entity.registRate!=null">and REGIST_RATE=#{entity.registRate}</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="CardSetRateResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_zzjyt_card_set_rate
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_zzjyt_card_set_rate
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.performance.leaguer.cardsetrate.domain.CardSetRateDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_zzjyt_card_set_rate
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="month!=null">
+				MONTH	,
+			</if>
+			<if test="orgId!=null">
+				ORG_ID	,
+			</if>
+			<if test="orgName!=null">
+				ORG_NAME	,
+			</if>
+			<if test="shopId!=null">
+				SHOP_ID	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="productLineId!=null">
+				PRODUCT_LINE_ID	,
+			</if>
+			<if test="productLineName!=null">
+				PRODUCT_LINE_NAME	,
+			</if>
+			<if test="counts!=null">
+				COUNTS	,
+			</if>
+			<if test="registQty!=null">
+				REGIST_QTY	,
+			</if>
+			<if test="registRate!=null">
+				REGIST_RATE	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="month!=null">
+				#{month}	,
+			</if>
+			<if test="orgId!=null">
+				#{orgId}	,
+			</if>
+			<if test="orgName!=null">
+				#{orgName}	,
+			</if>
+			<if test="shopId!=null">
+				#{shopId}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="productLineId!=null">
+				#{productLineId}	,
+			</if>
+			<if test="productLineName!=null">
+				#{productLineName}	,
+			</if>
+			<if test="counts!=null">
+				#{counts}	,
+			</if>
+			<if test="registQty!=null">
+				#{registQty}	,
+			</if>
+			<if test="registRate!=null">
+				#{registRate}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.performance.leaguer.cardsetrate.domain.CardSetRateDomain">
+		update isales_app.t_zzjyt_card_set_rate
+		<set>
+			MONTH = #{month},
+			ORG_ID = #{orgId},
+			ORG_NAME = #{orgName},
+			SHOP_ID = #{shopId},
+			SHOP_NAME = #{shopName},
+			PRODUCT_LINE_ID = #{productLineId},
+			PRODUCT_LINE_NAME = #{productLineName},
+			COUNTS = #{counts},
+			REGIST_QTY = #{registQty},
+			REGIST_RATE = #{registRate},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_zzjyt_card_set_rate 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="CardSetRateResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_zzjyt_card_set_rate
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_zzjyt_card_set_rate
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.score.dao.ScoreRuleDAO">
+	<!-- 根据主键序列字符串查询实体类的方法 -->
+	<select id="findByIds" resultMap="ScoreRuleResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_rule
+		where id in (${ids})
+	</select>
+</mapper>

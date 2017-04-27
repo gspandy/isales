@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.quartz.yangji.dao.YangjiDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="yangjiResultMap" type="com.haier.isales.quartz.yangji.domain.YangjiDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="yangjikey" property="key"  jdbcType="VARCHAR"  />
+		<result column="storeCode" property="storeCode"  jdbcType="VARCHAR"  />
+		<result column="storeName" property="storeName"  jdbcType="VARCHAR"  />
+		<result column="modelCode" property="modelCode"  jdbcType="VARCHAR"  />
+		<result column="industryCode" property="industryCode"  jdbcType="VARCHAR"  />
+		<result column="industryName" property="industryName"  jdbcType="VARCHAR"  />
+		<result column="operStatus" property="operStatus"  jdbcType="VARCHAR"  />
+		<result column="operDate" property="operDate"  jdbcType="TIMESTAMP"  />
+		<result column="yangjiType" property="yangjiType"  jdbcType="VARCHAR"  />
+		<result column="barNum" property="barNum"  jdbcType="VARCHAR"  />
+	</resultMap>
+
+	<!-- 实体的保存法方法 -->
+	<insert id="saveYangjiDao" parameterType="com.haier.isales.quartz.yangji.domain.YangjiDomain"  useGeneratedKeys="true" keyProperty="entity.id" >
+		insert into isales_app.t_isales_yangji_pushdata
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="entity.key!=null">
+				yangjikey ,
+			</if>
+			<if test="entity.storeCode!=null">
+				storeCode ,
+			</if>
+			<if test="entity.storeName!=null">
+				storeName ,
+			</if>
+			<if test="entity.modelCode!=null">
+				modelCode ,
+			</if>
+			<if test="entity.industryCode!=null">
+				industryCode ,
+			</if>
+			<if test="entity.industryName!=null">
+				industryName ,
+			</if>
+			<if test="entity.operStatus!=null">
+				operStatus ,
+			</if>
+			<if test="entity.operDate!=null">
+				operDate ,
+			</if>
+			<if test="entity.yangjiType!=null">
+				yangjiType ,
+			</if>
+			<if test="entity.barNum!=null">
+				barNum
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="entity.key!=null">
+				#{entity.key} ,
+			</if>
+			<if test="entity.storeCode!=null">
+				#{entity.storeCode} ,
+			</if>
+			<if test="entity.storeName!=null">
+				#{entity.storeName} ,
+			</if>
+			<if test="entity.modelCode!=null">
+				#{entity.modelCode} ,
+			</if>
+			<if test="entity.industryCode!=null">
+				#{entity.industryCode}	,
+			</if>
+			<if test="entity.industryName!=null">
+				#{entity.industryName}	,
+			</if>
+			<if test="entity.operStatus!=null">
+				#{entity.operStatus} ,
+			</if>
+			<if test="entity.operDate!=null">
+				#{entity.operDate}	,
+			</if>
+			<if test="entity.yangjiType!=null">
+				#{entity.yangjiType} ,
+			</if>
+			<if test="entity.barNum!=null">
+				#{entity.barNum}
+			</if>
+		</trim>
+	</insert>
+</mapper>

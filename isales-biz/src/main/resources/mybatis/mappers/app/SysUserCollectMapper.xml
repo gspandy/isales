@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.SysUserCollectDAO">
+	<!-- 根据工号更新收藏联系人关联状态 -->
+	<update id="updateCollect" parameterType="com.haier.isales.app.domain.SysUserCollectDomain">
+		update isales_sys.t_sys_user_collect
+		<set>
+			REF_STATUS = #{entity.refStatus},
+			UPDATE_TIME = #{entity.updateTime},
+		</set>
+		where 1=1
+		<if test="entity.userCode!=null and entity.userCode != ''">
+			and user_code = #{entity.userCode}
+		</if>
+		<if test="entity.collectUserCode!=null and entity.collectUserCode != ''">
+			and collect_user_code = #{entity.collectUserCode}
+		</if>
+	</update>
+	
+	<!-- 根据参数查询所有的对象内容 -->
+	<select id="findUserCollectByParams" resultMap="SysUserCollectResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_user_collect
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

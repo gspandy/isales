@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">VIEW_BTB_RS_9225_MONTH</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_pro_line_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="GMCODE" dest="GMCODE" type="String" />
+		<mapping source="SHOPID" dest="SHOPID" type="String" />
+		<mapping source="HMCID" dest="HMCID" type="String" />
+		<mapping source="MONTH" dest="MONTH" type="String" />
+		<mapping source="PRODUCTID" dest="PRODUCTID" type="String" />
+		<mapping source="PRODUCTNAME" dest="PRODUCTNAME" type="String" />
+		<mapping source="TYPE" dest="TYPE" type="String" />
+		<mapping source="CPXTYPE" dest="CPXTYPE" type="String" />
+	</mappings>
+
+	<procedures>
+		<procedure name="p_insertdata_from_temp_pro_line" />
+	</procedures>
+</transform>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!--QUERY_RATAIL  -->
+	<bean id="queryRatailTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="edwDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/edw/query-ratail-transform.xml"></property>
+	</bean>
+	
+	<!--QUERY_RATAIL_690  -->
+	<bean id="queryRatail690Transform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="edwDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/edw/query-ratail-690-transform.xml"></property>
+	</bean>
+	
+	<!-- ============================================================================== -->
+	<!-- ===================edw 同步数据 GuoYuchao 2014-12-15 begin=============== -->
+	<!-- 月度CPM提报到一级经营体(金额)零售计划临时表-->
+	<bean id="queryRatail1169Transform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="edwDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/edw/queryRatail1169-transform.xml"></property>
+	</bean>
+	<!-- 月度690RCM报的零售计划(到客户到门店)-->
+	<bean id="queryYeRet690Transform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="edwDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/edw/queryYeRet690-transform.xml"></property>
+	</bean>
+	<!-- ===================edw 同步数据 GuoYuchao 2014-12-15 end=============== -->
+
+	<bean id="queryBTBRatailTransform" class="org.bana.common.util.etl.SimpleTransform">
+		<property name="sourceDatasource" ref="edwDataSource" />
+		<property name="destDatasource" ref="dataSource" />
+		<property name="configPath" value="/quartz/etl/edw/query-btb-ratail-transform.xml"></property>
+	</bean>
+	
+</beans>

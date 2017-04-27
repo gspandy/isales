@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.salerinfo.personalinfo.dao.PersonalInfoDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="PersonalInfoResultMap" type="com.haier.isales.salerinfo.personalinfo.domain.PersonalInfoDomain">
+		<id column="HMC_ID" property="hmcId" jdbcType="VARCHAR" />
+		<result column="XJYT_ID" property="xjytId" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="ORGANALYSISATTR4" property="organalysisattr4" jdbcType="VARCHAR" />
+		<result column="ORGANALYSISATTR2" property="organalysisattr2" jdbcType="VARCHAR" />
+		<result column="ORGANALYSISATTR3" property="organalysisattr3" jdbcType="VARCHAR" />
+		<result column="ORGANALYSISATTR1" property="organalysisattr1" jdbcType="VARCHAR" />
+		<result column="MANAGE_ORG_CODE" property="manageOrgCode" jdbcType="VARCHAR" />
+		<result column="GLKH_NAME" property="glkhName" jdbcType="VARCHAR" />
+		<result column="BUID" property="buid" jdbcType="VARCHAR" />
+		<result column="BU_NAME" property="buName" jdbcType="VARCHAR" />
+		<result column="SHOP_ID" property="shopId" jdbcType="VARCHAR" />
+		<result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="RZLX" property="rzlx" jdbcType="VARCHAR" />
+		<result column="HNAME" property="hname" jdbcType="VARCHAR" />
+		<result column="MARKET_GROUP" property="marketGroup" jdbcType="VARCHAR" />
+		<result column="HAIER_CODE" property="haierCode" jdbcType="VARCHAR" />
+		<result column="GW_TYPE" property="gwType" jdbcType="VARCHAR" />
+		<result column="GW_ID" property="gwId" jdbcType="VARCHAR" />
+		<result column="GW_NAME" property="gwName" jdbcType="VARCHAR" />
+		<result column="HSEX" property="hsex" jdbcType="VARCHAR" />
+		<result column="RYFL" property="ryfl" jdbcType="VARCHAR" />
+		<result column="NATION" property="nation" jdbcType="VARCHAR" />
+		<result column="BIRTHDATE" property="birthdate" jdbcType="VARCHAR" />
+		<result column="IDENTITY_CARD" property="identityCard" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="WORK_TIME" property="workTime" jdbcType="VARCHAR" />
+		<result column="RBTBDATE" property="rbtbdate" jdbcType="VARCHAR" />
+		<result column="PACTKS_DATE" property="pactksDate" jdbcType="VARCHAR" />
+		<result column="PACTJS_DATE" property="pactjsDate" jdbcType="VARCHAR" />
+		<result column="PACTUNIT" property="pactunit" jdbcType="VARCHAR" />
+		<result column="HMAIL" property="hmail" jdbcType="VARCHAR" />
+		<result column="ZXY_TYPE" property="zxyType" jdbcType="VARCHAR" />
+		<result column="YGT_YPE" property="ygtYpe" jdbcType="VARCHAR" />
+		<result column="RHAIER_DATE" property="rhaierDate" jdbcType="VARCHAR" />
+		<result column="HAIER_PACTUNIT" property="haierPactunit" jdbcType="VARCHAR" />
+		<result column="GWJB" property="gwjb" jdbcType="VARCHAR" />
+		<result column="LEAVE_DATE" property="leaveDate" jdbcType="TIMESTAMP" />
+		<result column="SYS_TYPE" property="sysType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="AddressBookResultMap" type="com.haier.isales.salerinfo.personalinfo.domain.AddrBookDomain">
+		<result column="HMC_ID" property="userCode" jdbcType="VARCHAR" />
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+		<result column="XJYT_ID" property="orgCode" jdbcType="VARCHAR" />
+		<result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+		<result column="HNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="NAMELETTER" property="nameLetter" jdbcType="VARCHAR" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CHAN_CODE" property="chanCode" jdbcType="VARCHAR" />
+		<result column="CHAN_NAME" property="chanName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	XJYT_ID	,
+	ORG_NAME	,
+	ORGANALYSISATTR4	,
+	ORGANALYSISATTR2	,
+	ORGANALYSISATTR3	,
+	ORGANALYSISATTR1	,
+	MANAGE_ORG_CODE	,
+	GLKH_NAME	,
+	BUID	,
+	BU_NAME	,
+	SHOP_ID	,
+	SHOP_NAME	,
+	STATUS	,
+	RZLX	,
+	HMC_ID	,
+	HNAME	,
+	MARKET_GROUP	,
+	HAIER_CODE	,
+	GW_TYPE	,
+	GW_ID	,
+	GW_NAME	,
+	HSEX	,
+	RYFL	,
+	NATION	,
+	BIRTHDATE	,
+	IDENTITY_CARD	,
+	PHONE	,
+	WORK_TIME	,
+	RBTBDATE	,
+	PACTKS_DATE	,
+	PACTJS_DATE	,
+	PACTUNIT	,
+	HMAIL	,
+	ZXY_TYPE	,
+	YGT_YPE	,
+	RHAIER_DATE	,
+	HAIER_PACTUNIT	,
+	GWJB	,
+	LEAVE_DATE	,
+	SYS_TYPE		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.xjytId!=null">and XJYT_ID like CONCAT('%',#{entity.xjytId},'%')</if>
+		<if test="entity.orgName!=null">and ORG_NAME like CONCAT('%',#{entity.orgName},'%')</if>
+		<if test="entity.organalysisattr4!=null">and ORGANALYSISATTR4 like CONCAT('%',#{entity.organalysisattr4},'%')</if>
+		<if test="entity.organalysisattr2!=null">and ORGANALYSISATTR2 like CONCAT('%',#{entity.organalysisattr2},'%')</if>
+		<if test="entity.organalysisattr3!=null">and ORGANALYSISATTR3 like CONCAT('%',#{entity.organalysisattr3},'%')</if>
+		<if test="entity.organalysisattr1!=null">and ORGANALYSISATTR1 like CONCAT('%',#{entity.organalysisattr1},'%')</if>
+		<if test="entity.manageOrgCode!=null">and MANAGE_ORG_CODE like CONCAT('%',#{entity.manageOrgCode},'%')</if>
+		<if test="entity.glkhName!=null">and GLKH_NAME like CONCAT('%',#{entity.glkhName},'%')</if>
+		<if test="entity.buid!=null">and BUID like CONCAT('%',#{entity.buid},'%')</if>
+		<if test="entity.buName!=null">and BU_NAME like CONCAT('%',#{entity.buName},'%')</if>
+		<if test="entity.shopId!=null">and SHOP_ID like CONCAT('%',#{entity.shopId},'%')</if>
+		<if test="entity.shopName!=null">and SHOP_NAME like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.status!=null">and STATUS like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.rzlx!=null">and RZLX like CONCAT('%',#{entity.rzlx},'%')</if>
+		<if test="entity.hmcId!=null">and HMC_ID like CONCAT('%',#{entity.hmcId},'%')</if>
+		<if test="entity.hname!=null">and HNAME like CONCAT('%',#{entity.hname},'%')</if>
+		<if test="entity.marketGroup!=null">and MARKET_GROUP like CONCAT('%',#{entity.marketGroup},'%')</if>
+		<if test="entity.haierCode!=null">and HAIER_CODE like CONCAT('%',#{entity.haierCode},'%')</if>
+		<if test="entity.gwType!=null">and GW_TYPE like CONCAT('%',#{entity.gwType},'%')</if>
+		<if test="entity.gwId!=null">and GW_ID like CONCAT('%',#{entity.gwId},'%')</if>
+		<if test="entity.gwName!=null">and GW_NAME like CONCAT('%',#{entity.gwName},'%')</if>
+		<if test="entity.hsex!=null">and HSEX like CONCAT('%',#{entity.hsex},'%')</if>
+		<if test="entity.ryfl!=null">and RYFL like CONCAT('%',#{entity.ryfl},'%')</if>
+		<if test="entity.nation!=null">and NATION like CONCAT('%',#{entity.nation},'%')</if>
+		<if test="entity.birthdate!=null">and BIRTHDATE like CONCAT('%',#{entity.birthdate},'%')</if>
+		<if test="entity.identityCard!=null">and IDENTITY_CARD like CONCAT('%',#{entity.identityCard},'%')</if>
+		<if test="entity.phone!=null">and PHONE like CONCAT('%',#{entity.phone},'%')</if>
+		<if test="entity.workTime!=null">and WORK_TIME like CONCAT('%',#{entity.workTime},'%')</if>
+		<if test="entity.rbtbdate!=null">and RBTBDATE like CONCAT('%',#{entity.rbtbdate},'%')</if>
+		<if test="entity.pactksDate!=null">and PACTKS_DATE like CONCAT('%',#{entity.pactksDate},'%')</if>
+		<if test="entity.pactjsDate!=null">and PACTJS_DATE like CONCAT('%',#{entity.pactjsDate},'%')</if>
+		<if test="entity.pactunit!=null">and PACTUNIT like CONCAT('%',#{entity.pactunit},'%')</if>
+		<if test="entity.hmail!=null">and HMAIL like CONCAT('%',#{entity.hmail},'%')</if>
+		<if test="entity.zxyType!=null">and ZXY_TYPE like CONCAT('%',#{entity.zxyType},'%')</if>
+		<if test="entity.ygtYpe!=null">and YGT_YPE like CONCAT('%',#{entity.ygtYpe},'%')</if>
+		<if test="entity.rhaierDate!=null">and RHAIER_DATE like CONCAT('%',#{entity.rhaierDate},'%')</if>
+		<if test="entity.haierPactunit!=null">and HAIER_PACTUNIT like CONCAT('%',#{entity.haierPactunit},'%')</if>
+		<if test="entity.gwjb!=null">and GWJB like CONCAT('%',#{entity.gwjb},'%')</if>
+		<!-- java.util.Date LEAVE_DATE has been ignored!!! -->
+		<if test="entity.sysType!=null">and SYS_TYPE like CONCAT('%',#{entity.sysType},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="PersonalInfoResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee
+		where HMC_ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_employee
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.salerinfo.personalinfo.domain.PersonalInfoDomain" >
+		insert into isales_sys.t_sys_employee
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="xjytId!=null">
+				XJYT_ID	,
+			</if>
+			<if test="orgName!=null">
+				ORG_NAME	,
+			</if>
+			<if test="organalysisattr4!=null">
+				ORGANALYSISATTR4	,
+			</if>
+			<if test="organalysisattr2!=null">
+				ORGANALYSISATTR2	,
+			</if>
+			<if test="organalysisattr3!=null">
+				ORGANALYSISATTR3	,
+			</if>
+			<if test="organalysisattr1!=null">
+				ORGANALYSISATTR1	,
+			</if>
+			<if test="manageOrgCode!=null">
+				MANAGE_ORG_CODE	,
+			</if>
+			<if test="glkhName!=null">
+				GLKH_NAME	,
+			</if>
+			<if test="buid!=null">
+				BUID	,
+			</if>
+			<if test="buName!=null">
+				BU_NAME	,
+			</if>
+			<if test="shopId!=null">
+				SHOP_ID	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="rzlx!=null">
+				RZLX	,
+			</if>
+			<if test="hmcId!=null">
+				HMC_ID	,
+			</if>
+			<if test="hname!=null">
+				HNAME	,
+			</if>
+			<if test="marketGroup!=null">
+				MARKET_GROUP	,
+			</if>
+			<if test="haierCode!=null">
+				HAIER_CODE	,
+			</if>
+			<if test="gwType!=null">
+				GW_TYPE	,
+			</if>
+			<if test="gwId!=null">
+				GW_ID	,
+			</if>
+			<if test="gwName!=null">
+				GW_NAME	,
+			</if>
+			<if test="hsex!=null">
+				HSEX	,
+			</if>
+			<if test="ryfl!=null">
+				RYFL	,
+			</if>
+			<if test="nation!=null">
+				NATION	,
+			</if>
+			<if test="birthdate!=null">
+				BIRTHDATE	,
+			</if>
+			<if test="identityCard!=null">
+				IDENTITY_CARD	,
+			</if>
+			<if test="phone!=null">
+				PHONE	,
+			</if>
+			<if test="workTime!=null">
+				WORK_TIME	,
+			</if>
+			<if test="rbtbdate!=null">
+				RBTBDATE	,
+			</if>
+			<if test="pactksDate!=null">
+				PACTKS_DATE	,
+			</if>
+			<if test="pactjsDate!=null">
+				PACTJS_DATE	,
+			</if>
+			<if test="pactunit!=null">
+				PACTUNIT	,
+			</if>
+			<if test="hmail!=null">
+				HMAIL	,
+			</if>
+			<if test="zxyType!=null">
+				ZXY_TYPE	,
+			</if>
+			<if test="ygtYpe!=null">
+				YGT_YPE	,
+			</if>
+			<if test="rhaierDate!=null">
+				RHAIER_DATE	,
+			</if>
+			<if test="haierPactunit!=null">
+				HAIER_PACTUNIT	,
+			</if>
+			<if test="gwjb!=null">
+				GWJB	,
+			</if>
+			<if test="leaveDate!=null">
+				LEAVE_DATE	,
+			</if>
+			<if test="sysType!=null">
+				SYS_TYPE		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="xjytId!=null">
+				#{xjytId}	,
+			</if>
+			<if test="orgName!=null">
+				#{orgName}	,
+			</if>
+			<if test="organalysisattr4!=null">
+				#{organalysisattr4}	,
+			</if>
+			<if test="organalysisattr2!=null">
+				#{organalysisattr2}	,
+			</if>
+			<if test="organalysisattr3!=null">
+				#{organalysisattr3}	,
+			</if>
+			<if test="organalysisattr1!=null">
+				#{organalysisattr1}	,
+			</if>
+			<if test="manageOrgCode!=null">
+				#{manageOrgCode}	,
+			</if>
+			<if test="glkhName!=null">
+				#{glkhName}	,
+			</if>
+			<if test="buid!=null">
+				#{buid}	,
+			</if>
+			<if test="buName!=null">
+				#{buName}	,
+			</if>
+			<if test="shopId!=null">
+				#{shopId}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="rzlx!=null">
+				#{rzlx}	,
+			</if>
+			<if test="hmcId!=null">
+				#{hmcId}	,
+			</if>
+			<if test="hname!=null">
+				#{hname}	,
+			</if>
+			<if test="marketGroup!=null">
+				#{marketGroup}	,
+			</if>
+			<if test="haierCode!=null">
+				#{haierCode}	,
+			</if>
+			<if test="gwType!=null">
+				#{gwType}	,
+			</if>
+			<if test="gwId!=null">
+				#{gwId}	,
+			</if>
+			<if test="gwName!=null">
+				#{gwName}	,
+			</if>
+			<if test="hsex!=null">
+				#{hsex}	,
+			</if>
+			<if test="ryfl!=null">
+				#{ryfl}	,
+			</if>
+			<if test="nation!=null">
+				#{nation}	,
+			</if>
+			<if test="birthdate!=null">
+				#{birthdate}	,
+			</if>
+			<if test="identityCard!=null">
+				#{identityCard}	,
+			</if>
+			<if test="phone!=null">
+				#{phone}	,
+			</if>
+			<if test="workTime!=null">
+				#{workTime}	,
+			</if>
+			<if test="rbtbdate!=null">
+				#{rbtbdate}	,
+			</if>
+			<if test="pactksDate!=null">
+				#{pactksDate}	,
+			</if>
+			<if test="pactjsDate!=null">
+				#{pactjsDate}	,
+			</if>
+			<if test="pactunit!=null">
+				#{pactunit}	,
+			</if>
+			<if test="hmail!=null">
+				#{hmail}	,
+			</if>
+			<if test="zxyType!=null">
+				#{zxyType}	,
+			</if>
+			<if test="ygtYpe!=null">
+				#{ygtYpe}	,
+			</if>
+			<if test="rhaierDate!=null">
+				#{rhaierDate}	,
+			</if>
+			<if test="haierPactunit!=null">
+				#{haierPactunit}	,
+			</if>
+			<if test="gwjb!=null">
+				#{gwjb}	,
+			</if>
+			<if test="leaveDate!=null">
+				#{leaveDate}	,
+			</if>
+			<if test="sysType!=null">
+				#{sysType}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.salerinfo.personalinfo.domain.PersonalInfoDomain">
+		update isales_sys.t_sys_employee
+		<set>
+			XJYT_ID = #{xjytId},
+			ORG_NAME = #{orgName},
+			ORGANALYSISATTR4 = #{organalysisattr4},
+			ORGANALYSISATTR2 = #{organalysisattr2},
+			ORGANALYSISATTR3 = #{organalysisattr3},
+			ORGANALYSISATTR1 = #{organalysisattr1},
+			MANAGE_ORG_CODE = #{manageOrgCode},
+			GLKH_NAME = #{glkhName},
+			BUID = #{buid},
+			BU_NAME = #{buName},
+			SHOP_ID = #{shopId},
+			SHOP_NAME = #{shopName},
+			STATUS = #{status},
+			RZLX = #{rzlx},
+			HNAME = #{hname},
+			MARKET_GROUP = #{marketGroup},
+			HAIER_CODE = #{haierCode},
+			GW_TYPE = #{gwType},
+			GW_ID = #{gwId},
+			GW_NAME = #{gwName},
+			HSEX = #{hsex},
+			RYFL = #{ryfl},
+			NATION = #{nation},
+			BIRTHDATE = #{birthdate},
+			IDENTITY_CARD = #{identityCard},
+			PHONE = #{phone},
+			WORK_TIME = #{workTime},
+			RBTBDATE = #{rbtbdate},
+			PACTKS_DATE = #{pactksDate},
+			PACTJS_DATE = #{pactjsDate},
+			PACTUNIT = #{pactunit},
+			HMAIL = #{hmail},
+			ZXY_TYPE = #{zxyType},
+			YGT_YPE = #{ygtYpe},
+			RHAIER_DATE = #{rhaierDate},
+			HAIER_PACTUNIT = #{haierPactunit},
+			GWJB = #{gwjb},
+			LEAVE_DATE = #{leaveDate},
+			SYS_TYPE = #{sysType},
+		</set>
+		where HMC_ID = #{hmcId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_sys_employee 
+		where HMC_ID = #{hmcId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="PersonalInfoResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_employee
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

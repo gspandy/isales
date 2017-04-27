@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+    <dubbo:application name="${app.name}" owner="wangxuzheng" organization="haier"/>
+<!--     <dubbo:monitor protocol="registry" timeout="10000"></dubbo:monitor> -->
+    <dubbo:monitor protocol="registry" ></dubbo:monitor>
+    <!-- <dubbo:protocol name="dubbo" port="${dubbo.port}" /> -->
+    <!-- <dubbo:protocol name="rmi" port="1099" /> -->
+    <!-- <dubbo:protocol name="hessian" port="8089" /> -->
+    <!-- <dubbo:protocol name="webservice" port="9999" server="jetty"/> -->
+    
+    <!-- 多注册中心配置 -->
+    <!-- 添加缓存文件配置file -->
+    <dubbo:registry id="qingdaoRegistry1169" protocol="zookeeper" address="${dubbo.registry.address.1169}"
+    	file="${loggingRoot}/${server.name}/impl/dubbo/${server.name}-${dubbo.cache.name}.cache" timeout="100000"/>
+    <!-- <dubbo:registry id="hangzhouRegistry" address="10.20.141.151:9010" default="false" /> -->
+    <dubbo:registry id="qingdaoRegistry690" protocol="zookeeper" address="${dubbo.registry.address.690}" timeout="100000"/>
+    <dubbo:registry id="isalesRegistry" protocol="zookeeper" address="${dubbo.registry.address}"
+    	file="${loggingRoot}/${server.name}/impl/dubbo/${server.name}-${dubbo.cache.name}.cache" timeout="100000"/>
+    
+    <!-- <dubbo:provider delay="-1" protocol="dubbo" timeout="10000" retries="3"></dubbo:provider> -->
+	<!-- threadpool="fixed" threads="500" -->
+	<!-- serialization="kryo" 加速配置 -->
+	<dubbo:protocol name="dubbo"  dispatcher="all" threadpool="fixed" threads="500"/>
+	<dubbo:protocol name="rest" port="${monitor.rest.port}" server="tomcat" contextpath="services" />
+	<!-- HOP4.0配置 -->
+	<bean id="agentImpl" class="io.terminus.pampas.client.AgentImpl" />
+	<dubbo:service filter="default,dubboProfileFilter" interface="io.terminus.pampas.client.Agent"
+		ref="agentImpl" version="${server.name}" protocol="dubbo"/>
+</beans>

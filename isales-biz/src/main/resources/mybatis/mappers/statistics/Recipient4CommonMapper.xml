@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.statistics.emailreceive.dao.RecipientDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="RecipientResultMap" type="com.haier.isales.statistics.emailreceive.domain.RecipientDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="receiver_email" property="receiverEmail"  jdbcType="VARCHAR"  />
+		<result column="receiver_name" property="receiverName"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	RECEIVER_EMAIL	,
+	RECEIVER_NAME	,
+	CREATE_TIME	,
+	UPDATE_TIME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.receiverEmail!=null">and receiver_email like CONCAT('%',#{entity.receiverEmail},'%')</if>
+		<if test="entity.receiverName!=null">and receiver_name like CONCAT('%',#{entity.receiverName},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<!-- java.util.Date update_time has been ignored!!! -->
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="RecipientResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_data_statistics_email
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_data_statistics_email
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.statistics.emailreceive.domain.RecipientDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_data_statistics_email
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="receiverEmail!=null">
+				RECEIVER_EMAIL	,
+			</if>
+			<if test="receiverName!=null">
+				RECEIVER_NAME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="receiverEmail!=null">
+				#{receiverEmail}	,
+			</if>
+			<if test="receiverName!=null">
+				#{receiverName}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.statistics.emailreceive.domain.RecipientDomain">
+		update isales_app.t_isales_data_statistics_email
+		<set>
+			RECEIVER_EMAIL = #{receiverEmail},
+			RECEIVER_NAME = #{receiverName},
+			CREATE_TIME = #{createTime},
+			UPDATE_TIME = #{updateTime},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_data_statistics_email 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="RecipientResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_data_statistics_email
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_data_statistics_email
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

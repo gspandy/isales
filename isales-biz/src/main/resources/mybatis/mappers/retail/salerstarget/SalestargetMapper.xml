@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.salestarget.dao.SalestargetDAO">
+
+	<select id="findPersonalTarget" resultMap="SalestargetResultMap" >
+		select sum(ifnull(t.target_amount,0)) as target_amount,sum(ifnull(t.target_num,0)) as target_num
+		from isales_app.t_isales_sales_target t
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+	
+	<select id="getPersonalTargetList" resultMap="SalestargetResultMap" >
+	<![CDATA[
+		select ifnull(t.target_amount,0) as target_amount,ifnull(t.target_num,0) as target_num,t.year,t.month
+		from isales_app.t_isales_sales_target t
+		where 1=1
+		and t.operator_id=#{entity.operatorId}
+		and t.product_line=#{entity.productLine}
+		and (
+			(t.year=(#{entity.year}-1) and t.month>#{entity.month})
+			or (t.year=#{entity.year} and t.month<(#{entity.month}+1))
+		)
+		order by t.year,t.month
+	]]>	
+	</select>
+	
+	
+	<!-- 实体的更新方法,根据员工、产业线、月份更新 -->
+	<update id="updateByParams" parameterType="com.haier.isales.retail.salestarget.domain.SalestargetDomain">
+		update isales_app.t_isales_sales_target
+		<set>
+			<if test="targetAmount!=null">
+				TARGET_AMOUNT = #{targetAmount},		
+			</if>
+			<if test="targetNum!=null">
+				TARGET_NUM = #{targetNum},	
+			</if>
+			UPDATE_TIME = #{updateTime},
+		</set>
+		where OPERATOR_ID = #{operatorId}
+			and PRODUCT_LINE = #{productLine}
+			and YEAR = #{year}
+			and MONTH = #{month}
+	</update>	
+</mapper>

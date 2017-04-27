@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="5000" stageCommint="true">
+	<!-- 源表配置 -->
+	<sourceTable>
+		<property name="schama">ODS</property>
+		<property name="name">ODSEHUB_BTB_GZXT</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_btb_ratail_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="row_id" dest="row_id" type="String" />
+		<mapping source="trade_id" dest="trade_id" type="String" />
+		<mapping source="cus_id" dest="cus_id" type="String" />
+		<mapping source="cus_name" dest="cus_name" type="String" />
+		<mapping source="kind_id" dest="kind_id" type="String" />
+		<mapping source="goods_id" dest="goods_id" type="String" />
+		<mapping source="sales_month" dest="sales_month" type="Date" />
+		<mapping source="sales_num" dest="sales_num" type="String" />
+		<mapping source="jglsjje" dest="jglsjje" type="String" />
+		<mapping source="sourcetype" dest="sourcetype" type="int" />
+		<mapping source="createdate" dest="createdate" type="Date" />
+		<mapping source="saleschannelname" dest="saleschannelname" type="String" />
+		<mapping source="xsaleschannelname" dest="xsaleschannelname" type="String" />
+		<mapping source="parentorgid" dest="parentorgid" type="int" />
+		<mapping source="parentorgcode" dest="parentorgcode" type="String" />
+		<mapping source="parentorgname" dest="parentorgname" type="String" />
+		<mapping source="bgorgid" dest="bgorgid" type="int" />
+		<mapping source="goods_name" dest="goods_name" type="String" />
+		<mapping source="manageorgcode" dest="manageorgcode" type="String" />
+		<mapping source="price_add" dest="price_add" type="int" />
+		<mapping source="pricetype" dest="pricetype" type="String" />
+		<mapping source="created_date" dest="created_date" type="Date" />
+		<mapping source="last_modified_date" dest="last_modified_date" type="Date" />
+		<mapping source="load_batch" dest="load_batch" type="String" />
+		<mapping source="hy_flag" dest="hy_flag" type="String" />
+		<mapping source="empcode" dest="empcode" type="String" />
+		<mapping source="fpnum" dest="fpnum" type="String" />
+		<mapping source="barcode" dest="barcode" type="String" />
+		<mapping source="price" dest="price" type="String" />
+		<mapping source="yhname" dest="yhname" type="String" />
+		<mapping source="yhphone" dest="yhphone" type="String" />
+		<mapping source="shaddress" dest="shaddress" type="String" />
+		<mapping source="hishfresult" dest="hishfresult" type="String" />
+		<mapping source="present" dest="present" type="String" />
+		<mapping source="isyj" dest="isyj" type="String" />
+	</mappings>
+	<where>
+		<source>
+			to_char(sales_month,'yyyy-mm')=to_char(sysdate,'yyyy-mm') 
+			or to_char(sales_month,'yyyy-mm')=to_char(add_months(sysdate,-1),'yyyy-mm')
+		</source>
+	</where>
+	<procedures>
+		<procedure name="isales_app.p_sync_rd_performance_btb_ratail" >
+			<param value="1"/>
+		</procedure>
+		<procedure name="isales_sys.p_insertdata_from_btb_ratail" ></procedure>
+	</procedures>
+</transform>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.user.dao.UserFullInfoDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="UserFullInfoResultMap" type="com.haier.isales.system.user.domain.UserFullInfoDomain">
+		<id column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="user_sex" property="userSex"  jdbcType="VARCHAR"  />
+		<result column="user_IDENTITY_CARD" property="userIdentityCard"  jdbcType="VARCHAR"  />
+		<result column="SHOP_ID" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="SHOP_NAME" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="org_code" property="orgCode"  jdbcType="VARCHAR"  />
+		<result column="org_name" property="orgName"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT_ID" property="productId"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT_NAME" property="productName"  jdbcType="VARCHAR"  />
+		<result property="mainProductId" column="MAIN_PRODUCT_ID" jdbcType="VARCHAR" />
+		<result property="mainProductName" column="MAIN_PRODUCT_NAME" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	OPERATOR_ID	,
+	USER_CODE	,
+	USER_NAME	,
+	USER_SEX	,
+	USER_IDENTITY_CARD	,
+	SHOP_ID	,
+	SHOP_NAME	,
+	ORG_CODE	,
+	ORG_NAME	,
+	PRODUCT_ID	,
+	PRODUCT_NAME,
+	MAIN_PRODUCT_ID,
+	MAIN_PRODUCT_NAME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.operatorId!=null">and operator_id=#{entity.operatorId}</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.userName!=null">and user_name like CONCAT('%',#{entity.userName},'%')</if>
+		<if test="entity.userSex!=null">and user_sex like CONCAT('%',#{entity.userSex},'%')</if>
+		<if test="entity.userIdentityCard!=null">and user_IDENTITY_CARD like CONCAT('%',#{entity.userIdentityCard},'%')</if>
+		<if test="entity.shopId!=null">and SHOP_ID like CONCAT('%',#{entity.shopId},'%')</if>
+		<if test="entity.shopName!=null">and SHOP_NAME like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.orgCode!=null">and org_code like CONCAT('%',#{entity.orgCode},'%')</if>
+		<if test="entity.orgName!=null">and org_name like CONCAT('%',#{entity.orgName},'%')</if>
+		<if test="entity.productId!=null">and PRODUCT_ID like CONCAT('%',#{entity.productId},'%')</if>
+		<if test="entity.productName!=null">and PRODUCT_NAME like CONCAT('%',#{entity.productName},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="UserFullInfoResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee_summary
+		where operator_id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_employee_summary
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.user.domain.UserFullInfoDomain" >
+		insert into isales_sys.t_sys_employee_summary
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userName!=null">
+				USER_NAME	,
+			</if>
+			<if test="userSex!=null">
+				USER_SEX	,
+			</if>
+			<if test="userIdentityCard!=null">
+				USER_IDENTITY_CARD	,
+			</if>
+			<if test="shopId!=null">
+				SHOP_ID	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="orgCode!=null">
+				ORG_CODE	,
+			</if>
+			<if test="orgName!=null">
+				ORG_NAME	,
+			</if>
+			<if test="productId!=null">
+				PRODUCT_ID	,
+			</if>
+			<if test="productName!=null">
+				PRODUCT_NAME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="operatorId!=null">
+				#{operatorId}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userName!=null">
+				#{userName}	,
+			</if>
+			<if test="userSex!=null">
+				#{userSex}	,
+			</if>
+			<if test="userIdentityCard!=null">
+				#{userIdentityCard}	,
+			</if>
+			<if test="shopId!=null">
+				#{shopId}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="orgCode!=null">
+				#{orgCode}	,
+			</if>
+			<if test="orgName!=null">
+				#{orgName}	,
+			</if>
+			<if test="productId!=null">
+				#{productId}	,
+			</if>
+			<if test="productName!=null">
+				#{productName}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.user.domain.UserFullInfoDomain">
+		update isales_sys.t_sys_employee_summary
+		<set>
+			USER_CODE = #{userCode},
+			USER_NAME = #{userName},
+			USER_SEX = #{userSex},
+			USER_IDENTITY_CARD = #{userIdentityCard},
+			SHOP_ID = #{shopId},
+			SHOP_NAME = #{shopName},
+			ORG_CODE = #{orgCode},
+			ORG_NAME = #{orgName},
+			PRODUCT_ID = #{productId},
+			PRODUCT_NAME = #{productName},
+		</set>
+		where operator_id = #{operatorId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_sys.t_sys_employee_summary 
+		where operator_id = #{operatorId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="UserFullInfoResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_employee_summary
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_employee_summary
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

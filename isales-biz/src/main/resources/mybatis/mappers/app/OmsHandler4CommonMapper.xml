@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.omshandler.dao.OmsHandlerDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="OmsHandlerResultMap" type="com.haier.isales.app.omshandler.domain.OmsHandlerDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="row_id" property="rowId"  jdbcType="VARCHAR"  />
+		<result column="rn" property="rn"  jdbcType="VARCHAR"  />
+		<result column="org_no" property="orgNo"  jdbcType="VARCHAR"  />
+		<result column="bind_id" property="bindId"  jdbcType="VARCHAR"  />
+		<result column="create_date" property="createDate"  jdbcType="VARCHAR"  />
+		<result column="create_user" property="createUser"  jdbcType="VARCHAR"  />
+		<result column="update_date" property="updateDate"  jdbcType="VARCHAR"  />
+		<result column="update_user" property="updateUser"  jdbcType="VARCHAR"  />
+		<result column="work_flow_id" property="workFlowId"  jdbcType="VARCHAR"  />
+		<result column="work_flow_step_id" property="workFlowStepId"  jdbcType="VARCHAR"  />
+		<result column="is_end" property="isEnd"  jdbcType="VARCHAR"  />
+		<result column="trade_code" property="tradeCode"  jdbcType="VARCHAR"  />
+		<result column="trade_name" property="tradeName"  jdbcType="VARCHAR"  />
+		<result column="bu_code" property="buCode"  jdbcType="VARCHAR"  />
+		<result column="bu_name" property="buName"  jdbcType="VARCHAR"  />
+		<result column="line_code" property="lineCode"  jdbcType="VARCHAR"  />
+		<result column="line_name" property="lineName"  jdbcType="VARCHAR"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	ROW_ID	,
+	RN	,
+	ORG_NO	,
+	BIND_ID	,
+	CREATE_DATE	,
+	CREATE_USER	,
+	UPDATE_DATE	,
+	UPDATE_USER	,
+	WORK_FLOW_ID	,
+	WORK_FLOW_STEP_ID	,
+	IS_END	,
+	TRADE_CODE	,
+	TRADE_NAME	,
+	BU_CODE	,
+	BU_NAME	,
+	LINE_CODE	,
+	LINE_NAME	,
+	USER_CODE	,
+	USER_NAME	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.rowId!=null">and row_id like CONCAT('%',#{entity.rowId},'%')</if>
+		<if test="entity.rn!=null">and rn like CONCAT('%',#{entity.rn},'%')</if>
+		<if test="entity.orgNo!=null">and org_no like CONCAT('%',#{entity.orgNo},'%')</if>
+		<if test="entity.bindId!=null">and bind_id like CONCAT('%',#{entity.bindId},'%')</if>
+		<if test="entity.createDate!=null">and create_date like CONCAT('%',#{entity.createDate},'%')</if>
+		<if test="entity.createUser!=null">and create_user like CONCAT('%',#{entity.createUser},'%')</if>
+		<if test="entity.updateDate!=null">and update_date like CONCAT('%',#{entity.updateDate},'%')</if>
+		<if test="entity.updateUser!=null">and update_user like CONCAT('%',#{entity.updateUser},'%')</if>
+		<if test="entity.workFlowId!=null">and work_flow_id like CONCAT('%',#{entity.workFlowId},'%')</if>
+		<if test="entity.workFlowStepId!=null">and work_flow_step_id like CONCAT('%',#{entity.workFlowStepId},'%')</if>
+		<if test="entity.isEnd!=null">and is_end like CONCAT('%',#{entity.isEnd},'%')</if>
+		<if test="entity.tradeCode!=null">and trade_code like CONCAT('%',#{entity.tradeCode},'%')</if>
+		<if test="entity.tradeName!=null">and trade_name like CONCAT('%',#{entity.tradeName},'%')</if>
+		<if test="entity.buCode!=null">and bu_code like CONCAT('%',#{entity.buCode},'%')</if>
+		<if test="entity.buName!=null">and bu_name like CONCAT('%',#{entity.buName},'%')</if>
+		<if test="entity.lineCode!=null">and line_code like CONCAT('%',#{entity.lineCode},'%')</if>
+		<if test="entity.lineName!=null">and line_name like CONCAT('%',#{entity.lineName},'%')</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<if test="entity.userName!=null">and user_name like CONCAT('%',#{entity.userName},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="OmsHandlerResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_bpm_handler_oms_temp
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_bpm_handler_oms_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.app.omshandler.domain.OmsHandlerDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_temp.t_isales_bpm_handler_oms_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				ROW_ID	,
+			</if>
+			<if test="rn!=null">
+				RN	,
+			</if>
+			<if test="orgNo!=null">
+				ORG_NO	,
+			</if>
+			<if test="bindId!=null">
+				BIND_ID	,
+			</if>
+			<if test="createDate!=null">
+				CREATE_DATE	,
+			</if>
+			<if test="createUser!=null">
+				CREATE_USER	,
+			</if>
+			<if test="updateDate!=null">
+				UPDATE_DATE	,
+			</if>
+			<if test="updateUser!=null">
+				UPDATE_USER	,
+			</if>
+			<if test="workFlowId!=null">
+				WORK_FLOW_ID	,
+			</if>
+			<if test="workFlowStepId!=null">
+				WORK_FLOW_STEP_ID	,
+			</if>
+			<if test="isEnd!=null">
+				IS_END	,
+			</if>
+			<if test="tradeCode!=null">
+				TRADE_CODE	,
+			</if>
+			<if test="tradeName!=null">
+				TRADE_NAME	,
+			</if>
+			<if test="buCode!=null">
+				BU_CODE	,
+			</if>
+			<if test="buName!=null">
+				BU_NAME	,
+			</if>
+			<if test="lineCode!=null">
+				LINE_CODE	,
+			</if>
+			<if test="lineName!=null">
+				LINE_NAME	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="userName!=null">
+				USER_NAME	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				#{rowId}	,
+			</if>
+			<if test="rn!=null">
+				#{rn}	,
+			</if>
+			<if test="orgNo!=null">
+				#{orgNo}	,
+			</if>
+			<if test="bindId!=null">
+				#{bindId}	,
+			</if>
+			<if test="createDate!=null">
+				#{createDate}	,
+			</if>
+			<if test="createUser!=null">
+				#{createUser}	,
+			</if>
+			<if test="updateDate!=null">
+				#{updateDate}	,
+			</if>
+			<if test="updateUser!=null">
+				#{updateUser}	,
+			</if>
+			<if test="workFlowId!=null">
+				#{workFlowId}	,
+			</if>
+			<if test="workFlowStepId!=null">
+				#{workFlowStepId}	,
+			</if>
+			<if test="isEnd!=null">
+				#{isEnd}	,
+			</if>
+			<if test="tradeCode!=null">
+				#{tradeCode}	,
+			</if>
+			<if test="tradeName!=null">
+				#{tradeName}	,
+			</if>
+			<if test="buCode!=null">
+				#{buCode}	,
+			</if>
+			<if test="buName!=null">
+				#{buName}	,
+			</if>
+			<if test="lineCode!=null">
+				#{lineCode}	,
+			</if>
+			<if test="lineName!=null">
+				#{lineName}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="userName!=null">
+				#{userName}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.app.omshandler.domain.OmsHandlerDomain">
+		update isales_temp.t_isales_bpm_handler_oms_temp
+		<set>
+			ROW_ID = #{rowId},
+			RN = #{rn},
+			ORG_NO = #{orgNo},
+			BIND_ID = #{bindId},
+			CREATE_DATE = #{createDate},
+			CREATE_USER = #{createUser},
+			UPDATE_DATE = #{updateDate},
+			UPDATE_USER = #{updateUser},
+			WORK_FLOW_ID = #{workFlowId},
+			WORK_FLOW_STEP_ID = #{workFlowStepId},
+			IS_END = #{isEnd},
+			TRADE_CODE = #{tradeCode},
+			TRADE_NAME = #{tradeName},
+			BU_CODE = #{buCode},
+			BU_NAME = #{buName},
+			LINE_CODE = #{lineCode},
+			LINE_NAME = #{lineName},
+			USER_CODE = #{userCode},
+			USER_NAME = #{userName},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_bpm_handler_oms_temp 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="OmsHandlerResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_bpm_handler_oms_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_bpm_handler_oms_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

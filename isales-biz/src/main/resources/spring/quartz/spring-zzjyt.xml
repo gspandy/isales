@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!-- 权益卡套餐率 -->
+	<bean id="cardSetRateTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.CardSetRateTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="权益卡套餐率转换任务" />
+	</bean>
+	<bean id="cardSetRateTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cardSetRateTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 3 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	<!--  会员注册率（未验证） -->
+	<bean id="registRateUnverifiedTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.RegistRateUnverifiedTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="会员注册率（未验证）转换任务" />
+	</bean>
+	<bean id="registRateUnverifiedTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="registRateUnverifiedTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	<!--  会员注册率（已验证） -->
+	<bean id="registRateVerifiedTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.RegistRateVerifiedTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="会员注册率（已验证）" />
+	</bean>
+	<bean id="registRateVerifiedTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="registRateVerifiedTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 0 19 * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!--  直销员门店对应关系 -->
+	<bean id="employeeShopRefTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.EmployeeShopRefTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="直销员门店对应关系" />
+	</bean>
+	<bean id="employeeShopRefTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="employeeShopRefTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的销量及会员数据_已验证 -->
+	<bean id="sjcjScrmTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.SjcjScrmTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量与会员数据_已验证" />
+	</bean>
+	<bean id="sjcjScrmTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sjcjScrmTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的销量及会员数据_全部  -->
+	<bean id="sjcjScrmAllTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.SjcjScrmAllTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量与会员数据_全部" />
+	</bean>
+	<bean id="sjcjScrmAllTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sjcjScrmAllTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的销量及会员数据_客户的联网量  -->
+	<bean id="sjcjCustTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.SjcjCustTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量与会员数据_客户的联网量" />
+	</bean>
+	<bean id="sjcjCustTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sjcjCustTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!-- 按照门店和产业的直销员当月录入销量详情数据（包含销量、销额、提成）  -->
+	<bean id="userXlAllDetailTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.UserXlAllDetailTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量详情数据_直销员录入" />
+	</bean>
+	<bean id="userXlAllDetailTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlAllDetailTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的当月录入联网销量详情数据（包含销量、销额、提成）   -->
+	<bean id="userXlCstDetailTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.UserXlCstDetailTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="每月销量详情数据_联网量" />
+	</bean>
+	<bean id="userXlCstDetailTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlCstDetailTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的直销员T-1日录入销量详情数据（包含销量、销额、提成）  -->
+	<bean id="userXlAllDetailLstdayTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.UserXlAllDetailLstdayTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="T-1日销量详情数据_直销员录入" />
+	</bean>
+	<bean id="userXlAllDetailLstdayTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlAllDetailLstdayTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+	
+	<!-- 按照门店和产业的T-1日录入联网销量详情数据（包含销量、销额、提成）   -->
+	<bean id="userXlCstDetailLstdayTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.zzjyt.UserXlCstDetailLstdayTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="T-1日销量详情数据_联网量" />
+	</bean>
+	<bean id="userXlCstDetailLstdayTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userXlCstDetailLstdayTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 6 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+</beans>

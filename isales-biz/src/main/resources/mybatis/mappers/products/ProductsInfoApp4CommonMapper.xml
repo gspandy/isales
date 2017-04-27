@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.productsinfoapp.dao.ProductsInfoAppDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ProductsInfoAppResultMap" type="com.haier.isales.products.productsinfoapp.domain.ProductsInfoAppDomain">
+		<id column="metadataid" property="metadataid"  jdbcType="BIGINT"  />
+		<result column="modelcode" property="modelcode"  jdbcType="VARCHAR"  />
+		<result column="modelno" property="modelno"  jdbcType="VARCHAR"  />
+		<result column="modelname" property="modelname"  jdbcType="VARCHAR"  />
+		<result column="viewname" property="viewname"  jdbcType="VARCHAR"  />
+		<result column="viewdesc" property="viewdesc"  jdbcType="VARCHAR"  />
+		<result column="channeldescstrs" property="channeldescstrs"  jdbcType="VARCHAR"  />
+		<result column="pro_line_code" property="proLineCode"  jdbcType="VARCHAR"  />
+		<result column="pro_line_name" property="proLineName"  jdbcType="VARCHAR"  />
+		<result column="sales_channel" property="salesChannel"  jdbcType="VARCHAR"  />
+		<result column="model_img" property="modelImg"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	METADATAID	,
+	MODELCODE	,
+	MODELNO	,
+	MODELNAME	,
+	VIEWNAME	,
+	VIEWDESC	,
+	CHANNELDESCSTRS	,
+	PRO_LINE_CODE	,
+	PRO_LINE_NAME	,
+	SALES_CHANNEL	,
+	MODEL_IMG	,
+	CREATE_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.metadataid!=null">and metadataid=#{entity.metadataid}</if>
+		<if test="entity.modelcode!=null">and modelcode like CONCAT('%',#{entity.modelcode},'%')</if>
+		<if test="entity.modelno!=null">and modelno like CONCAT('%',#{entity.modelno},'%')</if>
+		<if test="entity.modelname!=null">and modelname like CONCAT('%',#{entity.modelname},'%')</if>
+		<if test="entity.viewname!=null">and viewname like CONCAT('%',#{entity.viewname},'%')</if>
+		<if test="entity.viewdesc!=null">and viewdesc like CONCAT('%',#{entity.viewdesc},'%')</if>
+		<if test="entity.channeldescstrs!=null">and channeldescstrs like CONCAT('%',#{entity.channeldescstrs},'%')</if>
+		<if test="entity.proLineCode!=null">and pro_line_code like CONCAT('%',#{entity.proLineCode},'%')</if>
+		<if test="entity.proLineName!=null">and pro_line_name like CONCAT('%',#{entity.proLineName},'%')</if>
+		<if test="entity.salesChannel!=null">and sales_channel like CONCAT('%',#{entity.salesChannel},'%')</if>
+		<if test="entity.modelImg!=null">and model_img like CONCAT('%',#{entity.modelImg},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ProductsInfoAppResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_products_info_summary
+		where metadataid = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_products_info_summary
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.products.productsinfoapp.domain.ProductsInfoAppDomain" >
+		insert into isales_app.t_isales_products_info_summary
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				METADATAID	,
+			</if>
+			<if test="modelcode!=null">
+				MODELCODE	,
+			</if>
+			<if test="modelno!=null">
+				MODELNO	,
+			</if>
+			<if test="modelname!=null">
+				MODELNAME	,
+			</if>
+			<if test="viewname!=null">
+				VIEWNAME	,
+			</if>
+			<if test="viewdesc!=null">
+				VIEWDESC	,
+			</if>
+			<if test="channeldescstrs!=null">
+				CHANNELDESCSTRS	,
+			</if>
+			<if test="proLineCode!=null">
+				PRO_LINE_CODE	,
+			</if>
+			<if test="proLineName!=null">
+				PRO_LINE_NAME	,
+			</if>
+			<if test="salesChannel!=null">
+				SALES_CHANNEL	,
+			</if>
+			<if test="modelImg!=null">
+				MODEL_IMG	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				#{metadataid}	,
+			</if>
+			<if test="modelcode!=null">
+				#{modelcode}	,
+			</if>
+			<if test="modelno!=null">
+				#{modelno}	,
+			</if>
+			<if test="modelname!=null">
+				#{modelname}	,
+			</if>
+			<if test="viewname!=null">
+				#{viewname}	,
+			</if>
+			<if test="viewdesc!=null">
+				#{viewdesc}	,
+			</if>
+			<if test="channeldescstrs!=null">
+				#{channeldescstrs}	,
+			</if>
+			<if test="proLineCode!=null">
+				#{proLineCode}	,
+			</if>
+			<if test="proLineName!=null">
+				#{proLineName}	,
+			</if>
+			<if test="salesChannel!=null">
+				#{salesChannel}	,
+			</if>
+			<if test="modelImg!=null">
+				#{modelImg}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.products.productsinfoapp.domain.ProductsInfoAppDomain">
+		update isales_app.t_isales_products_info_summary
+		<set>
+			MODELCODE = #{modelcode},
+			MODELNO = #{modelno},
+			MODELNAME = #{modelname},
+			VIEWNAME = #{viewname},
+			VIEWDESC = #{viewdesc},
+			CHANNELDESCSTRS = #{channeldescstrs},
+			PRO_LINE_CODE = #{proLineCode},
+			PRO_LINE_NAME = #{proLineName},
+			SALES_CHANNEL = #{salesChannel},
+			MODEL_IMG = #{modelImg},
+			CREATE_TIME = #{createTime},
+			REMARK = #{remark},
+		</set>
+		where metadataid = #{metadataid}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_products_info_summary 
+		where metadataid = #{metadataid}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ProductsInfoAppResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_products_info_summary
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_products_info_summary
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

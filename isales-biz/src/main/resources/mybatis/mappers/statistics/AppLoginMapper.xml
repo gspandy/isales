@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.statistics.applogin.dao.AppLoginDao">
+
+	<!-- =========================================================== -->
+	<resultMap id="AppLoginResultMap" type="com.haier.isales.statistics.applogin.domain.AppLoginDomain">
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+		<result column="login_count" property="loginCount" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+		user_id ,
+		operator_name ,
+		login_count
+	</sql>
+
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+
+	<!-- 获取所有中心安装并登录的人数统计 -->
+	<select id="getAppLoginByTime" resultMap="AppLoginResultMap">
+		SELECT out_1.user_id AS user_id
+		, (
+		SELECT u.operator_name
+		FROM
+		isales_sys.t_qn_user u
+		WHERE
+		u.operator_id = out_1.user_id
+		) AS operator_name
+		, count(out_1.user_id) AS login_count
+		FROM
+		(
+		SELECT lb.user_id
+		, date_format(lb.LOGIN_TIME, '%Y-%m-%d') AS login_time
+		FROM
+		isales_sys.t_sys_login_behaviour lb
+		WHERE
+		1 = 1
+		AND (date_format(lb.LOGIN_TIME, '%Y-%m-%d') BETWEEN date_format(#{startTime}, '%Y-%m-%d') AND
+		date_format(#{endTime}, '%Y-%m-%d'))
+		AND lb.session_id IS NOT NULL
+		GROUP BY
+		lb.user_id
+		, date_format(lb.LOGIN_TIME, '%Y-%m-%d')
+		) out_1
+		GROUP BY
+		out_1.user_id
+	</select>
+
+</mapper>

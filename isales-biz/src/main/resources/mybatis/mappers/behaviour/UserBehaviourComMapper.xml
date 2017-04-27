@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.behaviour.userbehaviourcom.dao.UserBehaviourComDAO">
+	<!-- 更新应用退出时间 -->
+	<update id="updateUserComQuitTime" parameterType="com.haier.isales.behaviour.userbehaviourcom.domain.UserBehaviourComDomain">
+		update isales_sys.t_sys_user_behaviour_complete
+		<set>
+			QUIT_TIME = #{quitTime}
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<select id="findIdByConditions" resultType="Long" 
+		parameterType="com.haier.isales.behaviour.userbehaviourcom.domain.UserBehaviourComDomain">
+		select MAX(ID) as id
+		from isales_sys.t_sys_user_behaviour_complete
+		where 1=1
+		<if test="loginName !=null and loginName != ''">
+			and login_name = #{loginName}
+		</if>
+		<!-- <if test="strOperateDate !=null and strOperateDate != ''">
+			and DATE_FORMAT(OPERATE_DATE,'%Y-%m-%d %T') = #{strOperateDate}
+		</if> -->
+		<if test="operateDate !=null">
+			and OPERATE_DATE = #{operateDate}
+		</if>
+		<if test="operationId !=null and operationId != ''">
+			and OPERATION_ID = #{operationId}
+		</if>
+	</select>
+</mapper>

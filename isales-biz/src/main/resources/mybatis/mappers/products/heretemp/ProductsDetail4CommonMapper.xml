@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.productsdetail.dao.ProductsDetailDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ProductsDetailResultMap" type="com.haier.isales.products.heretemp.productsdetail.domain.ProductsDetailDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="metadataid" property="metadataid"  jdbcType="BIGINT"  />
+		<result column="modelno" property="modelno"  jdbcType="VARCHAR"  />
+		<result column="viewname" property="viewname"  jdbcType="VARCHAR"  />
+		<result column="chnlpath" property="chnlpath"  jdbcType="VARCHAR"  />
+		<result column="docpuburl" property="docpuburl"  jdbcType="VARCHAR"  />
+		<result column="pic" property="pic"  jdbcType="VARCHAR"  />
+		<result column="title" property="title"  jdbcType="VARCHAR"  />
+		<result column="subtitle" property="subtitle"  jdbcType="VARCHAR"  />
+		<result column="content" property="content"  jdbcType="VARCHAR"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	METADATAID	,
+	MODELNO	,
+	VIEWNAME	,
+	CHNLPATH	,
+	DOCPUBURL	,
+	PIC	,
+	TITLE	,
+	SUBTITLE	,
+	CONTENT	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.metadataid!=null">and metadataid=#{entity.metadataid}</if>
+		<if test="entity.modelno!=null">and modelno like CONCAT('%',#{entity.modelno},'%')</if>
+		<if test="entity.viewname!=null">and viewname like CONCAT('%',#{entity.viewname},'%')</if>
+		<if test="entity.chnlpath!=null">and chnlpath like CONCAT('%',#{entity.chnlpath},'%')</if>
+		<if test="entity.docpuburl!=null">and docpuburl like CONCAT('%',#{entity.docpuburl},'%')</if>
+		<if test="entity.pic!=null">and pic like CONCAT('%',#{entity.pic},'%')</if>
+		<if test="entity.title!=null">and title like CONCAT('%',#{entity.title},'%')</if>
+		<if test="entity.subtitle!=null">and subtitle like CONCAT('%',#{entity.subtitle},'%')</if>
+		<if test="entity.content!=null">and content like CONCAT('%',#{entity.content},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ProductsDetailResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_detail_temp
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_products_detail_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.products.heretemp.productsdetail.domain.ProductsDetailDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_temp.t_isales_products_detail_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				METADATAID	,
+			</if>
+			<if test="modelno!=null">
+				MODELNO	,
+			</if>
+			<if test="viewname!=null">
+				VIEWNAME	,
+			</if>
+			<if test="chnlpath!=null">
+				CHNLPATH	,
+			</if>
+			<if test="docpuburl!=null">
+				DOCPUBURL	,
+			</if>
+			<if test="pic!=null">
+				PIC	,
+			</if>
+			<if test="title!=null">
+				TITLE	,
+			</if>
+			<if test="subtitle!=null">
+				SUBTITLE	,
+			</if>
+			<if test="content!=null">
+				CONTENT	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				#{metadataid}	,
+			</if>
+			<if test="modelno!=null">
+				#{modelno}	,
+			</if>
+			<if test="viewname!=null">
+				#{viewname}	,
+			</if>
+			<if test="chnlpath!=null">
+				#{chnlpath}	,
+			</if>
+			<if test="docpuburl!=null">
+				#{docpuburl}	,
+			</if>
+			<if test="pic!=null">
+				#{pic}	,
+			</if>
+			<if test="title!=null">
+				#{title}	,
+			</if>
+			<if test="subtitle!=null">
+				#{subtitle}	,
+			</if>
+			<if test="content!=null">
+				#{content}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.products.heretemp.productsdetail.domain.ProductsDetailDomain">
+		update isales_temp.t_isales_products_detail_temp
+		<set>
+			METADATAID = #{metadataid},
+			MODELNO = #{modelno},
+			VIEWNAME = #{viewname},
+			CHNLPATH = #{chnlpath},
+			DOCPUBURL = #{docpuburl},
+			PIC = #{pic},
+			TITLE = #{title},
+			SUBTITLE = #{subtitle},
+			CONTENT = #{content},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_products_detail_temp 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ProductsDetailResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_detail_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_products_detail_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

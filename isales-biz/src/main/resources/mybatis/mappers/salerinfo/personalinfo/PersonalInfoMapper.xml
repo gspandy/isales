@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.salerinfo.personalinfo.dao.PersonalInfoDAO">
+	
+	 <!-- mysql 分页尾 -->
+	<sql id="pagination_4mysql">
+<!-- 	  <![CDATA[LIMIT #{firstResult} ,#{pager.pageSize}]]> -->
+	  	<![CDATA[ limit #{pageCond.firstResult},#{pageCond.pageSize} ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+		<![CDATA[select count(*) from ( ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+		<![CDATA[) count_]]>
+	</sql>
+	<sql id="selectAllColumn">
+		select t.HMC_ID,
+		       t.HNAME,
+		       t.SHOP_ID,
+		       t.SHOP_NAME,
+		       t.STATUS,
+		       t.PHONE,
+		       t.BIRTHDATE,
+		       t.HSEX
+	</sql>
+	
+	<!-- 根据条件查询用户-->
+	<select id="getSalerInfo" resultMap="PersonalInfoResultMap">
+		<include refid="selectAllColumn"/>
+			  from isales_sys.t_sys_employee t
+			  where 1=1 			 
+		 and t.HMC_ID = #{userCode}
+	</select>
+	<!-- 通讯录列表，含人员姓名首字母，特殊判断郑州中心和漯河中心 -->
+	<!-- 增加产业、渠道的查询条件 <select id="searchEmpList" resultMap="AddressBookResultMap">
+		select HMC_ID,ORG_NAME,HNAME,SHOP_NAME,PHONE,ELT(INTERVAL(CONV(HEX(left(CONVERT(trim(hname) USING gbk),1)),16,10),
+0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+'Q','R','S','T','W','X','Y','Z') as NAMELETTER
+		from t_sys_employee 
+		where 1=1
+		<if test="orgCode=='JYT12E01'"> 
+		and (xjyt_id = #{orgCode} or xjyt_id = 'JYT12E02' )
+		</if>
+		<if test="orgCode!='JYT12E01'"> 
+		and xjyt_id = #{orgCode} 
+		</if>
+		<if test="searchKey!=null"> 
+		and (hmc_id  like CONCAT('%',upper(#{searchKey}),'%') or hname like CONCAT('%',#{searchKey},'%'))
+		</if>
+		order by NAMELETTER ,HNAME
+	</select> -->
+	
+	<select id="searchEmpList" resultMap="AddressBookResultMap">
+		select user_code as HMC_ID,ORG_NAME,user_name as HNAME,SHOP_NAME,mobile as PHONE,ELT(INTERVAL(CONV(HEX(left(CONVERT(trim(user_name) USING gbk),1)),16,10),
+		0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,0xC0AC,
+		0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+		'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','S','T','W','X','Y','Z') as NAMELETTER,
+		chan_name,product_name
+		from t_sys_employee_summary 
+		where 1=1
+		<if test="queryDto.queryOrgCode=='12E01'"> 
+		and (org_code = #{queryDto.queryOrgCode} or org_code = '12E02' )
+		</if>
+		<if test="queryDto.queryOrgCode!='12E01'"> 
+		and org_code = #{queryDto.queryOrgCode} 
+		</if>
+		<if test="queryDto.querySearchKey!=null"> 
+		and (user_code  like CONCAT('%',upper(#{queryDto.querySearchKey}),'%') or user_name like CONCAT('%',#{queryDto.querySearchKey},'%'))
+		</if>
+		<if test="queryDto.queryChanCode!=null"> 
+		and chan_code =  #{queryDto.queryChanCode}
+		</if>
+		<if test="queryDto.queryProductId!=null"> 
+		and  product_id  like CONCAT('%',upper(#{queryDto.queryProductId}),'%')
+		</if>
+		order by NAMELETTER ,user_name
+	</select>
+	
+	
+	<!-- 通讯录-人员信息 -->
+	<select id="searchEmpInfo" resultMap="AddressBookResultMap">
+		select ORG_NAME,SHOP_NAME,HMC_ID,HNAME,PHONE
+		from t_sys_employee 
+		where HMC_ID = #{userCode}
+	</select>
+	
+	<!-- 通讯录-中心信息，不显示漯河中心 -->
+	<select id="searchOrgListByUser" resultMap="AddressBookResultMap">
+		select distinct 
+		case 
+        when org_code='12E02' 
+        then '12E01'
+        else org_code 
+        END XJYT_ID,
+        case 
+        when ORG_NAME='漯河中心' 
+        then '郑州中心'
+        else ORG_NAME 
+        END ORG_NAME
+		from t_sys_employee_summary 
+		where ORG_NAME is not null
+			and ORG_CODE is not null
+
+		<if test="userCode!='searchAll'">
+		and user_code = #{userCode}
+		</if>
+		ORDER BY convert( ORG_NAME USING gbk )
+	</select>
+	<!-- 通讯录-产业列表 -->
+	<select id="searchProductListByUser" resultMap="AddressBookResultMap">
+		select distinct zzjyt_proline as PRODUCT_ID,zzjyt_proline_name PRODUCT_NAME
+		from isales_app.t_isales_zzjyt_hmms_proline
+		where zzjyt_proline_name is not null
+			and zzjyt_proline is not null
+		ORDER BY convert( zzjyt_proline_name USING gbk )
+	</select>
+	<!-- 通讯录-渠道列表 -->
+	<select id="searchChanListByUser" resultMap="AddressBookResultMap">
+		select distinct chan_code ,chan_name
+		from t_sys_employee_summary
+		where chan_name is not null
+			and chan_code is not null
+		ORDER BY convert( chan_name USING gbk )
+	</select>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.retail.dao.RetailDetailDAO">
+
+	<resultMap id="shopRetailDetailResultMap" type="retailDTO">
+		<result column="months" property="yearMonth" jdbcType="VARCHAR" />
+		<result column="shop_code" property="shopId" jdbcType="VARCHAR" />
+		<result column="proline_code" property="proLineId" jdbcType="VARCHAR" />
+		<result column="prod_code" property="prodCode" jdbcType="VARCHAR" />
+		<result column="prod_name" property="prodName" jdbcType="VARCHAR" />
+		<result column="qty" property="qty" jdbcType="VARCHAR" />
+		<result column="retail_bonus" property="bonus" jdbcType="VARCHAR" />
+		<result column="mtl_code_monty" property="retailMoney" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="shopRetailResultMap" type="retailDTO">
+		<result column="months" property="yearMonth" jdbcType="VARCHAR" />
+		<result column="shop_code" property="shopId" jdbcType="VARCHAR" />
+		<result column="retail_actual" property="actual" jdbcType="VARCHAR" />
+		<result column="retail_bonus" property="totalBonus" jdbcType="VARCHAR" />
+		<result column="actual_money" property="actualMoney" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 月销量、月累计(个人)提成、月销额 详情 -->
+	<select id="findShopBtbRetailDetail" resultMap="shopRetailDetailResultMap" parameterType="retailDTO">
+		SELECT months, shop_code, proline_code, prod_code, prod_name, qty, 
+		IFNULL(tc/mem_cnts,0) AS retail_bonus, mtl_code_monty
+		from isales_app.t_isales_btb_usr_xl_complete_detail br
+				where 1 = 1
+		<if
+			test="model.yearMonth != null and model.yearMonth != ''">
+			<![CDATA[
+				and br.MONTHS = #{model.yearMonth}
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and br.SHOP_CODE = #{model.shopId}
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and br.proline_code = #{model.proLineId}
+		</if>
+	</select>
+	
+	<!-- 月销量、月累计(个人)提成、月销额  -->
+	<select id="findShopBtbRetailMoney" resultMap="shopRetailResultMap" parameterType="retailDTO">
+		SELECT months, shop_code, 
+		truncate(IFNULL(SUM(qty), 0), 0) as retail_actual, 
+		truncate(IFNULL(sum(tc)/mem_cnts, 0), 0) AS retail_bonus, 
+		truncate(IFNULL(sum(mtl_code_monty), 0), 0) as actual_money
+		from isales_app.t_isales_btb_usr_xl_complete_detail br
+				where 1 = 1
+		<if
+			test="model.yearMonth != null and model.yearMonth != '' and model.yearMonthBegin != null and model.yearMonthBegin != ''">
+			<![CDATA[
+				and (br.MONTHS between #{model.yearMonthBegin} and #{model.yearMonth})
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and br.SHOP_CODE = #{model.shopId}
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and br.proline_code = #{model.proLineId}
+		</if>
+		group by br.MONTHS
+		order by br.MONTHS asc
+	</select>
+	
+</mapper>

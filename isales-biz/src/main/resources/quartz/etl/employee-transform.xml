@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">VIEW_BTB_RS_HMC</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_sys_employee_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="XJYTID" dest="XJYTID" type="String" />
+		<mapping source="ORGNAME" dest="ORGNAME" type="String" />
+		<mapping source="ORGANALYSISATTR4" dest="ORGANALYSISATTR4" type="String" />
+		<mapping source="ORGANALYSISATTR2" dest="ORGANALYSISATTR2" type="String" />
+		<mapping source="ORGANALYSISATTR3" dest="ORGANALYSISATTR3" type="String" />
+		<mapping source="ORGANALYSISATTR1" dest="ORGANALYSISATTR1" type="String" />
+		<mapping source="MANAGEORGCODE" dest="MANAGEORGCODE" type="String" />
+		<mapping source="MANAGEORGNAME" dest="MANAGEORGNAME" type="String" />
+		<mapping source="BUID" dest="BUID" type="String" />
+		<mapping source="BUNAME" dest="BUNAME" type="String" />
+		<mapping source="SHOPID" dest="SHOPID" type="String" />
+		<mapping source="SHOPNAME" dest="SHOPNAME" type="String" />
+		<mapping source="STATUS" dest="STATUS" type="String" />
+		<mapping source="RZLX" dest="RZLX" type="String" />
+		<mapping source="HMCID" dest="HMCID" type="String" />
+		<mapping source="HNAME" dest="HNAME" type="String" />
+		<!-- <mapping source="MARKETGROUP" dest="MARKETGROUP" type="String" /> -->
+		<mapping source="HAIERCODE" dest="HAIERCODE" type="String" />
+		<mapping source="GWTYPE" dest="GWTYPE" type="String" />
+		<mapping source="GWID" dest="GWID" type="String" />
+		<mapping source="GWNAME" dest="GWNAME" type="String" />
+		<mapping source="HSEX" dest="HSEX" type="String" />
+		<mapping source="RYFL" dest="RYFL" type="String" />
+		<mapping source="NATION" dest="NATION" type="String" />
+		<mapping source="BIRTHDATE" dest="BIRTHDATE" type="String" />
+		<mapping source="IDENTITYCARD" dest="IDENTITYCARD" type="String" />
+		<mapping source="PHONE" dest="PHONE" type="String" />
+		<mapping source="WORKTIME" dest="WORKTIME" type="String" />
+		<mapping source="RBTBDATE" dest="RBTBDATE" type="String" />
+		<mapping source="PACTKSDATE" dest="PACTKSDATE" type="String" />
+		<mapping source="PACTUNIT" dest="PACTUNIT" type="String" />
+		<mapping source="HMAIL" dest="HMAIL" type="String" />
+		<mapping source="ZXYTYPE" dest="ZXYTYPE" type="String" />
+		<mapping source="YGTYPE" dest="YGTYPE" type="String" />
+		<mapping source="RHAIERDATE" dest="RHAIERDATE" type="String" />
+		<mapping source="HAIERPACTUNIT" dest="HAIERPACTUNIT" type="String" />
+		<!-- <mapping source="GWJB" dest="GWJB" type="String" /> -->
+		<mapping source="LEAVEDATE" dest="LEAVEDATE" type="Date" />
+		<mapping source="SYSTYPE" dest="SYSTYPE" type="String" />
+	</mappings>
+
+	<procedures>
+		<procedure name="p_insertdata_from_temp_emp" />
+	</procedures>
+</transform>

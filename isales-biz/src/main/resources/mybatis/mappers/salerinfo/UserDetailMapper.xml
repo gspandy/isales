@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.salerinfo.userdetail.dao.UserDetailDAO">
+	
+	<update id="updateUserDetail" parameterType="com.haier.isales.salerinfo.userdetail.domain.UserDetailDomain">
+		update isales_app.t_isales_user_detail
+		<set>
+			<if test="signature!=null">
+			SIGNATURE = #{signature},
+			</if>
+			<if test="headPortraitId!=null">
+			HEAD_PORTRAIT_ID = #{headPortraitId},
+			</if>
+			<if test="wechatCode!=null">
+			WECHAT_CODE = #{wechatCode},
+			</if>
+			UPDATE_NAME = #{updateName},
+			UPDATE_TIME = #{updateTime},
+			<if test="mobile!=null">
+			MOBILE = #{mobile},
+			</if>
+		</set>
+		where operator_id = #{operatorId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.retail.dao.RetailDAO">
+
+	<resultMap id="personalRetailChartResultMap" type="retailDTO">
+		<result column="yearMonth" property="yearMonth" jdbcType="VARCHAR" />
+		<result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+		<result column="proline_id" property="proLineId" jdbcType="VARCHAR" />
+		<result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+		<result column="actual" property="actual" jdbcType="DECIMAL" />
+	</resultMap>
+	<!-- 业绩 销量查询个人销量  修改成查询门店销量 modified by lizhenwei 2016-04-26-->
+	<select id="findPerBtbRetail" resultMap="personalRetailChartResultMap" parameterType="retailDTO">
+		select br.sales_month as yearMonth
+		, max(br.emp_code) as emp_code
+		, truncate(sum(ifnull(br.sales_num,0)),0) as
+		actual
+		from isales_app.t_rd_performance_btb_ratail br
+		where 1 = 1
+		<if
+			test="model.yearMonth != null and model.yearMonth != '' and model.yearMonthBegin != null and model.yearMonthBegin != ''">
+			<![CDATA[
+				and (br.sales_month between #{model.yearMonthBegin} and #{model.yearMonth})
+			]]>
+		</if>
+		<if test="model.empCode != null and model.empCode != '' ">
+			and upper(br.emp_code) = upper(#{model.empCode})
+		</if>
+		<if test="model.proLineId != null and model.proLineId != '' ">
+			and br.proline_id = #{model.proLineId}
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and br.shop_id = #{model.shopId}
+		</if>
+		group by br.sales_month
+		order by br.sales_month asc
+	</select>
+	<!-- 查询个人零售额实际 -->
+	<select id="getPersonActualRetail" resultType="java.math.BigDecimal">
+		SELECT sum(t.sum_price)
+		FROM
+		isales_app.t_rd_performance_btb_ratail t
+		WHERE
+		1 = 1
+		AND t.sales_month = #{yearMonth}
+		AND t.emp_code = #{empCode}
+		AND t.proline_id = #{proLineId}
+	</select>
+	<!-- 查询整体零售额实际 -->
+	<select id="getOrgActualRetail" resultType="java.math.BigDecimal">
+		SELECT sum(t.sum_price)
+		FROM
+		isales_app.t_rd_performance_btb_ratail t
+		WHERE
+		1 = 1
+		AND t.sales_month = #{yearMonth}
+		AND t.shop_id = #{shopId}
+	</select>
+	<!-- 查询整体零售额目标 -->
+	<select id="getOrgTargetRetail" resultType="java.math.BigDecimal">
+		SELECT TARGET_SUM
+		FROM
+		isales_app.t_rd_performance_query_ye_ret_690
+		WHERE
+		OUTLET_CODE = #{shopId}
+		AND plan_month = #{yearMonth}
+	</select>
+
+	<!-- 查询个人零售额走势图 -->
+	<select id="getPersonActualChart" resultMap="personalRetailChartResultMap">
+		SELECT sum(t.sum_price) as actual
+		,t.sales_month as yearMonth
+		FROM
+		isales_app.t_rd_performance_btb_ratail t
+		WHERE
+		1 = 1
+		AND	t.sales_month BETWEEN #{model.yearMonthBegin} AND #{model.yearMonth}
+		AND t.emp_code = #{model.empCode}
+		AND t.proline_id = #{model.proLineId}
+		GROUP BY t.sales_month
+	</select>
+</mapper>

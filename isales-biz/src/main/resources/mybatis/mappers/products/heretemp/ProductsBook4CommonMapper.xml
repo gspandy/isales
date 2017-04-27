@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.heretemp.productsbook.dao.ProductsBookDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ProductsBookResultMap" type="com.haier.isales.products.heretemp.productsbook.domain.ProductsBookDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="metadataid" property="metadataid"  jdbcType="BIGINT"  />
+		<result column="modelno" property="modelno"  jdbcType="VARCHAR"  />
+		<result column="bookmetadataid" property="bookmetadataid"  jdbcType="BIGINT"  />
+		<result column="dfilepath" property="dfilepath"  jdbcType="VARCHAR"  />
+		<result column="gname" property="gname"  jdbcType="VARCHAR"  />
+		<result column="gfile" property="gfile"  jdbcType="VARCHAR"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	METADATAID	,
+	MODELNO	,
+	BOOKMETADATAID	,
+	DFILEPATH	,
+	GNAME	,
+	GFILE	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.metadataid!=null">and metadataid=#{entity.metadataid}</if>
+		<if test="entity.modelno!=null">and modelno like CONCAT('%',#{entity.modelno},'%')</if>
+		<if test="entity.bookmetadataid!=null">and bookmetadataid=#{entity.bookmetadataid}</if>
+		<if test="entity.dfilepath!=null">and dfilepath like CONCAT('%',#{entity.dfilepath},'%')</if>
+		<if test="entity.gname!=null">and gname like CONCAT('%',#{entity.gname},'%')</if>
+		<if test="entity.gfile!=null">and gfile like CONCAT('%',#{entity.gfile},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ProductsBookResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_book_temp
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_products_book_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.products.heretemp.productsbook.domain.ProductsBookDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_temp.t_isales_products_book_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				METADATAID	,
+			</if>
+			<if test="modelno!=null">
+				MODELNO	,
+			</if>
+			<if test="bookmetadataid!=null">
+				BOOKMETADATAID	,
+			</if>
+			<if test="dfilepath!=null">
+				DFILEPATH	,
+			</if>
+			<if test="gname!=null">
+				GNAME	,
+			</if>
+			<if test="gfile!=null">
+				GFILE	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="metadataid!=null">
+				#{metadataid}	,
+			</if>
+			<if test="modelno!=null">
+				#{modelno}	,
+			</if>
+			<if test="bookmetadataid!=null">
+				#{bookmetadataid}	,
+			</if>
+			<if test="dfilepath!=null">
+				#{dfilepath}	,
+			</if>
+			<if test="gname!=null">
+				#{gname}	,
+			</if>
+			<if test="gfile!=null">
+				#{gfile}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.products.heretemp.productsbook.domain.ProductsBookDomain">
+		update isales_temp.t_isales_products_book_temp
+		<set>
+			METADATAID = #{metadataid},
+			MODELNO = #{modelno},
+			BOOKMETADATAID = #{bookmetadataid},
+			DFILEPATH = #{dfilepath},
+			GNAME = #{gname},
+			GFILE = #{gfile},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_products_book_temp 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ProductsBookResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_book_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_products_book_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

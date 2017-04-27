@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+	<!-- hop 框架必须接口 begin-->
+	<!-- 文件存储服务 -->
+ 	<dubbo:reference id="fileServiceClient" registry="isalesRegistry" owner="zhangtao" interface="com.haier.openplatform.hfs.client.service.FileServiceClient" version="1.0.0" protocol="dubbo" timeout="100000" init="true"/> 
+	
+	<dubbo:reference id="projectServiceClientAdapter" registry="isalesRegistry" owner="wangxuzheng" interface="com.haier.openplatform.console.project.spi.MonitorServiceClient" version="1.0" protocol="dubbo" timeout="100000" init="true" />
+	<!-- hop 框架必须接口 end-->
+	
+	<!-- mobile 推送消息接口 -->
+	 <dubbo:reference id="pushServiceClient" registry="isalesRegistry" owner="hop" interface="com.haier.openplatform.mobile.push.service.PushServiceClient" version="1.0" protocol="dubbo" timeout="100000" init="true" /> 
+ 	<!-- 发送短信dubbo接口 -->
+	<dubbo:reference id="sendSmsServiceClient" registry="isalesRegistry" owner="hop" interface="com.haier.openplatform.console.info.spi.SendSmsServiceClient" version="1.0" protocol="dubbo" timeout="100000" init="true" />
+ 
+</beans>

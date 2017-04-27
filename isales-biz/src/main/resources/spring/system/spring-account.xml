@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd  "
+	default-lazy-init="true">
+	<!-- AccountDAO 的spring配置文件 -->
+	<bean id="accountDao" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.system.account.dao.AccountDAO" />
+	</bean>
+	
+	<bean id="appVersionIfNeedUpdateDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.system.account.dao.AppVersionIfNeedUpdateDAO"/>
+	</bean>
+	<!-- AccountService 的spring配置文件 和对应的实现类-->
+	<bean id="accountService" class="com.haier.isales.system.account.service.impl.AccountServiceImpl">
+		<property name="accountDao" ref="accountDao" />
+		<property name="scoreService" ref="scoreService" />
+		<property name="userDao" ref="userDao" />
+		<property name="ldapPasswordUtil" ref="ldapPasswordUtil" />
+		<property name="ldapPasswordUtilForUpdatePass" ref="ldapPasswordUtilForUpdatePass" />
+		<property name="userEmpDao" ref="userEmpDao"></property>
+		<property name="systeminfoService" ref="systeminfoService"></property>
+		<property name="smsSender" ref="smsSender"></property>
+		<property name="appVersionIfNeedUpdateDAO" ref="appVersionIfNeedUpdateDAO"></property>
+	</bean>
+	
+</beans>

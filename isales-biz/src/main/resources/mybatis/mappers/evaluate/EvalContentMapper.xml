@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.evaluate.dao.EvalContentDAO">
+	<!-- 根据查询条件查询直销员评价分数 -->
+	<select id="findEvalContentList" resultMap="EvalContentResultMap">
+		SELECT <include refid="all_Column_List"/>
+		FROM isales_app.t_user_evaluate_content
+		 WHERE 1=1 
+		 
+		<if test="queryDTO.uecSeq!=null and queryDTO.uecSeq != ''">
+			AND uec_seq = #{queryDTO.uecSeq}
+		</if>
+		ORDER BY uec_seq
+	</select>
+</mapper>

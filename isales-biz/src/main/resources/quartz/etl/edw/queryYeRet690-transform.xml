@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="10000" trancateTable="true" batchSize="10000" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">ITF_BW</property>
+		<property name="name">VW_YE_RET_690</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_query_ye_ret_690_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="CTIMEID" dest="CTIMEID" type="String" />
+		<mapping source="PRODUCT_LINE_CODE" dest="PRODUCT_LINE_CODE" type="String" />
+		<mapping source="PRODUCT_LINE_NAME" dest="PRODUCT_LINE_NAME" type="String" />
+		<mapping source="SALE_CHAN_CODE" dest="SALE_CHAN_CODE" type="String" />
+		<mapping source="SALE_CHAN_NAME" dest="SALE_CHAN_NAME" type="String" />
+		<mapping source="PRO_BAND" dest="PRO_BAND" type="String" />
+		<mapping source="PRO_BAND_NAME" dest="PRO_BAND_NAME" type="String" />
+		<mapping source="PRO_SERIES_CODE" dest="PRO_SERIES_CODE" type="String" />
+		<mapping source="PRO_SERIES_NAME" dest="PRO_SERIES_NAME" type="String" />
+		<mapping source="MAT_TYPE" dest="MAT_TYPE" type="String" />
+		<mapping source="PROD_CODE" dest="PROD_CODE" type="String" />
+		<mapping source="PROD_NAME" dest="PROD_NAME" type="String" />
+		<mapping source="PR_STATION_CODE" dest="PR_STATION_CODE" type="String" />
+		<mapping source="PR_STATION_NAME" dest="PR_STATION_NAME" type="String" />
+		<mapping source="DEPT_CODE" dest="DEPT_CODE" type="String" />
+		<mapping source="DEPT_NAME" dest="DEPT_NAME" type="String" />
+		<mapping source="RCM_STATION_CODE" dest="RCM_STATION_CODE" type="String" />
+		<mapping source="RCM_STATION_NAME" dest="RCM_STATION_NAME" type="String" />
+		<mapping source="SUB_EMP_CODE" dest="SUB_EMP_CODE" type="String" />
+		<mapping source="SUB_EMP_NAME" dest="SUB_EMP_NAME" type="String" />
+		<mapping source="CUST_CODE" dest="CUST_CODE" type="String" />
+		<mapping source="CUST_NAME" dest="CUST_NAME" type="String" />
+		<mapping source="OUTLET_CODE" dest="OUTLET_CODE" type="String" />
+		<mapping source="OUTLET_NAME" dest="OUTLET_NAME" type="String" />
+		<mapping source="SCHEDULE_AMOUNT" dest="SCHEDULE_AMOUNT" type="String" />
+		<mapping source="PRODUCT_PRICE" dest="PRODUCT_PRICE" type="String" />
+		<mapping source="TARGET_RETAIL_SALES" dest="TARGET_RETAIL_SALES" type="String" />
+		<mapping source="SHARE_RETAIL_SALES" dest="SHARE_RETAIL_SALES" type="String" />
+		<mapping source="MKT_LOOKUP_CODE" dest="MKT_LOOKUP_CODE" type="String" />
+		<mapping source="MKT_LOOKUP_TYPE" dest="MKT_LOOKUP_TYPE" type="String" />
+	</mappings>
+    <!-- only synchronize two years data   added by lizhenwei 2016-06-07 -->
+    <where>
+    	<source>
+    		CTIMEID BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -24), 'yyyymmdd')
+ 				AND TO_CHAR(SYSDATE, 'yyyymmdd')
+    	</source>
+    </where>
+	 <procedures>
+		<procedure name="p_insertdata_query_ye_ret_690" />
+	</procedures> 
+</transform>

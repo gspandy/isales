@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.reportsave.dao.SaveEmployeeRefSalesDao">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	    <resultMap id="saveReportsalesResultMap" type="com.haier.isales.retail.reportsales.domain.ReportsalesDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="YGID" property="ygid"  jdbcType="VARCHAR"  />
+		<result column="GJTIME" property="gjtime"  jdbcType="VARCHAR"  />
+		<result column="FPNUM" property="fpnum"  jdbcType="VARCHAR"  />
+		<result column="CPZNO" property="cpzno"  jdbcType="VARCHAR"  />
+		<result column="CPZNAME" property="cpzname"  jdbcType="VARCHAR"  />
+		<result column="PRODUCTTYPE" property="producttype"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT" property="product"  jdbcType="VARCHAR"  />
+		<result column="COUNTS" property="counts"  jdbcType="VARCHAR"  />
+		<result column="BARCODE" property="barcode"  jdbcType="VARCHAR"  />
+		<result column="PRICE" property="price"  jdbcType="VARCHAR"  />
+		<result column="NEWPRICE" property="newprice"  jdbcType="VARCHAR"  />
+		<result column="PRESENT" property="present"  jdbcType="VARCHAR"  />
+		<result column="PRESENTNUM" property="presentnum"  jdbcType="VARCHAR"  />
+		<result column="ISYJ" property="isyj"  jdbcType="VARCHAR"  />
+		<result column="YHNAME" property="yhname"  jdbcType="VARCHAR"  />
+		<result column="YHPHONE" property="yhphone"  jdbcType="VARCHAR"  />
+		<result column="SHADDRESS" property="shaddress"  jdbcType="VARCHAR"  />
+		<result column="HISHFRESULT" property="hishfresult"  jdbcType="VARCHAR"  />
+		<result column="PADBJ" property="padbj"  jdbcType="VARCHAR"  />
+		<result column="PADIMG" property="padimg"  jdbcType="VARCHAR"  />
+		<result column="HAIERMAIL" property="haiermail"  jdbcType="VARCHAR"  />
+		<result column="QYKID" property="qykid"  jdbcType="VARCHAR"  />
+		<result column="HYZC" property="hyzc"  jdbcType="VARCHAR"  />
+		<result column="MDID" property="mdid"  jdbcType="VARCHAR"  />
+		<result column="MDNAME" property="mdname"  jdbcType="VARCHAR"  />
+		<result column="Telephone" property="telephone"  jdbcType="VARCHAR"  />
+		<result column="LRFS" property="lrfs"  jdbcType="VARCHAR"  />
+		<result column="report_type" property="reportType"  jdbcType="VARCHAR"  />
+		<result column="synchronous_state" property="synchronousState"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="customer_IDno" property="customerIdno"  jdbcType="VARCHAR"  />
+		<result column="customer_birthday" property="customerBirthday"  jdbcType="VARCHAR"  />
+		<result column="customer_features" property="customerFeatures"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+		<result column="synchronous_result" property="synchronousResult"  />
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="share_type" property="shareType"  jdbcType="VARCHAR"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="ehub_data_id" property="ehubDataId"  jdbcType="VARCHAR"  />
+		
+		<result column="prdn" property="prdn"  jdbcType="VARCHAR"  /><!-- 产品型号名称  -->
+		<result column="categoryE" property="categoryE"  jdbcType="VARCHAR"  /><!-- 产品组编码  -->
+		<result column="categoryEName" property="categoryEName"  jdbcType="VARCHAR"  /><!-- 产品组名称 -->
+	</resultMap>
+	
+
+<!-- 实体的保存法方法 -->
+	<insert id="saveSaleInfo">
+		insert into isales_app.t_isales_sales_diary
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="model.ygid!=null">
+				YGID	,
+			</if>
+			<if test="model.gjtime!=null">
+				GJTIME	,
+			</if>
+			<if test="model.fpnum!=null">
+				FPNUM	,
+			</if>
+			<if test="model.cpzno!=null">
+				CPZNO	,
+			</if>
+			<if test="model.cpzname!=null">
+				CPZNAME	,
+			</if>
+			<if test="model.producttype!=null">
+				PRODUCTTYPE	,
+			</if>
+			<if test="model.product!=null">
+				PRODUCT	,
+			</if>
+			<if test="model.counts!=null">
+				COUNTS	,
+			</if>
+			<if test="model.barcode!=null">
+				BARCODE	,
+			</if>
+			<if test="model.price!=null">
+				PRICE	,
+			</if>
+			<if test="model.newprice!=null">
+				NEWPRICE	,
+			</if>
+			<if test="model.present!=null">
+				PRESENT	,
+			</if>
+			<if test="model.presentnum!=null">
+				PRESENTNUM	,
+			</if>
+			<if test="model.isyj!=null">
+				ISYJ	,
+			</if>
+			<if test="model.yhname!=null">
+				YHNAME	,
+			</if>
+			<if test="model.yhphone!=null">
+				YHPHONE	,
+			</if>
+			<if test="model.shaddress!=null">
+				SHADDRESS	,
+			</if>
+			<if test="model.hishfresult!=null">
+				HISHFRESULT	,
+			</if>
+			<if test="model.padbj!=null">
+				PADBJ	,
+			</if>
+			<if test="model.padimg!=null">
+				PADIMG	,
+			</if>
+			<if test="model.haiermail!=null">
+				HAIERMAIL	,
+			</if>
+			<if test="model.qykid!=null">
+				QYKID	,
+			</if>
+			<if test="model.hyzc!=null">
+				HYZC	,
+			</if>
+			<if test="model.mdid!=null">
+				MDID	,
+			</if>
+			<if test="model.mdname!=null">
+				MDNAME	,
+			</if>
+			<if test="model.telephone!=null">
+				TELEPHONE	,
+			</if>
+			<if test="model.lrfs!=null">
+				LRFS	,
+			</if>
+			<if test="model.reportType!=null">
+				REPORT_TYPE	,
+			</if>
+			<if test="model.synchronousState!=null">
+				SYNCHRONOUS_STATE	,
+			</if>
+			<if test="model.updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="model.createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="model.customerIdno!=null">
+				CUSTOMER_IDNO	,
+			</if>
+			<if test="model.customerBirthday!=null">
+				CUSTOMER_BIRTHDAY	,
+			</if>
+			<if test="model.customerFeatures!=null">
+				CUSTOMER_FEATURES	,
+			</if>
+			<if test="model.remark!=null">
+				REMARK	,
+			</if>
+			<if test="model.synchronousResult!=null">
+				SYNCHRONOUS_RESULT	,
+			</if>
+			<if test="model.operatorId!=null">
+				OPERATOR_ID	,
+			</if>
+			<if test="model.shareType!=null">
+				SHARE_TYPE	,	
+			</if>
+			<if test="prdn!=null">
+				prdn ,
+			</if>
+			<if test="categoryE!=null">
+				categoryE ,
+			</if>
+			<if test="categoryEName!=null">
+				categoryEName	
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="model.ygid!=null">
+				#{model.ygid}	,
+			</if>
+			<if test="model.gjtime!=null">
+				#{model.gjtime}	,
+			</if>
+			<if test="model.fpnum!=null">
+				#{model.fpnum}	,
+			</if>
+			<if test="model.cpzno!=null">
+				#{model.cpzno}	,
+			</if>
+			<if test="model.cpzname!=null">
+				#{model.cpzname}	,
+			</if>
+			<if test="model.producttype!=null">
+				#{model.producttype}	,
+			</if>
+			<if test="model.product!=null">
+				#{model.product}	,
+			</if>
+			<if test="model.counts!=null">
+				#{model.counts}	,
+			</if>
+			<if test="model.barcode!=null">
+				#{model.barcode}	,
+			</if>
+			<if test="model.price!=null">
+				#{model.price}	,
+			</if>
+			<if test="model.newprice!=null">
+				#{model.newprice}	,
+			</if>
+			<if test="model.present!=null">
+				#{model.present}	,
+			</if>
+			<if test="model.presentnum!=null">
+				#{model.presentnum}	,
+			</if>
+			<if test="model.isyj!=null">
+				#{model.isyj}	,
+			</if>
+			<if test="model.yhname!=null">
+				#{model.yhname}	,
+			</if>
+			<if test="model.yhphone!=null">
+				#{model.yhphone}	,
+			</if>
+			<if test="model.shaddress!=null">
+				#{model.shaddress}	,
+			</if>
+			<if test="model.hishfresult!=null">
+				#{model.hishfresult}	,
+			</if>
+			<if test="model.padbj!=null">
+				#{model.padbj}	,
+			</if>
+			<if test="model.padimg!=null">
+				#{model.padimg}	,
+			</if>
+			<if test="model.haiermail!=null">
+				#{model.haiermail}	,
+			</if>
+			<if test="model.qykid!=null">
+				#{model.qykid}	,
+			</if>
+			<if test="model.hyzc!=null">
+				#{model.hyzc}	,
+			</if>
+			<if test="model.mdid!=null">
+				#{model.mdid}	,
+			</if>
+			<if test="model.mdname!=null">
+				#{model.mdname}	,
+			</if>
+			<if test="model.telephone!=null">
+				#{model.telephone}	,
+			</if>
+			<if test="model.lrfs!=null">
+				#{model.lrfs}	,
+			</if>
+			<if test="model.reportType!=null">
+				#{model.reportType}	,
+			</if>
+			<if test="model.synchronousState!=null">
+				#{model.synchronousState}	,
+			</if>
+			<if test="model.updateTime!=null">
+				#{model.updateTime}	,
+			</if>
+			<if test="model.createTime!=null">
+				#{model.createTime}	,
+			</if>
+			<if test="model.customerIdno!=null">
+				#{model.customerIdno}	,
+			</if>
+			<if test="model.customerBirthday!=null">
+				#{model.customerBirthday}	,
+			</if>
+			<if test="model.customerFeatures!=null">
+				#{model.customerFeatures}	,
+			</if>
+			<if test="model.remark!=null">
+				#{model.remark}	,
+			</if>
+			<if test="model.synchronousResult!=null">
+				#{model.synchronousResult}	,
+			</if>
+			<if test="model.operatorId!=null">
+				#{model.operatorId}	,
+			</if>
+			<if test="model.shareType!=null">
+				#{model.shareType}	
+			</if>
+			<if test="prdn!=null">
+				#{prdn},
+			</if>
+			<if test="categoryE!=null">
+				#{categoryE},
+			</if>
+			<if test="categoryEName!=null">
+				#{categoryEName}	
+			</if>
+		</trim>
+	</insert>
+</mapper>

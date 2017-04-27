@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.label.dao.LabelDAO">
+	
+	<!-- 根据标签组参数查询标签 -->
+	<select id="findByGroupParam" resultMap="LabelResultMap" >
+		<![CDATA[
+			SELECT l.label_id
+			     , l.label_code
+			     , l.label_name
+			     , l.parent_org
+			     , l.label_level
+			     , l.label_seq
+			     , l.label_status
+			     , l.update_id
+			     , l.update_name
+			     , l.update_time
+			     , l.create_id
+			     , l.create_name
+			     , l.create_time
+			FROM
+			  isales_sys.t_qn_label l
+			LEFT JOIN isales_sys.t_qn_label_group_ref lgr
+			ON lgr.label_id = l.label_id
+			LEFT JOIN isales_sys.t_qn_label_group lg
+			ON lg.group_id = lgr.group_id
+			WHERE 1 = 1 
+		]]>
+		<if test="model.groupId != null and model.groupId != ''">
+		<![CDATA[
+			  and lg.group_id =  #{model.groupId}
+		]]>
+		</if>
+	</select>
+	<select id="findByGroupList" resultMap="LabelResultMap" >
+		SELECT l.label_id
+		  	 , l.label_code
+		     , l.label_name
+		     , l.parent_org
+		     , l.label_level
+		     , l.label_seq
+		     , l.label_status
+		     , l.update_id
+		     , l.update_name
+		     , l.update_time
+		     , l.create_id
+		     , l.create_name
+		     , l.create_time
+		FROM
+		  isales_sys.t_qn_label l
+		LEFT JOIN isales_sys.t_qn_label_group_ref lgr
+		ON lgr.label_id = l.label_id
+		WHERE lgr.group_id in
+		<foreach collection="groupIdList" item="item" index="index" open="(" separator="," close=")">
+        		${item}
+  		</foreach>
+	</select>
+	
+</mapper>

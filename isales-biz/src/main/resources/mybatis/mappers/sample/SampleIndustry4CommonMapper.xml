@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.sample.sampleindustry.dao.SampleIndustryDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="SampleIndustryResultMap" type="com.haier.isales.sample.sampleindustry.domain.SampleIndustryDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="industry_code" property="industryCode"  jdbcType="VARCHAR"  />
+		<result column="industry_name" property="industryName"  jdbcType="VARCHAR"  />
+		<result column="product_id" property="productId"  jdbcType="VARCHAR"  />
+		<result column="product_name" property="productName"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	INDUSTRY_CODE	,
+	INDUSTRY_NAME	,
+	PRODUCT_ID	,
+	PRODUCT_NAME
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.industryCode!=null">and industry_code like CONCAT('%',#{entity.industryCode},'%')</if>
+		<if test="entity.industryName!=null">and industry_name like CONCAT('%',#{entity.type},'%')</if>
+		<if test="entity.productId!=null">and product_id like CONCAT('%',#{entity.productId},'%')</if>
+		<if test="entity.productName!=null">and product_name like CONCAT('%',#{entity.productName},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="SampleIndustryResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_sample_pro_line
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_sample_pro_line
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.sample.sampleindustry.domain.SampleIndustryDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_sample_pro_line
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="industryCode!=null">
+				INDUSTRY_CODE	,
+			</if>
+			<if test="industryName!=null">
+				INDUSTRY_NAME	,
+			</if>
+			<if test="productId!=null">
+				PRODUCT_ID	,
+			</if>
+			<if test="productName!=null">
+				PRODUCT_NAME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="industryCode!=null">
+				#{industryCode}	,
+			</if>
+			<if test="industryName!=null">
+				#{industryName}	,
+			</if>
+			<if test="productId!=null">
+				#{productId}	,
+			</if>
+			<if test="productName!=null">
+				#{productName}	
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.sample.sampleindustry.domain.SampleIndustryDomain">
+		update isales_app.t_isales_sample_pro_line
+		<set>
+			INDUSTRY_CODE = #{industryCode},
+			INDUSTRY_NAME = #{industryName},
+			PRODUCT_ID = #{productId},
+			PRODUCT_NAME = #{productName},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_sample_pro_line 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="SampleIndustryResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_sample_pro_line
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_sample_pro_line
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

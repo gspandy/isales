@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.heretemp.productsfaq.dao.ProductsFAQDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ProductsFAQResultMap" type="com.haier.isales.products.heretemp.productsfaq.domain.ProductsFAQDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="faqmetadataid" property="faqmetadataid"  jdbcType="BIGINT"  />
+		<result column="metadataid" property="metadataid"  jdbcType="BIGINT"  />
+		<result column="fname" property="fname"  jdbcType="VARCHAR"  />
+		<result column="ffilename" property="ffilename"  />
+		<result column="synchronous_time" property="synchronousTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	FAQMETADATAID	,
+	METADATAID	,
+	FNAME	,
+	FFILENAME	,
+	SYNCHRONOUS_TIME	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.faqmetadataid!=null">and faqmetadataid=#{entity.faqmetadataid}</if>
+		<if test="entity.metadataid!=null">and metadataid=#{entity.metadataid}</if>
+		<if test="entity.fname!=null">and fname like CONCAT('%',#{entity.fname},'%')</if>
+		<if test="entity.ffilename!=null">and ffilename like CONCAT('%',#{entity.ffilename},'%')</if>
+		<!-- java.util.Date synchronous_time has been ignored!!! -->
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ProductsFAQResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_faq_temp
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_temp.t_isales_products_faq_temp
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.products.heretemp.productsfaq.domain.ProductsFAQDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_temp.t_isales_products_faq_temp
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="faqmetadataid!=null">
+				FAQMETADATAID	,
+			</if>
+			<if test="metadataid!=null">
+				METADATAID	,
+			</if>
+			<if test="fname!=null">
+				FNAME	,
+			</if>
+			<if test="ffilename!=null">
+				FFILENAME	,
+			</if>
+			<if test="synchronousTime!=null">
+				SYNCHRONOUS_TIME	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="faqmetadataid!=null">
+				#{faqmetadataid}	,
+			</if>
+			<if test="metadataid!=null">
+				#{metadataid}	,
+			</if>
+			<if test="fname!=null">
+				#{fname}	,
+			</if>
+			<if test="ffilename!=null">
+				#{ffilename}	,
+			</if>
+			<if test="synchronousTime!=null">
+				#{synchronousTime}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.products.heretemp.productsfaq.domain.ProductsFAQDomain">
+		update isales_temp.t_isales_products_faq_temp
+		<set>
+			FAQMETADATAID = #{faqmetadataid},
+			METADATAID = #{metadataid},
+			FNAME = #{fname},
+			FFILENAME = #{ffilename},
+			SYNCHRONOUS_TIME = #{synchronousTime},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_temp.t_isales_products_faq_temp 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ProductsFAQResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_temp.t_isales_products_faq_temp
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_temp.t_isales_products_faq_temp
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

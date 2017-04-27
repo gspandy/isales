@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.retail.dao.RetailDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="RetailResultMap" type="com.haier.isales.performance.retail.domain.RetailDomain">
+		<id column="row_id" property="rowId"  jdbcType="VARCHAR"  />
+		<result column="trade_id" property="tradeId"  jdbcType="VARCHAR"  />
+		<result column="shop_id" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="shop_name" property="shopName"  jdbcType="VARCHAR"  />
+		<result column="proline_id" property="prolineId"  jdbcType="VARCHAR"  />
+		<result column="product_id" property="productId"  jdbcType="VARCHAR"  />
+		<result column="sales_month" property="salesMonth"  jdbcType="TIMESTAMP"  />
+		<result column="sales_num" property="salesNum"  jdbcType="DECIMAL"  />
+		<result column="sales_price" property="salesPrice"  jdbcType="DECIMAL"  />
+		<result column="sourcetype" property="sourcetype"  jdbcType="INTEGER"  />
+		<result column="createdate" property="createdate"  jdbcType="TIMESTAMP"  />
+		<result column="saleschannelname" property="saleschannelname"  jdbcType="VARCHAR"  />
+		<result column="xsaleschannelname" property="xsaleschannelname"  jdbcType="VARCHAR"  />
+		<result column="parentorgid" property="parentorgid"  jdbcType="INTEGER"  />
+		<result column="parentorgcode" property="parentorgcode"  jdbcType="VARCHAR"  />
+		<result column="parentorgname" property="parentorgname"  jdbcType="VARCHAR"  />
+		<result column="bgorgid" property="bgorgid"  jdbcType="INTEGER"  />
+		<result column="goods_name" property="goodsName"  jdbcType="VARCHAR"  />
+		<result column="manageorgcode" property="manageorgcode"  jdbcType="VARCHAR"  />
+		<result column="price_add" property="priceAdd"  jdbcType="INTEGER"  />
+		<result column="pricetype" property="pricetype"  jdbcType="VARCHAR"  />
+		<result column="created_date" property="createdDate"  jdbcType="TIMESTAMP"  />
+		<result column="last_modified_date" property="lastModifiedDate"  jdbcType="TIMESTAMP"  />
+		<result column="load_batch" property="loadBatch"  jdbcType="VARCHAR"  />
+		<result column="hy_flag" property="hyFlag"  jdbcType="VARCHAR"  />
+		<result column="empcode" property="empcode"  jdbcType="VARCHAR"  />
+		<result column="fpnum" property="fpnum"  jdbcType="VARCHAR"  />
+		<result column="barcode" property="barcode"  jdbcType="VARCHAR"  />
+		<result column="price" property="price"  jdbcType="VARCHAR"  />
+		<result column="yhname" property="yhname"  jdbcType="VARCHAR"  />
+		<result column="yhphone" property="yhphone"  jdbcType="VARCHAR"  />
+		<result column="shaddress" property="shaddress"  jdbcType="VARCHAR"  />
+		<result column="hishfresult" property="hishfresult"  jdbcType="VARCHAR"  />
+		<result column="present" property="present"  jdbcType="VARCHAR"  />
+		<result column="is_prototype" property="isPrototype"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ROW_ID	,
+	TRADE_ID	,
+	SHOP_ID	,
+	SHOP_NAME	,
+	PROLINE_ID	,
+	PRODUCT_ID	,
+	SALES_MONTH	,
+	SALES_NUM	,
+	SALES_PRICE	,
+	SOURCETYPE	,
+	CREATEDATE	,
+	SALESCHANNELNAME	,
+	XSALESCHANNELNAME	,
+	PARENTORGID	,
+	PARENTORGCODE	,
+	PARENTORGNAME	,
+	BGORGID	,
+	GOODS_NAME	,
+	MANAGEORGCODE	,
+	PRICE_ADD	,
+	PRICETYPE	,
+	CREATED_DATE	,
+	LAST_MODIFIED_DATE	,
+	LOAD_BATCH	,
+	HY_FLAG	,
+	EMPCODE	,
+	FPNUM	,
+	BARCODE	,
+	PRICE	,
+	YHNAME	,
+	YHPHONE	,
+	SHADDRESS	,
+	HISHFRESULT	,
+	PRESENT	,
+	IS_PROTOTYPE	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.rowId!=null">and row_id like CONCAT('%',#{entity.rowId},'%')</if>
+		<if test="entity.tradeId!=null">and trade_id like CONCAT('%',#{entity.tradeId},'%')</if>
+		<if test="entity.shopId!=null">and shop_id like CONCAT('%',#{entity.shopId},'%')</if>
+		<if test="entity.shopName!=null">and shop_name like CONCAT('%',#{entity.shopName},'%')</if>
+		<if test="entity.prolineId!=null">and proline_id like CONCAT('%',#{entity.prolineId},'%')</if>
+		<if test="entity.productId!=null">and product_id like CONCAT('%',#{entity.productId},'%')</if>
+		<!-- java.util.Date sales_month has been ignored!!! -->
+		<if test="entity.salesNum!=null">and sales_num=#{entity.salesNum}</if>
+		<if test="entity.salesPrice!=null">and sales_price=#{entity.salesPrice}</if>
+		<if test="entity.sourcetype!=null">and sourcetype=#{entity.sourcetype}</if>
+		<!-- java.util.Date createdate has been ignored!!! -->
+		<if test="entity.saleschannelname!=null">and saleschannelname like CONCAT('%',#{entity.saleschannelname},'%')</if>
+		<if test="entity.xsaleschannelname!=null">and xsaleschannelname like CONCAT('%',#{entity.xsaleschannelname},'%')</if>
+		<if test="entity.parentorgid!=null">and parentorgid=#{entity.parentorgid}</if>
+		<if test="entity.parentorgcode!=null">and parentorgcode like CONCAT('%',#{entity.parentorgcode},'%')</if>
+		<if test="entity.parentorgname!=null">and parentorgname like CONCAT('%',#{entity.parentorgname},'%')</if>
+		<if test="entity.bgorgid!=null">and bgorgid=#{entity.bgorgid}</if>
+		<if test="entity.goodsName!=null">and goods_name like CONCAT('%',#{entity.goodsName},'%')</if>
+		<if test="entity.manageorgcode!=null">and manageorgcode like CONCAT('%',#{entity.manageorgcode},'%')</if>
+		<if test="entity.priceAdd!=null">and price_add=#{entity.priceAdd}</if>
+		<if test="entity.pricetype!=null">and pricetype like CONCAT('%',#{entity.pricetype},'%')</if>
+		<!-- java.util.Date created_date has been ignored!!! -->
+		<!-- java.util.Date last_modified_date has been ignored!!! -->
+		<if test="entity.loadBatch!=null">and load_batch like CONCAT('%',#{entity.loadBatch},'%')</if>
+		<if test="entity.hyFlag!=null">and hy_flag like CONCAT('%',#{entity.hyFlag},'%')</if>
+		<if test="entity.empcode!=null">and empcode like CONCAT('%',#{entity.empcode},'%')</if>
+		<if test="entity.fpnum!=null">and fpnum like CONCAT('%',#{entity.fpnum},'%')</if>
+		<if test="entity.barcode!=null">and barcode like CONCAT('%',#{entity.barcode},'%')</if>
+		<if test="entity.price!=null">and price like CONCAT('%',#{entity.price},'%')</if>
+		<if test="entity.yhname!=null">and yhname like CONCAT('%',#{entity.yhname},'%')</if>
+		<if test="entity.yhphone!=null">and yhphone like CONCAT('%',#{entity.yhphone},'%')</if>
+		<if test="entity.shaddress!=null">and shaddress like CONCAT('%',#{entity.shaddress},'%')</if>
+		<if test="entity.hishfresult!=null">and hishfresult like CONCAT('%',#{entity.hishfresult},'%')</if>
+		<if test="entity.present!=null">and present like CONCAT('%',#{entity.present},'%')</if>
+		<if test="entity.isPrototype!=null">and is_prototype like CONCAT('%',#{entity.isPrototype},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="RetailResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_btb_ratail
+		where row_id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_btb_ratail
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.performance.retail.domain.RetailDomain" >
+		insert into isales_app.t_isales_btb_ratail
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				ROW_ID	,
+			</if>
+			<if test="tradeId!=null">
+				TRADE_ID	,
+			</if>
+			<if test="shopId!=null">
+				SHOP_ID	,
+			</if>
+			<if test="shopName!=null">
+				SHOP_NAME	,
+			</if>
+			<if test="prolineId!=null">
+				PROLINE_ID	,
+			</if>
+			<if test="productId!=null">
+				PRODUCT_ID	,
+			</if>
+			<if test="salesMonth!=null">
+				SALES_MONTH	,
+			</if>
+			<if test="salesNum!=null">
+				SALES_NUM	,
+			</if>
+			<if test="salesPrice!=null">
+				SALES_PRICE	,
+			</if>
+			<if test="sourcetype!=null">
+				SOURCETYPE	,
+			</if>
+			<if test="createdate!=null">
+				CREATEDATE	,
+			</if>
+			<if test="saleschannelname!=null">
+				SALESCHANNELNAME	,
+			</if>
+			<if test="xsaleschannelname!=null">
+				XSALESCHANNELNAME	,
+			</if>
+			<if test="parentorgid!=null">
+				PARENTORGID	,
+			</if>
+			<if test="parentorgcode!=null">
+				PARENTORGCODE	,
+			</if>
+			<if test="parentorgname!=null">
+				PARENTORGNAME	,
+			</if>
+			<if test="bgorgid!=null">
+				BGORGID	,
+			</if>
+			<if test="goodsName!=null">
+				GOODS_NAME	,
+			</if>
+			<if test="manageorgcode!=null">
+				MANAGEORGCODE	,
+			</if>
+			<if test="priceAdd!=null">
+				PRICE_ADD	,
+			</if>
+			<if test="pricetype!=null">
+				PRICETYPE	,
+			</if>
+			<if test="createdDate!=null">
+				CREATED_DATE	,
+			</if>
+			<if test="lastModifiedDate!=null">
+				LAST_MODIFIED_DATE	,
+			</if>
+			<if test="loadBatch!=null">
+				LOAD_BATCH	,
+			</if>
+			<if test="hyFlag!=null">
+				HY_FLAG	,
+			</if>
+			<if test="empcode!=null">
+				EMPCODE	,
+			</if>
+			<if test="fpnum!=null">
+				FPNUM	,
+			</if>
+			<if test="barcode!=null">
+				BARCODE	,
+			</if>
+			<if test="price!=null">
+				PRICE	,
+			</if>
+			<if test="yhname!=null">
+				YHNAME	,
+			</if>
+			<if test="yhphone!=null">
+				YHPHONE	,
+			</if>
+			<if test="shaddress!=null">
+				SHADDRESS	,
+			</if>
+			<if test="hishfresult!=null">
+				HISHFRESULT	,
+			</if>
+			<if test="present!=null">
+				PRESENT	,
+			</if>
+			<if test="isPrototype!=null">
+				IS_PROTOTYPE	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="rowId!=null">
+				#{rowId}	,
+			</if>
+			<if test="tradeId!=null">
+				#{tradeId}	,
+			</if>
+			<if test="shopId!=null">
+				#{shopId}	,
+			</if>
+			<if test="shopName!=null">
+				#{shopName}	,
+			</if>
+			<if test="prolineId!=null">
+				#{prolineId}	,
+			</if>
+			<if test="productId!=null">
+				#{productId}	,
+			</if>
+			<if test="salesMonth!=null">
+				#{salesMonth}	,
+			</if>
+			<if test="salesNum!=null">
+				#{salesNum}	,
+			</if>
+			<if test="salesPrice!=null">
+				#{salesPrice}	,
+			</if>
+			<if test="sourcetype!=null">
+				#{sourcetype}	,
+			</if>
+			<if test="createdate!=null">
+				#{createdate}	,
+			</if>
+			<if test="saleschannelname!=null">
+				#{saleschannelname}	,
+			</if>
+			<if test="xsaleschannelname!=null">
+				#{xsaleschannelname}	,
+			</if>
+			<if test="parentorgid!=null">
+				#{parentorgid}	,
+			</if>
+			<if test="parentorgcode!=null">
+				#{parentorgcode}	,
+			</if>
+			<if test="parentorgname!=null">
+				#{parentorgname}	,
+			</if>
+			<if test="bgorgid!=null">
+				#{bgorgid}	,
+			</if>
+			<if test="goodsName!=null">
+				#{goodsName}	,
+			</if>
+			<if test="manageorgcode!=null">
+				#{manageorgcode}	,
+			</if>
+			<if test="priceAdd!=null">
+				#{priceAdd}	,
+			</if>
+			<if test="pricetype!=null">
+				#{pricetype}	,
+			</if>
+			<if test="createdDate!=null">
+				#{createdDate}	,
+			</if>
+			<if test="lastModifiedDate!=null">
+				#{lastModifiedDate}	,
+			</if>
+			<if test="loadBatch!=null">
+				#{loadBatch}	,
+			</if>
+			<if test="hyFlag!=null">
+				#{hyFlag}	,
+			</if>
+			<if test="empcode!=null">
+				#{empcode}	,
+			</if>
+			<if test="fpnum!=null">
+				#{fpnum}	,
+			</if>
+			<if test="barcode!=null">
+				#{barcode}	,
+			</if>
+			<if test="price!=null">
+				#{price}	,
+			</if>
+			<if test="yhname!=null">
+				#{yhname}	,
+			</if>
+			<if test="yhphone!=null">
+				#{yhphone}	,
+			</if>
+			<if test="shaddress!=null">
+				#{shaddress}	,
+			</if>
+			<if test="hishfresult!=null">
+				#{hishfresult}	,
+			</if>
+			<if test="present!=null">
+				#{present}	,
+			</if>
+			<if test="isPrototype!=null">
+				#{isPrototype}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.performance.retail.domain.RetailDomain">
+		update isales_app.t_isales_btb_ratail
+		<set>
+			TRADE_ID = #{tradeId},
+			SHOP_ID = #{shopId},
+			SHOP_NAME = #{shopName},
+			PROLINE_ID = #{prolineId},
+			PRODUCT_ID = #{productId},
+			SALES_MONTH = #{salesMonth},
+			SALES_NUM = #{salesNum},
+			SALES_PRICE = #{salesPrice},
+			SOURCETYPE = #{sourcetype},
+			CREATEDATE = #{createdate},
+			SALESCHANNELNAME = #{saleschannelname},
+			XSALESCHANNELNAME = #{xsaleschannelname},
+			PARENTORGID = #{parentorgid},
+			PARENTORGCODE = #{parentorgcode},
+			PARENTORGNAME = #{parentorgname},
+			BGORGID = #{bgorgid},
+			GOODS_NAME = #{goodsName},
+			MANAGEORGCODE = #{manageorgcode},
+			PRICE_ADD = #{priceAdd},
+			PRICETYPE = #{pricetype},
+			CREATED_DATE = #{createdDate},
+			LAST_MODIFIED_DATE = #{lastModifiedDate},
+			LOAD_BATCH = #{loadBatch},
+			HY_FLAG = #{hyFlag},
+			EMPCODE = #{empcode},
+			FPNUM = #{fpnum},
+			BARCODE = #{barcode},
+			PRICE = #{price},
+			YHNAME = #{yhname},
+			YHPHONE = #{yhphone},
+			SHADDRESS = #{shaddress},
+			HISHFRESULT = #{hishfresult},
+			PRESENT = #{present},
+			IS_PROTOTYPE = #{isPrototype},
+			REMARK = #{remark},
+		</set>
+		where row_id = #{rowId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_app.t_isales_btb_ratail 
+		where row_id = #{rowId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="RetailResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_btb_ratail
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_btb_ratail
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

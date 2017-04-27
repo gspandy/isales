@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.bpmissuetype.dao.BpmIssueTypeDAO">
+	<!-- 用列名信息拼 -->
+	<select id="findBpmIssueType" resultType="String">
+		SELECT DISTINCT (
+					    case when 
+					    <if test="entity.issueTypeKey !=null and entity.issueTypeKey != ''">
+							'101' = #{entity.issueTypeKey}
+						</if>
+					    then t.high_class
+					    when 
+					    <if test="entity.issueTypeKey !=null and entity.issueTypeKey != ''">
+							'102' = #{entity.issueTypeKey}
+						</if>
+					    then t.small_class
+			            when 
+			            <if test="entity.issueTypeKey !=null and entity.issueTypeKey != ''">
+							'103' = #{entity.issueTypeKey}
+						</if> 
+			            then t.pro_line
+					    when 
+					    <if test="entity.issueTypeKey !=null and entity.issueTypeKey != ''">
+							'104' = #{entity.issueTypeKey}
+						</if>
+					    then t.bu_code
+					    when 
+					    <if test="entity.issueTypeKey !=null and entity.issueTypeKey != ''">
+							'105' = #{entity.issueTypeKey}
+						</if> 
+					    then t.channel
+				        else ''
+				        end
+				  ) 
+				FROM
+				  isales_app.t_isales_bpm_issue_type t
+				WHERE
+				  1 = 1
+		<if test="entity.highClass!=null and entity.highClass != ''">
+			and t.high_class = #{entity.highClass}
+		</if>
+		<if test="entity.smallClass!=null and entity.smallClass != ''">
+			and t.small_class = #{entity.smallClass}
+		</if>
+		<if test="entity.proLine!=null and entity.proLine != ''">
+			and t.pro_line = #{entity.proLine}
+		</if>
+		 order by id asc
+	</select>
+	
+</mapper>

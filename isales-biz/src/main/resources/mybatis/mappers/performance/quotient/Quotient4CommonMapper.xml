@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.quotient.dao.QuotientDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="QuotientResultMap" type="com.haier.isales.performance.quotient.domain.QuotientDomain">
+		<id column="ID" property="id"  jdbcType="BIGINT"  />
+		<result column="YEAR" property="year"  jdbcType="INTEGER"  />
+		<result column="MONTH" property="month"  jdbcType="INTEGER"  />
+		<result column="TRADE_CODE" property="tradeCode"  jdbcType="VARCHAR"  />
+		<result column="CUST_NO" property="custNo"  jdbcType="VARCHAR"  />
+		<result column="PRODUCT_LINE_NO" property="productLineNo"  jdbcType="VARCHAR"  />
+		<result column="TARGET" property="target"  jdbcType="DECIMAL"  />
+		<result column="ACTUAL" property="actual"  jdbcType="DECIMAL"  />
+		<result column="CRRSPD_PERIOD" property="crrspdPeriod"  jdbcType="DECIMAL"  />
+		<result column="BASE_LINE" property="baseLine"  jdbcType="DECIMAL"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	YEAR	,
+	MONTH	,
+	TRADE_CODE	,
+	CUST_NO	,
+	PRODUCT_LINE_NO	,
+	TARGET	,
+	ACTUAL	,
+	CRRSPD_PERIOD	,
+	BASE_LINE	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and ID=#{entity.id}</if>
+		<if test="entity.year!=null">and YEAR like CONCAT('%',#{entity.year},'%')</if>
+		<if test="entity.month!=null">and MONTH like CONCAT('%',#{entity.month},'%')</if>
+		<if test="entity.tradeCode!=null">and TRADE_CODE like CONCAT('%',#{entity.tradeCode},'%')</if>
+		<if test="entity.custNo!=null">and CUST_NO like CONCAT('%',#{entity.custNo},'%')</if>
+		<if test="entity.productLineNo!=null">and PRODUCT_LINE_NO like CONCAT('%',#{entity.productLineNo},'%')</if>
+		<if test="entity.target!=null">and TARGET=#{entity.target}</if>
+		<if test="entity.actual!=null">and ACTUAL=#{entity.actual}</if>
+		<if test="entity.crrspdPeriod!=null">and CRRSPD_PERIOD=#{entity.crrspdPeriod}</if>
+		<if test="entity.baseLine!=null">and BASE_LINE=#{entity.baseLine}</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="QuotientResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_quotient_month
+		where ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_quotient_month
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.performance.quotient.domain.QuotientDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_quotient_month
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="year!=null">
+				YEAR	,
+			</if>
+			<if test="month!=null">
+				MONTH	,
+			</if>
+			<if test="tradeCode!=null">
+				TRADE_CODE	,
+			</if>
+			<if test="custNo!=null">
+				CUST_NO	,
+			</if>
+			<if test="productLineNo!=null">
+				PRODUCT_LINE_NO	,
+			</if>
+			<if test="target!=null">
+				TARGET	,
+			</if>
+			<if test="actual!=null">
+				ACTUAL	,
+			</if>
+			<if test="crrspdPeriod!=null">
+				CRRSPD_PERIOD	,
+			</if>
+			<if test="baseLine!=null">
+				BASE_LINE	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="year!=null">
+				#{year}	,
+			</if>
+			<if test="month!=null">
+				#{month}	,
+			</if>
+			<if test="tradeCode!=null">
+				#{tradeCode}	,
+			</if>
+			<if test="custNo!=null">
+				#{custNo}	,
+			</if>
+			<if test="productLineNo!=null">
+				#{productLineNo}	,
+			</if>
+			<if test="target!=null">
+				#{target}	,
+			</if>
+			<if test="actual!=null">
+				#{actual}	,
+			</if>
+			<if test="crrspdPeriod!=null">
+				#{crrspdPeriod}	,
+			</if>
+			<if test="baseLine!=null">
+				#{baseLine}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.performance.quotient.domain.QuotientDomain">
+		update isales_app.t_isales_quotient_month
+		<set>
+			YEAR = #{year},
+			MONTH = #{month},
+			TRADE_CODE = #{tradeCode},
+			CUST_NO = #{custNo},
+			PRODUCT_LINE_NO = #{productLineNo},
+			TARGET = #{target},
+			ACTUAL = #{actual},
+			CRRSPD_PERIOD = #{crrspdPeriod},
+			BASE_LINE = #{baseLine},
+			REMARK = #{remark},
+		</set>
+		where ID = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_quotient_month 
+		where ID = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="QuotientResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_quotient_month
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_quotient_month
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

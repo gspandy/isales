@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd  "
+	default-lazy-init="true">
+	
+	<!-- RetailDAO 的spring配置文件 -->
+	<bean id="retailDao" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.performance.retail.dao.RetailDAO" />
+	</bean>
+	
+	<bean id="retailDetailDao" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.performance.retail.dao.RetailDetailDAO" />
+	</bean>
+	
+	<bean id="retailDetailLstdayDao" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.performance.retail.dao.RetailDetailLstdayDAO" />
+	</bean>
+	<bean id="retaiStructurelDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.performance.retail.dao.RetaiStructurelDAO" />
+	</bean>
+	
+	<!--周期  -->
+	<bean id="cyclesDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" parent="baseDAO">
+		<property name="mapperInterface" value="com.haier.isales.performance.retail.dao.CyclesDAO" />
+	</bean>
+	
+	<!-- RetailService 的spring配置文件 和对应的实现类-->
+	<bean id="retailService" class="com.haier.isales.performance.retail.service.impl.RetailServiceImpl" parent="userBehaviourByHandService">
+		<property name="retailDao" ref="retailDao"></property>
+		<property name="salestargetService" ref="salestargetService"></property>
+		<property name="btbSjcjScrmDao" ref="btbSjcjScrmDao"></property>
+		<property name="retailDetailDao" ref="retailDetailDao"></property>
+		<property name="retailDetailLstdayDao" ref="retailDetailLstdayDao"></property>
+		<property name="retaiStructurelDAO" ref="retaiStructurelDAO"></property>
+	</bean>
+	
+	
+	<!-- 周期实现类-->
+	<bean id="cyclesService" class="com.haier.isales.performance.retail.service.impl.CyclesServiceImpl">
+		<property name="cyclesDAO" ref="cyclesDAO"></property>
+	</bean>
+	
+</beans>

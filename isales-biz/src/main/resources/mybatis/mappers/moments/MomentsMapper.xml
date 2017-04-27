@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.moments.dao.MomentsDAO">
+	
+	<resultMap id="MomentsDtoResultMap" type="com.haier.isales.moments.dto.MomentsDTO">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="content" property="content"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="type" property="type"  jdbcType="VARCHAR"  />
+		<result column="label_groups" property="labelGroups"  jdbcType="VARCHAR"  />
+		<result column="snapshot" property="snapshot"  />
+		<result column="create_id" property="createId"  jdbcType="BIGINT"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_name" property="createName"  jdbcType="VARCHAR"  />
+		<result column="update_id" property="updateId"  jdbcType="BIGINT"  />
+		<result column="update_name" property="updateName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="browse_count" property="browseCount"  jdbcType="INTEGER"  />
+		<result column="post_count" property="postCount"  jdbcType="INTEGER"  />
+		<result column="like_count" property="likeCount"  jdbcType="INTEGER"  />
+		<result column="dislike_count" property="dislikeCount"  jdbcType="INTEGER"  />
+		<result column="comments_count" property="commentsCount"  jdbcType="INTEGER"  />
+	</resultMap>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditionsWithRegexp">
+		and (create_id=#{queryDto.currentUserId} <if test="queryDto.labelGroups!=null">or (label_groups Regexp #{queryDto.labelGroups})</if>)
+		<if test="queryDto.status!=null">and status like CONCAT('%',#{queryDto.status},'%')</if>
+	</sql>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findDtoListByParams" resultMap="MomentsDtoResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_moments${queryDto.tableNameSuffix}
+		where 1=1
+		<include refid="searchConditionsWithRegexp"/>
+		order by id desc
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findDtoCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_moments${queryDto.tableNameSuffix}
+		where 1=1
+		<include refid="searchConditionsWithRegexp"/>
+		
+	</select>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findTable" resultType="String" >
+		SELECT TABLE_NAME FROM information_schema.Tables 
+		WHERE TABLE_SCHEMA = 'isales_app' AND table_name = 't_isales_moments${queryDto.tableNameSuffix}'
+	</select>
+	
+	<!-- 实体的更新方法,更新被赞数 -->
+	<update id="updateLikeCount" parameterType="com.haier.isales.moments.domain.MomentsDomain">
+		update isales_app.t_isales_moments
+		<set>
+			LIKE_COUNT = LIKE_COUNT + (#{likeCount})
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照指定的表后缀名去查询对应的内容  -->
+	<select id="findByIdWithSuffix" resultMap="MomentsResultMap">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_moments${suffix}
+		where id = #{id}
+	</select>
+	
+	
+	<!-- 实体的更新方法 -->
+	<update id="updateWithSuffix">
+		update isales_app.t_isales_moments${suffix}
+		<set>
+			CONTENT = #{update.content},
+			STATUS = #{update.status},
+			TYPE = #{update.type},
+			LOCATION = #{update.location},
+			LABEL_GROUPS = #{update.labelGroups},
+			SNAPSHOT = #{update.snapshot},
+			CREATE_ID = #{update.createId},
+			CREATE_TIME = #{update.createTime},
+			CREATE_NAME = #{update.createName},
+			CREATE_USERCODE = #{update.createUsercode},
+			UPDATE_ID = #{update.updateId},
+			UPDATE_NAME = #{update.updateName},
+			UPDATE_TIME = #{update.updateTime},
+			UPDATE_USERCODE = #{update.updateUsercode},
+			BROWSE_COUNT = #{update.browseCount},
+			POST_COUNT = #{update.postCount},
+			LIKE_COUNT = #{update.likeCount},
+			DISLIKE_COUNT = #{update.dislikeCount},
+			COMMENTS_COUNT = #{update.commentsCount},
+		</set>
+		where id = #{update.id}
+	</update>	
+</mapper>

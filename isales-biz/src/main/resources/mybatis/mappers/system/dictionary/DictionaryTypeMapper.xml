@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.system.dictionary.dao.DictionaryTypeDAO">	
+	<!-- 根据businTypeName查询字典组 -->
+	<select id="findBybusinTypeName" parameterType="String" resultMap="DictionaryTypeResultMap">
+		<![CDATA[
+			  select * 
+			  from isales_sys.t_qn_dictionary_busintype b 
+			  where b.BUSINTYPE_NAME = #{businTypeName}
+			  limit 1
+		]]>
+	</select>
+	<!-- 查询所有有效字典组 -->
+	<select id="findAllBusinType" resultMap="DictionaryTypeResultMap">
+		<![CDATA[
+			  select * 
+			  from isales_sys.t_qn_dictionary_busintype b 			  
+		]]>
+	</select>
+</mapper>

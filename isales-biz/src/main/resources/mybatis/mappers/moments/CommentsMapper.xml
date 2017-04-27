@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.moments.dao.CommentsDAO">	
+	<resultMap id="CommentsDtoResultMap" type="com.haier.isales.moments.dto.CommentsDTO">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="title" property="title"  jdbcType="VARCHAR"  />
+		<result column="content" property="content"  />
+		<result column="location" property="location"  jdbcType="VARCHAR"  />
+		<result column="source_id" property="sourceId"  jdbcType="BIGINT"  />
+		<result column="source_userid" property="sourceUserid"  jdbcType="BIGINT"  />
+		<result column="source_username" property="sourceUsername"  jdbcType="VARCHAR"  />
+		<result column="source_usercode" property="sourceUsercode"  jdbcType="VARCHAR"  />
+		<result column="parent_id" property="parentId"  jdbcType="BIGINT"  />
+		<result column="parent_userid" property="parentUserid"  jdbcType="BIGINT"  />
+		<result column="parent_username" property="parentUsername"  jdbcType="VARCHAR"  />
+		<result column="parent_usercode" property="parentUsercode"  jdbcType="VARCHAR"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="label_groups" property="labelGroups"  jdbcType="VARCHAR"  />
+		<result column="type" property="type"  jdbcType="VARCHAR"  />
+		<result column="create_id" property="createId"  jdbcType="BIGINT"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_name" property="createName"  jdbcType="VARCHAR"  />
+		<result column="update_id" property="updateId"  jdbcType="BIGINT"  />
+		<result column="update_name" property="updateName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<sql id="all_Dto_Column_List">
+	ID	,
+	TITLE	,
+	CONTENT	,
+	LOCATION	,
+	SOURCE_ID	,
+	SOURCE_USERID	,
+	SOURCE_USERNAME	,
+	SOURCE_USERCODE	,
+	PARENT_ID	,
+	PARENT_USERID	,
+	PARENT_USERNAME	,
+	PARENT_USERCODE	,
+	STATUS	,
+	LABEL_GROUPS	,
+	TYPE	,
+	CREATE_ID	,
+	CREATE_TIME	,
+	CREATE_NAME	,
+	UPDATE_ID	,
+	UPDATE_NAME	,
+	UPDATE_TIME		
+	</sql> 
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditionsWithRegexp">
+		and (create_id=#{queryDto.currentUserId} <if test="queryDto.labelGroups!=null">or (label_groups Regexp #{queryDto.labelGroups})</if>)
+		<if test="queryDto.status!=null">and status like CONCAT('%',#{queryDto.status},'%')</if>
+		<if test="queryDto.sourceId!=null">and source_id=#{queryDto.sourceId}</if>
+	</sql>
+
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findDtoListByParams" resultMap="CommentsDtoResultMap" >
+		select <include refid="all_Dto_Column_List"/>
+		from isales_app.t_isales_comments${queryDto.tableNameSuffix}
+		where 1=1
+		<include refid="searchConditionsWithRegexp"/>
+		order by id desc
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findDtoCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_comments${queryDto.tableNameSuffix}
+		where 1=1
+		<include refid="searchConditionsWithRegexp"/>
+	</select>
+	
+	<select id="findTable" resultType="String" >
+		SELECT TABLE_NAME FROM information_schema.Tables 
+		WHERE TABLE_SCHEMA = 'isales_app' AND table_name = 't_isales_comments${queryDto.tableNameSuffix}'
+	</select>
+	
+	
+	<!-- 按照指定的表后缀名去查询对应的内容  -->
+	<select id="findByIdWithSuffix" resultMap="CommentsResultMap">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_comments${suffix}
+		where id = #{id}
+	</select>
+	
+	
+	<!-- 实体的更新方法 -->
+	<update id="updateWithSuffix" >
+		update isales_app.t_isales_comments${suffix}
+		<set>
+			TITLE = #{update.title},
+			CONTENT = #{update.content},
+			LOCATION = #{update.location},
+			SOURCE_ID = #{update.sourceId},
+			SOURCE_USERID = #{update.sourceUserid},
+			SOURCE_USERNAME = #{update.sourceUsername},
+			SOURCE_USERCODE = #{update.sourceUsercode},
+			PARENT_ID = #{update.parentId},
+			PARENT_USERID = #{update.parentUserid},
+			PARENT_USERNAME = #{update.parentUsername},
+			PARENT_USERCODE = #{update.parentUsercode},
+			STATUS = #{update.status},
+			LABEL_GROUPS = #{update.labelGroups},
+			TYPE = #{update.type},
+			CREATE_ID = #{update.createId},
+			CREATE_TIME = #{update.createTime},
+			CREATE_NAME = #{update.createName},
+			CREATE_USERCODE = #{update.createUsercode},
+			UPDATE_ID = #{update.updateId},
+			UPDATE_NAME = #{update.updateName},
+			UPDATE_TIME = #{update.updateTime},
+			UPDATE_USERCODE = #{update.updateUsercode},
+		</set>
+		where id = #{update.id}
+	</update>	
+</mapper>

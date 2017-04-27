@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.evaluate.dao.EvalScoreDAO">
+	
+	<!-- 根据查询条件查询直销员评价分数 -->
+	<select id="findEvalScoreList" resultMap="EvalScoretMap">
+		SELECT ues.user_code, ues.uec_seq, uec.uec_content, TRUNCATE(AVG(ues.score),1) as avg_score
+		FROM isales_app.t_user_evaluate_score ues
+		 LEFT JOIN isales_app.t_user_evaluate_content uec
+		 ON ues.uec_seq = uec.uec_seq
+		 WHERE 1=1 
+		 
+		<if test="queryDTO.userCode!=null and queryDTO.userCode != ''">
+			AND UPPER(ues.user_code) = UPPER(#{queryDTO.userCode})
+		</if>
+		<if test="queryDTO.uecSeq!=null and queryDTO.uecSeq != ''">
+			AND ues.uec_seq = #{queryDTO.uecSeq}
+		</if>
+		<if test="queryDTO.beginTime!=null and queryDTO.beginTime != ''
+					and queryDTO.endTime!=null and queryDTO.endTime != ''">
+			AND DATE_FORMAT(ues.create_time, '%Y-%m-%d') 
+				BETWEEN #{queryDTO.beginTime} AND #{queryDTO.endTime}
+		</if>
+		GROUP BY ues.user_code, ues.uec_seq ORDER BY ues.uec_seq
+	</select>
+</mapper>

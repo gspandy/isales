@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.system.user.dao.UserDao">
+	
+	 <!-- mysql 分页尾 -->
+	<sql id="pagination_4mysql">
+<!-- 	  <![CDATA[LIMIT #{firstResult} ,#{pager.pageSize}]]> -->
+	  	<![CDATA[ limit #{pageCond.firstResult},#{pageCond.pageSize} ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+		<![CDATA[select count(*) from ( ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+		<![CDATA[) count_]]>
+	</sql>
+	
+	<!-- 根据条件查询用户-->
+	<select id="getUserByParam" parameterType="userSearchModel" resultMap="UserResultMap">
+		select
+		<include refid="all_Column_List"/>
+		<![CDATA[
+			  from isales_sys.t_qn_user t
+			  where 1=1 			 
+		]]>
+		 <if test="model.operatorId != null and model.operatorId != ''">
+		  	  	<![CDATA[ and t.operator_id = #{model.operatorId}]]>
+		 </if>
+		 <if test="model.loginName != null and model.loginName != ''">
+		  	  	<![CDATA[ and t.login_name like concat('%',#{model.loginName},"%")]]>
+		 </if>
+		  order by t.operator_id asc
+		 <include refid="pagination_4mysql"/>
+	</select>
+	<!-- 根据条件查询用户-->
+	<select id="getCountUserByParam" parameterType="userSearchModel" resultType="Long">
+	
+		<include refid="count_Start_Head"/>
+		select <include refid="all_Column_List"/>
+		<![CDATA[
+			  from isales_sys.t_qn_user t
+			  where 1=1 			 
+		]]>
+		 <if test="operatorId != null and operatorId != ''">
+		  	  	<![CDATA[ and t.operator_id = #{operatorId}]]>
+		 </if>
+		<include refid="count_Start_Tail"/>
+	</select>
+	<!-- 根据组织编号查询组织及下属组织所有用户 -->
+	<select id="findUserByOrgParam" parameterType="userSearchModel" resultMap="UserResultMap">
+		<![CDATA[
+			  SELECT distinct  u.operator_id
+				     , u.org_code 
+				     , u.operator_name
+				     , u.login_name
+				     , u.mobile
+				     , u.password
+				     , u.status
+				     , u.create_time
+				     , u.user_type
+				     , u.audit_status
+				
+				FROM
+				  isales_sys.t_qn_user u
+				LEFT JOIN isales_sys.t_qn_user_org_ref uor
+				ON uor.operator_id = u.operator_id
+				LEFT JOIN isales_sys.t_qn_organization o
+				ON o.org_code = uor.org_code
+				WHERE
+				  1 = 1
+		]]>
+		 <if test="model.orgSeq != null and model.orgSeq != ''">
+				 <![CDATA[  AND o.org_seq LIKE concat(#{model.orgSeq}, '%')	]]>		 
+		 </if>
+	</select>
+	<!-- 根据虚拟组织编号查询组织及下属组织所有用户 -->
+	<select id="findUserByVirtualOrgParam" parameterType="userSearchModel" resultMap="UserResultMap">
+		<![CDATA[
+			  SELECT distinct  u.operator_id
+				     , u.org_code 
+				     , u.operator_name
+				     , u.login_name
+				     , u.mobile
+				     , u.password
+				     , u.status
+				     , u.create_time
+				     , u.user_type
+				     , u.audit_status
+				
+				FROM
+				  isales_sys.t_qn_user u
+				LEFT JOIN isales_sys.t_qn_user_virtualorg_ref uor
+				ON uor.operator_id = u.operator_id
+				LEFT JOIN isales_sys.t_qn_virtual_org o
+				ON o.org_code = uor.org_code
+				WHERE
+				  1 = 1
+		]]>
+		 <if test="model.orgSeq != null and model.orgSeq != ''">
+				 <![CDATA[  AND o.org_seq LIKE concat(#{model.orgSeq}, '%')	]]>		 
+		 </if>
+		<!--  <if test="model.excludeStatus != null ">
+			and req_.status  not in 
+			<foreach collection="model.excludeStatus" item="item" index="index" open="(" separator="," close=")">
+	        #{item}
+	  		</foreach>
+		</if> --><!-- GuoYuchao 2015-3-30 11:26:27 修改单元测试 -->
+	</select>
+	<!-- 根据虚拟组织编号查询组织及下属组织所有用户 -->
+	<select id="getUserByLabel" parameterType="userSearchModel" resultMap="UserResultMap">
+		<![CDATA[
+			  SELECT DISTINCT u.operator_id
+				              , u.org_code
+				              , u.operator_name
+				              , u.login_name
+				              , u.mobile
+				              , u.password
+				              , u.status
+				              , u.create_time
+				              , u.user_type
+				              , u.audit_status
+				FROM
+				  isales_sys.t_qn_user u
+				LEFT JOIN isales_sys.t_qn_user_label_ref ulr
+				ON ulr.operator_id = u.operator_id
+				LEFT JOIN isales_sys.t_qn_label l
+				ON l.label_id = ulr.label_id
+				WHERE
+				1 = 1
+				
+			]]>
+			<if test="includeLabelList != null and includeLabelList.size() > 0">
+				and  ulr.label_id  IN 
+				<foreach collection="includeLabelList" item="item" index="index" open="(" separator="," close=")">
+		        #{item.labelId}
+		  		</foreach>
+			</if>				   
+	   	    <if test="excludeLabelList != null and excludeLabelList.size() > 0 ">
+				and  ulr.label_id not IN  
+				<foreach collection="excludeLabelList" item="item" index="index" open="(" separator="," close=")">
+		        #{item.labelId}
+		  		</foreach>
+			</if>
+	</select>
+	<!-- 根据虚拟组织编号查询组织及下属组织所有用户 -->
+	<select id="getUserByLabelIds" parameterType="userSearchModel" resultMap="UserResultMap">
+		SELECT DISTINCT u.operator_id
+				              , u.org_code
+				              , u.operator_name
+				              , u.login_name
+				              , u.mobile
+				              , u.password
+				              , u.status
+				              , u.create_time
+				              , u.user_type
+				              , u.audit_status
+		FROM
+		isales_sys.t_qn_user u
+		LEFT JOIN isales_sys.t_qn_user_label_ref ulr
+		ON ulr.operator_id = u.operator_id
+		LEFT JOIN isales_sys.t_qn_label l
+		ON l.label_id = ulr.label_id
+		WHERE
+		1 = 1
+		<if test="includeLabelList != null and includeLabelList.size() > 0">
+			and  ulr.label_id  IN 
+			<foreach collection="includeGroupList" item="item" index="index" open="(" separator="," close=")">
+	        		${item}
+	  		</foreach>
+		</if>				   
+   	    	<if test="excludeLabelList != null and excludeLabelList.size() > 0 ">
+			and  ulr.label_id not IN  
+			<foreach collection="excludeGroupList" item="item" index="index" open="(" separator="," close=")">
+	        		${item}
+	  		</foreach>
+		</if>
+	</select>
+	<!-- 根据指定的所在组织的集合，和不在的组织集合，查询这个组织下属的所有员工信息 -->
+	<select id="findUserByOrgParamList" resultMap="UserResultMap">
+		SELECT DISTINCT u.operator_id
+				              , u.org_code
+				              , u.operator_name
+				              , u.login_name
+				              , u.mobile
+				              , u.password
+				              , u.status
+				              , u.create_time
+				              , u.user_type
+				              , u.audit_status
+		FROM
+		  isales_sys.t_qn_user u
+		LEFT JOIN isales_sys.t_qn_user_org_ref uor
+		ON uor.operator_id = u.operator_id
+		WHERE
+		  uor.org_code in  
+		<foreach collection="includeList" item="item" index="index" open="(" separator="," close=")">
+        		#{item}
+  		</foreach>
+  		<if test="excludeList != null and excludeList.size() > 0">
+	  		and 
+	  		  uor.org_code not in
+	  		<foreach collection="excludeList" item="item" index="index" open="(" separator="," close=")">
+	        		#{item}
+	  		</foreach>
+  		</if>
+	</select>
+	
+	<select id="findUserByVirtualOrgParamList" resultMap="UserResultMap">
+		SELECT DISTINCT u.operator_id
+				              , u.org_code
+				              , u.operator_name
+				              , u.login_name
+				              , u.mobile
+				              , u.password
+				              , u.status
+				              , u.create_time
+				              , u.user_type
+				              , u.audit_status
+		FROM
+			isales_sys.t_qn_user u
+			LEFT JOIN isales_sys.t_qn_user_virtualorg_ref uor
+			ON uor.operator_id = u.operator_id
+		WHERE
+		  uor.org_code in  
+		<foreach collection="includeList" item="item" index="index" open="(" separator="," close=")">
+        		${item}
+  		</foreach>
+  		<if test="excludeList != null and excludeList.size() > 0">
+  		and 
+  		  uor.org_code not in
+  		<foreach collection="excludeList" item="item" index="index" open="(" separator="," close=")">
+        		${item}
+  		</foreach>
+  		</if>
+	</select>
+	
+	<select id="getUsersInSameShop" resultMap="UserResultMap">
+		SELECT distinct s.operator_id as operator_id
+		              , s.user_name as operator_name
+		              , s.user_code as user_code 
+		FROM isales_sys.t_sys_employee_summary  s
+		WHERE 
+		  s.SHOP_ID =#{shopId}
+	</select>
+</mapper>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.prototype.dao.PrototypeDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="PrototypeResultMap" type="com.haier.isales.prototype.domain.PrototypeDomain">
+		<id column="ID" property="id"  jdbcType="BIGINT"  />
+		<result column="station_name" property="stationName"  jdbcType="VARCHAR"  />
+		<result column="product_sort_no" property="productSortNo"  jdbcType="VARCHAR"  />
+		<result column="product_line" property="productLine"  jdbcType="VARCHAR"  />
+		<result column="product_line_name" property="productLineName"  jdbcType="VARCHAR"  />
+		<result column="shop_id" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="trade_org_code" property="tradeOrgCode"  jdbcType="VARCHAR"  />
+		<result column="barcode" property="barcode"  jdbcType="VARCHAR"  />
+		<result column="product_model_code" property="productModelCode"  jdbcType="VARCHAR"  />
+		<result column="product_model_name" property="productModelName"  jdbcType="VARCHAR"  />
+		<result column="price" property="price"  jdbcType="DECIMAL"  />
+		<result column="discount_scale" property="discountScale"  jdbcType="DECIMAL"  />
+		<result column="out_date" property="outDate"  jdbcType="TIMESTAMP"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="img_id" property="imgId"  jdbcType="BIGINT"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+		<result column="yjstate" property="yjstate"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	STATION_NAME	,
+	PRODUCT_SORT_NO	,
+	PRODUCT_LINE	,
+	PRODUCT_LINE_NAME	,
+	SHOP_ID	,
+	TRADE_ORG_CODE	,
+	BARCODE	,
+	PRODUCT_MODEL_CODE	,
+	PRODUCT_MODEL_NAME	,
+	PRICE	,
+	DISCOUNT_SCALE	,
+	OUT_DATE	,
+	STATUS	,
+	IMG_ID	,
+	REMARK	,
+	yjstate
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and ID=#{entity.id}</if>
+		<if test="entity.stationName!=null">and station_name like CONCAT('%',#{entity.stationName},'%')</if>
+		<if test="entity.productSortNo!=null">and product_sort_no like CONCAT('%',#{entity.productSortNo},'%')</if>
+		<if test="entity.productLine!=null">and product_line like CONCAT('%',#{entity.productLine},'%')</if>
+		<if test="entity.productLineName!=null">and product_line_name like CONCAT('%',#{entity.productLineName},'%')</if>
+		<if test="entity.shopId!=null">and shop_id like CONCAT('%',#{entity.shopId},'%')</if>
+		<if test="entity.tradeOrgCode!=null">and trade_org_code like CONCAT('%',#{entity.tradeOrgCode},'%')</if>
+		<if test="entity.barcode!=null">and barcode like CONCAT('%',#{entity.barcode},'%')</if>
+		<if test="entity.productModelCode!=null">and product_model_code like CONCAT('%',#{entity.productModelCode},'%')</if>
+		<if test="entity.productModelName!=null">and product_model_name like CONCAT('%',#{entity.productModelName},'%')</if>
+		<if test="entity.price!=null">and price=#{entity.price}</if>
+		<if test="entity.discountScale!=null">and discount_scale=#{entity.discountScale}</if>
+		<!-- java.util.Date out_date has been ignored!!! -->
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.imgId!=null">and img_id=#{entity.imgId}</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="PrototypeResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_prototype
+		where ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_prototype
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.prototype.domain.PrototypeDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_prototype
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="stationName!=null">
+				STATION_NAME	,
+			</if>
+			<if test="productSortNo!=null">
+				PRODUCT_SORT_NO	,
+			</if>
+			<if test="productLine!=null">
+				PRODUCT_LINE	,
+			</if>
+			<if test="productLineName!=null">
+				PRODUCT_LINE_NAME	,
+			</if>
+			<if test="shopId!=null">
+				SHOP_ID	,
+			</if>
+			<if test="tradeOrgCode!=null">
+				TRADE_ORG_CODE	,
+			</if>
+			<if test="barcode!=null">
+				BARCODE	,
+			</if>
+			<if test="productModelCode!=null">
+				PRODUCT_MODEL_CODE	,
+			</if>
+			<if test="productModelName!=null">
+				PRODUCT_MODEL_NAME	,
+			</if>
+			<if test="price!=null">
+				PRICE	,
+			</if>
+			<if test="discountScale!=null">
+				DISCOUNT_SCALE	,
+			</if>
+			<if test="outDate!=null">
+				OUT_DATE	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="imgId!=null">
+				IMG_ID	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="stationName!=null">
+				#{stationName}	,
+			</if>
+			<if test="productSortNo!=null">
+				#{productSortNo}	,
+			</if>
+			<if test="productLine!=null">
+				#{productLine}	,
+			</if>
+			<if test="productLineName!=null">
+				#{productLineName}	,
+			</if>
+			<if test="shopId!=null">
+				#{shopId}	,
+			</if>
+			<if test="tradeOrgCode!=null">
+				#{tradeOrgCode}	,
+			</if>
+			<if test="barcode!=null">
+				#{barcode}	,
+			</if>
+			<if test="productModelCode!=null">
+				#{productModelCode}	,
+			</if>
+			<if test="productModelName!=null">
+				#{productModelName}	,
+			</if>
+			<if test="price!=null">
+				#{price}	,
+			</if>
+			<if test="discountScale!=null">
+				#{discountScale}	,
+			</if>
+			<if test="outDate!=null">
+				#{outDate}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="imgId!=null">
+				#{imgId}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.prototype.domain.PrototypeDomain">
+		update isales_app.t_isales_prototype
+		<set>
+			STATION_NAME = #{stationName},
+			PRODUCT_SORT_NO = #{productSortNo},
+			PRODUCT_LINE = #{productLine},
+			PRODUCT_LINE_NAME = #{productLineName},
+			SHOP_ID = #{shopId},
+			TRADE_ORG_CODE = #{tradeOrgCode},
+			BARCODE = #{barcode},
+			PRODUCT_MODEL_CODE = #{productModelCode},
+			PRODUCT_MODEL_NAME = #{productModelName},
+			PRICE = #{price},
+			DISCOUNT_SCALE = #{discountScale},
+			OUT_DATE = #{outDate},
+			STATUS = #{status},
+			IMG_ID = #{imgId},
+			REMARK = #{remark},
+		</set>
+		where ID = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_prototype 
+		where ID = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="PrototypeResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_prototype
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_prototype
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

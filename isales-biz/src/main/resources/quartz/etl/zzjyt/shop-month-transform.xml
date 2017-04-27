@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">view_btb_rs_hmc_month</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_shop_employee_ref_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="tjmonth" dest="month" type="String" />
+		<mapping source="hmcid" dest="user_code" type="String" />
+		<mapping source="shopid" dest="shop_code" type="String" />
+		<mapping source="orgname" dest="shop_name" type="String" />
+	</mappings>
+
+	<where>
+		<source>
+			tjmonth = to_char(add_months(SYSDATE ,-1),'yyyy-mm') 
+			or tjmonth = to_char(SYSDATE,'yyyy-mm')
+		</source>
+	</where>
+
+	<procedures>
+		<procedure name="isales_app.p_collect_shop_employee_ref" />
+	</procedures>
+</transform>

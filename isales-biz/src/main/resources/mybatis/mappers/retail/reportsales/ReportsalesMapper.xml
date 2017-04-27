@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.reportsales.dao.ReportsalesDAO">
+
+
+	<update id="updateStatus">
+		update isales_app.t_isales_sales_diary
+		set synchronous_state = #{synchronousState},
+		synchronous_result = #{errorMessage}
+		where id = #{id}
+	</update>
+	
+	<update id="updateEhubDataId">
+		update isales_app.t_isales_sales_diary
+		set ehub_data_id = #{ehubDataId}
+		where id = #{id}
+	</update>
+	
+	<select id="getPurchasedCustomerList" resultMap="ReportsalesResultMap">
+		select yhname as yhname, 
+			yhphone as yhphone, 
+			goods_name as producttype,
+			price as newprice,
+			sales_month as gjtime,
+			shaddress as shaddress 
+		from isales_app.t_isales_btb_ratail 
+		where sales_month > date_add(now(), INTERVAL -60 day) 
+		<if test="entity.ygid!=null">and empcode = #{entity.ygid}</if> 
+		ORDER BY date_format(sales_month,'%Y-%m-%d') desc,created_date desc,row_id desc
+		<include refid="pagination_Tail"/>
+	</select>
+	<select id="getPurchasedCustomerCount" resultType="integer">
+		select count(1) 
+		from isales_app.t_isales_btb_ratail 
+		where sales_month > date_add(now(), INTERVAL -60 day)
+		<if test="entity.ygid!=null">and empcode = #{entity.ygid}</if>
+	</select>
+</mapper>

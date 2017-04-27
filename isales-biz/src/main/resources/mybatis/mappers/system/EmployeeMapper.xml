@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.system.employee.dao.EmployeeDao">
+	
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+		<![CDATA[select count(*) from ( ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+		<![CDATA[) count_]]>
+	</sql>
+	<resultMap id="employeeSearchMap" type="employee">
+		<id property="employeeSn" column="employee_sn" javaType="String" jdbcType="CHAR" />
+		<result property="employeeName" column="employee_name"/>
+		<result property="englishName" column="EnglishName"/>
+		<result property="gender" column="Gender"/>
+		<result property="phone" column="Phone"/>
+		<result property="mobileNo" column="MobileNo"/>
+		<result property="email" column="Email"/>
+		<result property="idCardNo" column="IdCardNo"/>
+		<result property="updateTime" column="UpdateTime"/>
+		<result property="createTime" column="CreateTime"/>
+		<result property="empStatusCode" column="EmpStatuscode"/>
+		<result property="empStatusName" column="EmpStatusName"/>
+		<result property="countryName" column="CountryName"/>
+		<result property="companyName" column="CompanyName"/>
+		<result property="buFuName" column="BUFUname"/>
+		<result property="departmentName" column="DepartmentName"/>
+		<result property="empGroupName" column="EmpGroupName"/>
+		<result property="empSubGroupName" column="EmpSubGroupName"/>
+		<result property="notesMail" column="notesmail"/>
+		<result property="personelSubAreaName" column="PersonelSubAreaName"/>
+		<result property="operatorId" column="operator_id"/>
+		<result property="grantStatus" column="grant_status"/>
+	</resultMap>
+	
+	<sql id="selectAllColumn">
+		SELECT employee_sn
+		     , employee_name
+		     , EnglishName
+		     , Gender
+		     , Phone
+		     , MobileNo
+		     , Email
+		     , IdCardNo
+		     , UpdateTime
+		     , CreateTime
+		     , EmpStatuscode
+		     , EmpStatusName
+		     , CountryName
+		     , CompanyName
+		     , BUFUname
+		     , DepartmentName
+		     , EmpGroupName
+		     , EmpSubGroupName
+		     , notesmail
+		     , PersonelSubAreaName
+	</sql>
+	<!-- 根据条件查询用户 员工号精确匹配-->
+	<select id="getEmployeeByParam" parameterType="employee" resultMap="employeeSearchMap">
+		<include refid="selectAllColumn"/>
+		<![CDATA[
+			    , u.operator_id as operator_id
+				, (
+					case when u.operator_id is null or u.audit_status = '101'
+					then '0'
+					else '1'
+					end
+				) as grant_status
+			  from isales_sys.t_sys_employee t
+			  left join isales_sys.t_qn_user u
+			  on u.login_name = t.employee_sn
+			  where 1=1 		 
+		]]>
+		 <if test="model.employeeSn != null and model.employeeSn != ''">
+		  	  	<![CDATA[ and t.employee_sn = #{model.employeeSn}]]>
+		 </if>
+		  order by t.employee_sn asc
+		 <include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据条件查询用户关联登录-->
+	<select id="getEmployeeGrantByParam" parameterType="employee" resultMap="employeeSearchMap">
+		<include refid="selectAllColumn"/>
+		<![CDATA[
+				, u.operator_id as operator_id
+				, (
+					case when u.operator_id is null or u.audit_status = '101'
+					then '0'
+					else '1'
+					end
+				) as grant_status
+			  from isales_sys.t_sys_employee t
+			  left join isales_sys.t_qn_user u
+			  on u.login_name = t.employee_sn
+			  where 1=1 			 
+		]]>
+		 <if test="model.employeeSn != null and model.employeeSn != ''">
+		 		<!-- <![CDATA[ and t.employee_sn = #{model.employeeSn}]]> -->
+		  	  	<![CDATA[ and t.employee_sn  like concat('%',#{model.employeeSn},'%') ]]>
+		 </if>
+		 <if test="model.employeeName != null and model.employeeName != ''">
+		  	  	<![CDATA[ and t.employee_name like concat('%',#{model.employeeName},'%')]]>
+		 </if>
+		  <if test="model.grantStatus != null and model.grantStatus != '' and model.grantStatus == 1 ">
+		  	  	<![CDATA[ and u.operator_id is not null]]>
+		  	  	<![CDATA[ and u.audit_status = '102']]>
+		 </if>
+		  <if test="model.grantStatus != null and model.grantStatus != '' and model.grantStatus == 0 ">
+		  	  	<![CDATA[ and u.operator_id is null]]>
+		 </if>
+		  order by t.employee_sn asc
+		 <include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据条件查询用户-->
+	<select id="getCountEmployeeGrantByParam" parameterType="employee" resultType="Long">
+	
+		<include refid="count_Start_Head"/>
+		<include refid="selectAllColumn"/>
+		<![CDATA[
+				, u.operator_id as operator_id
+				, (
+					case when u.operator_id is null OR u.audit_status = '101'
+					then '0'
+					else '1'
+					end
+				) as grant_status
+			  from isales_sys.t_sys_employee t
+			  left join isales_sys.t_qn_user u
+			  on u.login_name = t.employee_sn
+			  where 1=1 			 
+		]]>
+		 <if test="model.employeeSn != null and model.employeeSn != ''">
+		  	  	<!-- <![CDATA[ and t.employee_sn = #{model.employeeSn}]]> -->
+		  	  	<![CDATA[ and t.employee_sn  like concat('%',#{model.employeeSn},'%') ]]>
+		 </if>
+		 <if test="model.employeeName != null and model.employeeName != ''">
+		  	  	<![CDATA[ and t.employee_name like concat('%',#{model.employeeName},'%') ]]>
+		 </if>
+		  <if test="model.grantStatus != null and model.grantStatus != '' and model.grantStatus == 1 ">
+		  	  	<![CDATA[ and u.operator_id is not null]]>
+		  	  	<![CDATA[ and u.audit_status = '102']]>
+		 </if>
+		  <if test="model.grantStatus != null and model.grantStatus != '' and model.grantStatus == 0 ">
+		  	  	<![CDATA[ and u.operator_id is null]]>
+		 </if>
+		<include refid="count_Start_Tail"/>
+	</select>
+	<!-- 根据条件查询用户-->
+	<select id="getCountEmployeeByParam" parameterType="employee" resultType="Long">
+	
+		<include refid="count_Start_Head"/>
+		<include refid="selectAllColumn"/>
+		<![CDATA[
+			  from isales_sys.t_sys_employee t
+			  where 1=1 			 
+		]]>
+		<if test="model.employeeSn != null and model.employeeSn != ''">
+		  	  	<![CDATA[ and t.employee_sn = #{model.employeeSn}]]>
+		 </if>
+		<include refid="count_Start_Tail"/>
+	</select>
+	<!-- 新增用户-->
+	<insert id="saveEmployee" parameterType="employee">
+		<![CDATA[
+		insert into isales_sys.t_sys_employee
+		  (
+			   employee_sn
+		     , employee_name
+		     , EnglishName
+		     , Gender
+		     , Phone
+		     , MobileNo
+		     , Email
+		     , IdCardNo
+		     , UpdateTime
+		     , CreateTime
+		     , status
+			)
+		values
+		  (
+		   #{employeeSn},
+		   #{employeeName},
+		   #{englishName},
+		   #{gender},
+		   #{phone},
+		   #{mobileNo},
+		   #{email},
+		   #{idCardNo},
+		   #{updateTime},
+		   #{createTime},
+		   #{status})
+		]]>
+	</insert>
+	
+	<!-- 更行信息 -->
+	<update id="updateEmployee" parameterType="employee">
+		<![CDATA[
+		update isales_sys.t_sys_employee
+		   set  
+				employee_name	=	   #{employeeName},
+				EnglishName	    =	   #{englishName},
+				Gender	        =	   #{gender},
+				Phone	        =	   #{phone},
+				MobileNo	    =	   #{mobileNo},
+				Email	        =	   #{email},
+				IdCardNo	    =	   #{idCardNo},
+				UpdateTime	    =	   #{updateTime},
+				CreateTime	    =	   #{createTime},
+				status	        =	   #{status}
+
+		 where employee_sn = #{employeeSn}
+		]]>
+	</update>
+	
+</mapper>

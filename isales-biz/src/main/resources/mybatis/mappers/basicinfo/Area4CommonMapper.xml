@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.basicinfo.pubarea.dao.AreaDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="AreaResultMap" type="com.haier.isales.basicinfo.pubarea.domain.AreaDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="PA_CODE" property="paCode"  jdbcType="VARCHAR"  />
+		<result column="PA_NAME" property="paName"  jdbcType="VARCHAR"  />
+		<result column="PA_PCODE" property="paPCode"  jdbcType="VARCHAR"  />
+		<result column="PA_LEVEL" property="paLevel"  jdbcType="VARCHAR"  />
+		<result column="CREATE_TIME" property="createTime"  jdbcType="TIMESTAMP"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	PA_CODE	,
+	PA_NAME	,
+	PA_PCODE	,
+	PA_LEVEL	,
+	CREATE_TIME	
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id like CONCAT('%',#{entity.id},'%')</if>
+		<if test="entity.paCode!=null">and PA_CODE like CONCAT('%',#{entity.paCode},'%')</if>
+		<if test="entity.paName!=null">and PA_NAME like CONCAT('%',#{entity.paName},'%')</if>
+		<if test="entity.paPCode!=null">and PA_PCODE like CONCAT('%',#{entity.paPCode},'%')</if>
+		<if test="entity.paLevel!=null">and PA_LEVEL like CONCAT('%',#{entity.paLevel},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="AreaResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_area
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_area
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.basicinfo.pubarea.domain.AreaDomain" >
+		insert into isales_app.t_isales_area
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="paCode!=null">
+				PA_CODE	,
+			</if>
+			<if test="paName!=null">
+				PA_NAME	,
+			</if>
+			<if test="paPCode!=null">
+				PA_PCODE	,
+			</if>
+			<if test="paLevel!=null">
+				PA_LEVEL	
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="paCode!=null">
+				#{paCode}	,
+			</if>
+			<if test="paName!=null">
+				#{paName}	,
+			</if>
+			<if test="paPCode!=null">
+				#{paPCode}	,
+			</if>
+			<if test="paLevel!=null">
+				#{paLevel}
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.basicinfo.pubarea.domain.AreaDomain">
+		update isales_app.t_isales_area
+		<set>
+			PA_CODE = #{paCode},
+			PA_NAME = #{paName},
+			PA_PCODE = #{paPCode},
+			PA_LEVEL = #{paLevel},
+		</set>
+		where PA_CODE = #{paCode}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_app.t_isales_area
+		where PA_CODE = #{paCode}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="AreaResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_area
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_area
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

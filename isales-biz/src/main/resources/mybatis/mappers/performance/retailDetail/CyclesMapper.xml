@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.retail.dao.CyclesDAO">
+
+	<resultMap id="cyclesResultMap" type="cyclesDTO">
+		<result column="id" property="ID" jdbcType="BIGINT" />
+		<result column="cycles" property="cycles" jdbcType="VARCHAR" />
+		<result column="cycle_start" property="cycle_start" jdbcType="INTEGER" />
+		<result column="cycle_end" property="cycle_end" jdbcType="INTEGER" />
+		<result column="cycle_result" property="result" jdbcType="BOOLEAN" />
+	</resultMap>
+	
+	<select id="findCyclesByChoose" resultMap="cyclesResultMap" parameterType="cyclesDTO">
+		SELECT cycle_start,cycle_end,cycle_result
+		from isales_app.t_isales_btb_fene_cycle cy
+		where 1 = 1
+		<if
+			test="cyclesDTO.cycles != null and cyclesDTO.cycles != ''">
+			<![CDATA[
+				and cy.cycles = #{cyclesDTO.cycles} limit 1
+			]]>
+		</if>
+	</select>
+</mapper>

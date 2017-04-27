@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.dictionary.dao.DictionaryTypeDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="DictionaryTypeResultMap" type="com.haier.isales.system.dto.DictionaryType">
+		<id column="BUSINTYPE_ID" property="businTypeId" jdbcType="VARCHAR" />
+		<result column="BUSINTYPE_NAME" property="businTypeName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	BUSINTYPE_ID	,
+	BUSINTYPE_NAME		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.businTypeId!=null">and BUSINTYPE_ID like CONCAT('%',#{entity.businTypeId},'%')</if>
+		<if test="entity.businTypeName!=null">and BUSINTYPE_NAME like CONCAT('%',#{entity.businTypeName},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="DictionaryTypeResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_dictionary_busintype
+		where BUSINTYPE_ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_qn_dictionary_busintype
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.dto.DictionaryType" >
+		insert into isales_sys.t_qn_dictionary_busintype
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="businTypeId!=null">
+				BUSINTYPE_ID	,
+			</if>
+			<if test="businTypeName!=null">
+				BUSINTYPE_NAME		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="businTypeId!=null">
+				#{businTypeId}	,
+			</if>
+			<if test="businTypeName!=null">
+				#{businTypeName}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.dto.DictionaryType">
+		update isales_sys.t_qn_dictionary_busintype
+		<set>
+			BUSINTYPE_NAME = #{businTypeName},
+		</set>
+		where BUSINTYPE_ID = #{businTypeId}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_qn_dictionary_busintype 
+		where BUSINTYPE_ID = #{businTypeId}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="DictionaryTypeResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_dictionary_busintype
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_qn_dictionary_busintype
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

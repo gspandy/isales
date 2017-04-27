@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.quotient.dao.QuotientDAO">
+
+	<select id="searchQuotientAccomplish" resultMap="QuotientResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_quotient_month
+		where 1=1
+		<if test="entity.year!=null">
+			and YEAR = #{entity.year}
+		</if>
+		<if test="entity.month!=null">
+			and MONTH = #{entity.month}
+		</if>
+		<if test="entity.tradeCode!=null">
+			and TRADE_CODE = #{entity.tradeCode}
+		</if>
+		<if test="entity.custNo!=null">
+			and CUST_NO = #{entity.custNo}
+		</if>
+		<if test="entity.productLineNo!=null">
+			and PRODUCT_LINE_NO = #{entity.productLineNo}
+		</if>
+	</select>
+
+
+	<select id="searchQuotientCharts" resultMap="QuotientResultMap">
+
+		SELECT
+		ID ,
+		YEAR ,
+		MONTH ,
+		TRADE_CODE ,
+		CUST_NO ,
+		PRODUCT_LINE_NO ,
+		TARGET ,
+		ACTUAL ,
+		CRRSPD_PERIOD ,
+		BASE_LINE ,
+		REMARK
+		<![CDATA[
+		FROM
+		isales_app.t_isales_quotient_month t
+		where 1=1
+		AND t.CUST_NO = #{entity.custNo}
+		AND t.PRODUCT_LINE_NO =
+		#{entity.productLineNo}
+		AND ((t.year = #{entity.year}-1
+		AND t.MONTH > #{entity.month})
+		OR (t.year = #{entity.year}
+		AND	t.MONTH < #{entity.month}+1))
+		ORDER BY
+		t.`YEAR` ASC
+		, t.MONTH ASC
+		, t.ID ASC
+		]]>
+	</select>
+
+</mapper>

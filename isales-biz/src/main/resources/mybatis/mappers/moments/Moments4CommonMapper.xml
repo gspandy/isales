@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.moments.dao.MomentsDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="MomentsResultMap" type="com.haier.isales.moments.domain.MomentsDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="content" property="content"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="type" property="type"  jdbcType="VARCHAR"  />
+		<result column="location" property="location"  jdbcType="VARCHAR"  />
+		<result column="label_groups" property="labelGroups"  jdbcType="VARCHAR"  />
+		<result column="snapshot" property="snapshot"  />
+		<result column="create_id" property="createId"  jdbcType="BIGINT"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_name" property="createName"  jdbcType="VARCHAR"  />
+		<result column="create_usercode" property="createUsercode"  jdbcType="VARCHAR"  />
+		<result column="update_id" property="updateId"  jdbcType="BIGINT"  />
+		<result column="update_name" property="updateName"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="update_usercode" property="updateUsercode"  jdbcType="VARCHAR"  />
+		<result column="browse_count" property="browseCount"  jdbcType="INTEGER"  />
+		<result column="post_count" property="postCount"  jdbcType="INTEGER"  />
+		<result column="like_count" property="likeCount"  jdbcType="INTEGER"  />
+		<result column="dislike_count" property="dislikeCount"  jdbcType="INTEGER"  />
+		<result column="comments_count" property="commentsCount"  jdbcType="INTEGER"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	CONTENT	,
+	STATUS	,
+	TYPE	,
+	LOCATION	,
+	LABEL_GROUPS	,
+	SNAPSHOT	,
+	CREATE_ID	,
+	CREATE_TIME	,
+	CREATE_NAME	,
+	CREATE_USERCODE	,
+	UPDATE_ID	,
+	UPDATE_NAME	,
+	UPDATE_TIME	,
+	UPDATE_USERCODE	,
+	BROWSE_COUNT	,
+	POST_COUNT	,
+	LIKE_COUNT	,
+	DISLIKE_COUNT	,
+	COMMENTS_COUNT		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.content!=null">and content like CONCAT('%',#{entity.content},'%')</if>
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.type!=null">and type like CONCAT('%',#{entity.type},'%')</if>
+		<if test="entity.location!=null">and location like CONCAT('%',#{entity.location},'%')</if>
+		<if test="entity.labelGroups!=null">and label_groups like CONCAT('%',#{entity.labelGroups},'%')</if>
+		<if test="entity.snapshot!=null">and snapshot like CONCAT('%',#{entity.snapshot},'%')</if>
+		<if test="entity.createId!=null">and create_id=#{entity.createId}</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.createName!=null">and create_name like CONCAT('%',#{entity.createName},'%')</if>
+		<if test="entity.createUsercode!=null">and create_usercode like CONCAT('%',#{entity.createUsercode},'%')</if>
+		<if test="entity.updateId!=null">and update_id=#{entity.updateId}</if>
+		<if test="entity.updateName!=null">and update_name like CONCAT('%',#{entity.updateName},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<if test="entity.updateUsercode!=null">and update_usercode like CONCAT('%',#{entity.updateUsercode},'%')</if>
+		<if test="entity.browseCount!=null">and browse_count=#{entity.browseCount}</if>
+		<if test="entity.postCount!=null">and post_count=#{entity.postCount}</if>
+		<if test="entity.likeCount!=null">and like_count=#{entity.likeCount}</if>
+		<if test="entity.dislikeCount!=null">and dislike_count=#{entity.dislikeCount}</if>
+		<if test="entity.commentsCount!=null">and comments_count=#{entity.commentsCount}</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="MomentsResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_moments
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_moments
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.moments.domain.MomentsDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_moments
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="content!=null">
+				CONTENT	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="type!=null">
+				TYPE	,
+			</if>
+			<if test="location!=null">
+				LOCATION	,
+			</if>
+			<if test="labelGroups!=null">
+				LABEL_GROUPS	,
+			</if>
+			<if test="snapshot!=null">
+				SNAPSHOT	,
+			</if>
+			<if test="createId!=null">
+				CREATE_ID	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="createName!=null">
+				CREATE_NAME	,
+			</if>
+			<if test="createUsercode!=null">
+				CREATE_USERCODE	,
+			</if>
+			<if test="updateId!=null">
+				UPDATE_ID	,
+			</if>
+			<if test="updateName!=null">
+				UPDATE_NAME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="updateUsercode!=null">
+				UPDATE_USERCODE	,
+			</if>
+			<if test="browseCount!=null">
+				BROWSE_COUNT	,
+			</if>
+			<if test="postCount!=null">
+				POST_COUNT	,
+			</if>
+			<if test="likeCount!=null">
+				LIKE_COUNT	,
+			</if>
+			<if test="dislikeCount!=null">
+				DISLIKE_COUNT	,
+			</if>
+			<if test="commentsCount!=null">
+				COMMENTS_COUNT		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="content!=null">
+				#{content}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="type!=null">
+				#{type}	,
+			</if>
+			<if test="location!=null">
+				#{location}	,
+			</if>
+			<if test="labelGroups!=null">
+				#{labelGroups}	,
+			</if>
+			<if test="snapshot!=null">
+				#{snapshot}	,
+			</if>
+			<if test="createId!=null">
+				#{createId}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="createName!=null">
+				#{createName}	,
+			</if>
+			<if test="createUsercode!=null">
+				#{createUsercode}	,
+			</if>
+			<if test="updateId!=null">
+				#{updateId}	,
+			</if>
+			<if test="updateName!=null">
+				#{updateName}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="updateUsercode!=null">
+				#{updateUsercode}	,
+			</if>
+			<if test="browseCount!=null">
+				#{browseCount}	,
+			</if>
+			<if test="postCount!=null">
+				#{postCount}	,
+			</if>
+			<if test="likeCount!=null">
+				#{likeCount}	,
+			</if>
+			<if test="dislikeCount!=null">
+				#{dislikeCount}	,
+			</if>
+			<if test="commentsCount!=null">
+				#{commentsCount}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.moments.domain.MomentsDomain">
+		update isales_app.t_isales_moments
+		<set>
+			CONTENT = #{content},
+			STATUS = #{status},
+			TYPE = #{type},
+			LOCATION = #{location},
+			LABEL_GROUPS = #{labelGroups},
+			SNAPSHOT = #{snapshot},
+			CREATE_ID = #{createId},
+			CREATE_TIME = #{createTime},
+			CREATE_NAME = #{createName},
+			CREATE_USERCODE = #{createUsercode},
+			UPDATE_ID = #{updateId},
+			UPDATE_NAME = #{updateName},
+			UPDATE_TIME = #{updateTime},
+			UPDATE_USERCODE = #{updateUsercode},
+			BROWSE_COUNT = #{browseCount},
+			POST_COUNT = #{postCount},
+			LIKE_COUNT = #{likeCount},
+			DISLIKE_COUNT = #{dislikeCount},
+			COMMENTS_COUNT = #{commentsCount},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_moments 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="MomentsResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_moments
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_moments
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

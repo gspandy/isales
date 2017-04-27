@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/lang
+     http://www.springframework.org/schema/lang/spring-lang.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- EDW收入接口同步任务 -->
+	<bean id="queryRatailTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.edw.QueryRatailTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="EDW收入接口同步任务" />
+	</bean>
+	<bean id="queryRatailTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryRatailTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 2 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!-- EDW精品店收入接口同步任务 -->
+	<bean id="queryRatail690TransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.edw.QueryRatail690TransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="EDW收入接口同步任务" />
+	</bean>
+	<bean id="queryRatail690TransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryRatail690TransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 2 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!-- ======================================== -->
+	<!-- 月度CPM提报到一级经营体(金额)零售计划 信息同步Job -->
+	<bean id="queryRatail1169TransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.edw.QueryRatail1169TransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="月度CPM提报到一级经营体(金额)零售计划  信息同步Job" />
+	</bean>
+	<bean id="queryRatail1169TransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryRatail1169TransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!-- 月度690RCM报的零售计划(到客户到门店) 信息同步Job -->
+	<bean id="queryYeRet690TransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.edw.QueryYeRet690TransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="月度690RCM报的零售计划(到客户到门店) 信息同步Job" />
+	</bean>
+	<bean id="queryYeRet690TransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryYeRet690TransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 1 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+	<!-- 零售额(收入)信息同步Job -->
+	<bean id="queryBTBRatailTransformJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.haier.isales.quartz.datatranscoding.edw.QueryBTBRatailTransformJob" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_JOB_GROUP" />
+		<property name="durability" value="false" /><!-- 任务完成之后是否依然保留到数据库，默认false -->
+		<property name="description" value="零售额(收入)信息同步Job" />
+	</bean>
+	<bean id="queryBTBRatailTransformTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryBTBRatailTransformJobDetail" />
+		<!-- 任务执行时间表达式 秒，分，时，日，月，周，年 -->
+		<property name="cronExpression" value="0 0 0 * * ?" />
+		<property name="group" value="#{quartzProperties['org.quartz.scheduler.instanceName']}_TRIGGER_GROUP" />
+	</bean>
+
+</beans>

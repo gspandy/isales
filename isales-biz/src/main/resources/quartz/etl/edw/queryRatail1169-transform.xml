@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="2000" trancateTable="true" batchSize="2000" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">ITF_BW</property>
+		<property name="name">VW_1169_RATAIL</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_query_ratail_1169_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="SCHEDULE_YEAR" dest="SCHEDULE_YEAR" type="String" />
+		<mapping source="SCHEDULE_MONTH" dest="SCHEDULE_MONTH" type="String" />
+		<mapping source="TRADE_CODE" dest="TRADE_CODE" type="String" />
+		<mapping source="TRADE_NAME" dest="TRADE_NAME" type="String" />
+		<mapping source="MKT_LOOKUP_CODE" dest="MKT_LOOKUP_CODE" type="String" />
+		<mapping source="CHAN_CODE" dest="CHAN_CODE" type="String" />
+		<mapping source="CHAN_NAME" dest="CHAN_NAME" type="String" />
+		<mapping source="FIRST_REGION_CODE" dest="FIRST_REGION_CODE" type="String" />
+		<mapping source="FIRST_REGION_NAME" dest="FIRST_REGION_NAME" type="String" />
+		<mapping source="PRODUCT_LINE_ID" dest="PRODUCT_LINE_ID" type="String" />
+		<mapping source="PRODUCT_LINE_CODE" dest="PRODUCT_LINE_CODE" type="String" />
+		<mapping source="PRODUCT_LINE_NAME" dest="PRODUCT_LINE_NAME" type="String" />
+		<mapping source="SMB_SCODE" dest="SMB_SCODE" type="String" />
+		<mapping source="SMB_SNAME" dest="SMB_SNAME" type="String" />
+		<mapping source="PRO_BAND_CODE" dest="PRO_BAND_CODE" type="String" />
+		<mapping source="PRO_BAND_NAME" dest="PRO_BAND_NAME" type="String" />
+		<mapping source="RETAIL_AMT" dest="RETAIL_AMT" type="String" />
+		<mapping source="SUBMIT_DATE" dest="SUBMIT_DATE" type="Date" />
+		<mapping source="SUBMIT_EMPLOYEE_CODE" dest="SUBMIT_EMPLOYEE_CODE" type="String" />
+		<mapping source="SUBMIT_EMPLOYEE_NAME" dest="SUBMIT_EMPLOYEE_NAME" type="String" />
+	</mappings>
+
+	<!-- <procedures>
+		<procedure name="p_insertdata_from_temp_emp" />
+	</procedures> -->
+</transform>

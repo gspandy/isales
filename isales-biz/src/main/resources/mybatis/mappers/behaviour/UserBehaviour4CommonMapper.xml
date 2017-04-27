@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.behaviour.userBehaviour.dao.UserBehaviourDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="UserBehaviourResultMap" type="com.haier.isales.behaviour.userBehaviour.domain.UserBehaviourDomain">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="OPERATE_DATE" property="operateDate" jdbcType="TIMESTAMP" />
+		<result column="OPERATE_TYPE" property="operateType" jdbcType="VARCHAR" />
+		<result column="OPERATION_ID" property="operationId" jdbcType="VARCHAR" />
+		<result column="OPERATION_NAME" property="operationName" jdbcType="VARCHAR" />
+		<result column="USER_IP" property="userIp" jdbcType="VARCHAR" />
+		<result column="USER_DEVICE" property="userDevice" jdbcType="VARCHAR" />
+		<result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+		<result column="device_model" property="deviceModel" jdbcType="VARCHAR" />
+		<result column="device_mac" property="deviceMac" jdbcType="VARCHAR" />
+		<result column="client_os_type" property="clientOsType" jdbcType="VARCHAR" />
+		<result column="client_os_version" property="clientOsVersion" jdbcType="VARCHAR" />
+		<result column="browser_kernel" property="browserKernel" jdbcType="VARCHAR" />
+		<result column="browser_version" property="browserVersion" jdbcType="VARCHAR" />
+		<result column="CALL_TIME" property="callTime" jdbcType="BIGINT" />
+		<result column="device_brand" property="deviceBrand" jdbcType="VARCHAR" />
+		<result column="device_resolution" property="deviceResolution" jdbcType="VARCHAR" />
+		<result column="app_version" property="appVersion" jdbcType="VARCHAR" />
+		<result column="cordova_version" property="cordovaVersion" jdbcType="VARCHAR" />
+		<result column="pixel_height" property="pixelHeight" jdbcType="VARCHAR" />
+		<result column="pixel_width" property="pixelWidth" jdbcType="VARCHAR" />
+		<result column="pixel_ratio" property="pixelRatio" jdbcType="VARCHAR" />
+		<result column="client_info" property="clientInfo" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	USER_ID	,
+	LOGIN_NAME	,
+	OPERATE_DATE	,
+	OPERATE_TYPE	,
+	OPERATION_ID	,
+	OPERATION_NAME	,
+	USER_IP	,
+	USER_DEVICE	,
+	DEVICE_NAME	,
+	DEVICE_MODEL	,
+	DEVICE_MAC	,
+	CLIENT_OS_TYPE	,
+	CLIENT_OS_VERSION	,
+	BROWSER_KERNEL	,
+	BROWSER_VERSION	,
+	CALL_TIME	,
+	DEVICE_BRAND	,
+	DEVICE_RESOLUTION	,
+	APP_VERSION	,
+	CORDOVA_VERSION	,
+	PIXEL_HEIGHT	,
+	PIXEL_WIDTH	,
+	PIXEL_RATIO	,
+	CLIENT_INFO	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and ID=#{entity.id}</if>
+		<if test="entity.userId!=null">and user_id=#{entity.userId}</if>
+		<if test="entity.loginName!=null">and login_name like CONCAT('%',#{entity.loginName},'%')</if>
+		<!-- java.util.Date OPERATE_DATE has been ignored!!! -->
+		<if test="entity.operateType!=null">and OPERATE_TYPE like CONCAT('%',#{entity.operateType},'%')</if>
+		<if test="entity.operationId!=null">and OPERATION_ID like CONCAT('%',#{entity.operationId},'%')</if>
+		<if test="entity.operationName!=null">and OPERATION_NAME like CONCAT('%',#{entity.operationName},'%')</if>
+		<if test="entity.userIp!=null">and USER_IP like CONCAT('%',#{entity.userIp},'%')</if>
+		<if test="entity.userDevice!=null">and USER_DEVICE like CONCAT('%',#{entity.userDevice},'%')</if>
+		<if test="entity.deviceName!=null">and device_name like CONCAT('%',#{entity.deviceName},'%')</if>
+		<if test="entity.deviceModel!=null">and device_model like CONCAT('%',#{entity.deviceModel},'%')</if>
+		<if test="entity.deviceMac!=null">and device_mac like CONCAT('%',#{entity.deviceMac},'%')</if>
+		<if test="entity.clientOsType!=null">and client_os_type like CONCAT('%',#{entity.clientOsType},'%')</if>
+		<if test="entity.clientOsVersion!=null">and client_os_version like CONCAT('%',#{entity.clientOsVersion},'%')</if>
+		<if test="entity.browserKernel!=null">and browser_kernel like CONCAT('%',#{entity.browserKernel},'%')</if>
+		<if test="entity.browserVersion!=null">and browser_version like CONCAT('%',#{entity.browserVersion},'%')</if>
+		<if test="entity.callTime!=null">and CALL_TIME=#{entity.callTime}</if>
+		<if test="entity.deviceBrand!=null">and device_brand like CONCAT('%',#{entity.deviceBrand},'%')</if>
+		<if test="entity.deviceResolution!=null">and device_resolution like CONCAT('%',#{entity.deviceResolution},'%')</if>
+		<if test="entity.appVersion!=null">and app_version like CONCAT('%',#{entity.appVersion},'%')</if>
+		<if test="entity.cordovaVersion!=null">and cordova_version like CONCAT('%',#{entity.cordovaVersion},'%')</if>
+		<if test="entity.pixelHeight!=null">and pixel_height like CONCAT('%',#{entity.pixelHeight},'%')</if>
+		<if test="entity.pixelWidth!=null">and pixel_width like CONCAT('%',#{entity.pixelWidth},'%')</if>
+		<if test="entity.pixelRatio!=null">and pixel_ratio like CONCAT('%',#{entity.pixelRatio},'%')</if>
+		<if test="entity.clientInfo!=null">and client_info like CONCAT('%',#{entity.clientInfo},'%')</if>
+		<if test="entity.remark!=null">and REMARK like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="UserBehaviourResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_user_behaviour
+		where ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_sys_user_behaviour
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.behaviour.userBehaviour.domain.UserBehaviourDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_sys.t_sys_user_behaviour
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				USER_ID	,
+			</if>
+			<if test="loginName!=null">
+				LOGIN_NAME	,
+			</if>
+			<if test="operateDate!=null">
+				OPERATE_DATE	,
+			</if>
+			<if test="operateType!=null">
+				OPERATE_TYPE	,
+			</if>
+			<if test="operationId!=null">
+				OPERATION_ID	,
+			</if>
+			<if test="operationName!=null">
+				OPERATION_NAME	,
+			</if>
+			<if test="userIp!=null">
+				USER_IP	,
+			</if>
+			<if test="userDevice!=null">
+				USER_DEVICE	,
+			</if>
+			<if test="deviceName!=null">
+				DEVICE_NAME	,
+			</if>
+			<if test="deviceModel!=null">
+				DEVICE_MODEL	,
+			</if>
+			<if test="deviceMac!=null">
+				DEVICE_MAC	,
+			</if>
+			<if test="clientOsType!=null">
+				CLIENT_OS_TYPE	,
+			</if>
+			<if test="clientOsVersion!=null">
+				CLIENT_OS_VERSION	,
+			</if>
+			<if test="browserKernel!=null">
+				BROWSER_KERNEL	,
+			</if>
+			<if test="browserVersion!=null">
+				BROWSER_VERSION	,
+			</if>
+			<if test="callTime!=null">
+				CALL_TIME	,
+			</if>
+			<if test="deviceBrand!=null">
+				DEVICE_BRAND	,
+			</if>
+			<if test="deviceResolution!=null">
+				DEVICE_RESOLUTION	,
+			</if>
+			<if test="appVersion!=null">
+				APP_VERSION	,
+			</if>
+			<if test="cordovaVersion!=null">
+				CORDOVA_VERSION	,
+			</if>
+			<if test="pixelHeight!=null">
+				PIXEL_HEIGHT	,
+			</if>
+			<if test="pixelWidth!=null">
+				PIXEL_WIDTH	,
+			</if>
+			<if test="pixelRatio!=null">
+				PIXEL_RATIO	,
+			</if>
+			<if test="clientInfo!=null">
+				CLIENT_INFO	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				#{userId}	,
+			</if>
+			<if test="loginName!=null">
+				#{loginName}	,
+			</if>
+			<if test="operateDate!=null">
+				#{operateDate}	,
+			</if>
+			<if test="operateType!=null">
+				#{operateType}	,
+			</if>
+			<if test="operationId!=null">
+				#{operationId}	,
+			</if>
+			<if test="operationName!=null">
+				#{operationName}	,
+			</if>
+			<if test="userIp!=null">
+				#{userIp}	,
+			</if>
+			<if test="userDevice!=null">
+				#{userDevice}	,
+			</if>
+			<if test="deviceName!=null">
+				#{deviceName}	,
+			</if>
+			<if test="deviceModel!=null">
+				#{deviceModel}	,
+			</if>
+			<if test="deviceMac!=null">
+				#{deviceMac}	,
+			</if>
+			<if test="clientOsType!=null">
+				#{clientOsType}	,
+			</if>
+			<if test="clientOsVersion!=null">
+				#{clientOsVersion}	,
+			</if>
+			<if test="browserKernel!=null">
+				#{browserKernel}	,
+			</if>
+			<if test="browserVersion!=null">
+				#{browserVersion}	,
+			</if>
+			<if test="callTime!=null">
+				#{callTime}	,
+			</if>
+			<if test="deviceBrand!=null">
+				#{deviceBrand}	,
+			</if>
+			<if test="deviceResolution!=null">
+				#{deviceResolution}	,
+			</if>
+			<if test="appVersion!=null">
+				#{appVersion}	,
+			</if>
+			<if test="cordovaVersion!=null">
+				#{cordovaVersion}	,
+			</if>
+			<if test="pixelHeight!=null">
+				#{pixelHeight}	,
+			</if>
+			<if test="pixelWidth!=null">
+				#{pixelWidth}	,
+			</if>
+			<if test="pixelRatio!=null">
+				#{pixelRatio}	,
+			</if>
+			<if test="clientInfo!=null">
+				#{clientInfo}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.behaviour.userBehaviour.domain.UserBehaviourDomain">
+		update isales_sys.t_sys_user_behaviour
+		<set>
+			USER_ID = #{userId},
+			LOGIN_NAME = #{loginName},
+			OPERATE_DATE = #{operateDate},
+			OPERATE_TYPE = #{operateType},
+			OPERATION_ID = #{operationId},
+			OPERATION_NAME = #{operationName},
+			USER_IP = #{userIp},
+			USER_DEVICE = #{userDevice},
+			DEVICE_NAME = #{deviceName},
+			DEVICE_MODEL = #{deviceModel},
+			DEVICE_MAC = #{deviceMac},
+			CLIENT_OS_TYPE = #{clientOsType},
+			CLIENT_OS_VERSION = #{clientOsVersion},
+			BROWSER_KERNEL = #{browserKernel},
+			BROWSER_VERSION = #{browserVersion},
+			CALL_TIME = #{callTime},
+			DEVICE_BRAND = #{deviceBrand},
+			DEVICE_RESOLUTION = #{deviceResolution},
+			APP_VERSION = #{appVersion},
+			CORDOVA_VERSION = #{cordovaVersion},
+			PIXEL_HEIGHT = #{pixelHeight},
+			PIXEL_WIDTH = #{pixelWidth},
+			PIXEL_RATIO = #{pixelRatio},
+			CLIENT_INFO = #{clientInfo},
+			REMARK = #{remark},
+		</set>
+		where ID = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_sys.t_sys_user_behaviour 
+		where ID = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="UserBehaviourResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_sys_user_behaviour
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_sys_user_behaviour
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

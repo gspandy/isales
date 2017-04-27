@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.dao.AppVersionDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="AppVersionResultMap" type="com.haier.isales.app.domain.AppVersionDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="app_version" property="appVersion"  jdbcType="VARCHAR"  />
+		<result column="app_upgrade_abstract" property="appUpgradeAbstract"  jdbcType="VARCHAR" />
+		<result column="app_upgrade_content" property="appUpgradeContent"  />
+		<result column="app_os_type" property="appOsType"  jdbcType="VARCHAR"  />
+		<result column="need_update_client" property="needUpdateClient"  jdbcType="BIT"  />
+		<result column="app_size" property="appSize"  jdbcType="VARCHAR"  />
+		<result column="app_download_url" property="appDownloadUrl"  jdbcType="VARCHAR"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="app_upgrade_time" property="appUpgradeTime"  jdbcType="TIMESTAMP"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	APP_VERSION	,
+	APP_UPGRADE_ABSTRACT	,
+	APP_UPGRADE_CONTENT	,
+	APP_OS_TYPE	,
+	NEED_UPDATE_CLIENT	,
+	APP_SIZE	,
+	APP_DOWNLOAD_URL	,
+	CREATE_TIME	,
+	UPDATE_TIME	,
+	APP_UPGRADE_TIME	,
+	STATUS	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.appVersion!=null">and app_version=#{entity.appVersion}</if>
+		<if test="entity.appUpgradeAbstract!=null">and app_upgrade_abstract like CONCAT('%',#{entity.appUpgradeAbstract},'%')</if>
+		<if test="entity.appUpgradeContent!=null">and app_upgrade_content like CONCAT('%',#{entity.appUpgradeContent},'%')</if>
+		<if test="entity.appOsType!=null">and app_os_type like CONCAT('%',#{entity.appOsType},'%')</if>
+		<if test="entity.needUpdateClient!=null">and need_update_client=#{entity.needUpdateClient}</if>
+		<if test="entity.appSize!=null">and app_size like CONCAT('%',#{entity.appSize},'%')</if>
+		<if test="entity.appDownloadUrl!=null">and app_download_url like CONCAT('%',#{entity.appDownloadUrl},'%')</if>
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<!-- java.util.Date app_upgrade_time has been ignored!!! -->
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.remark!=null">and remark like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="AppVersionResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_app_version
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_app_version
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.app.domain.AppVersionDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_app_version
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appVersion!=null">
+				APP_VERSION	,
+			</if>
+			<if test="appUpgradeAbstract!=null">
+				APP_UPGRADE_ABSTRACT	,
+			</if>
+			<if test="appUpgradeContent!=null">
+				APP_UPGRADE_CONTENT	,
+			</if>
+			<if test="appOsType!=null">
+				APP_OS_TYPE	,
+			</if>
+			<if test="needUpdateClient!=null">
+				NEED_UPDATE_CLIENT	,
+			</if>
+			<if test="appSize!=null">
+				APP_SIZE	,
+			</if>
+			<if test="appDownloadUrl!=null">
+				APP_DOWNLOAD_URL	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="appUpgradeTime!=null">
+				APP_UPGRADE_TIME	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="appVersion!=null">
+				#{appVersion}	,
+			</if>
+			<if test="appUpgradeAbstract!=null">
+				#{appUpgradeAbstract}	,
+			</if>
+			<if test="appUpgradeContent!=null">
+				#{appUpgradeContent}	,
+			</if>
+			<if test="appOsType!=null">
+				#{appOsType}	,
+			</if>
+			<if test="needUpdateClient!=null">
+				#{needUpdateClient}	,
+			</if>
+			<if test="appSize!=null">
+				#{appSize}	,
+			</if>
+			<if test="appDownloadUrl!=null">
+				#{appDownloadUrl}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="appUpgradeTime!=null">
+				#{appUpgradeTime}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.app.domain.AppVersionDomain">
+		update isales_app.t_isales_app_version
+		<set>
+			APP_VERSION = #{appVersion},
+			APP_UPGRADE_ABSTRACT = #{appUpgradeAbstract},
+			APP_UPGRADE_CONTENT = #{appUpgradeContent},
+			APP_OS_TYPE = #{appOsType},
+			NEED_UPDATE_CLIENT = #{needUpdateClient},
+			APP_SIZE = #{appSize},
+			APP_DOWNLOAD_URL = #{appDownloadUrl},
+			CREATE_TIME = #{createTime},
+			UPDATE_TIME = #{updateTime},
+			APP_UPGRADE_TIME = #{appUpgradeTime},
+			STATUS = #{status},
+			REMARK = #{remark},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_app_version 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="AppVersionResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_app_version
+		where 1=1
+		<include refid="searchConditions"/>
+		order by app_upgrade_time desc,id desc
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_app_version
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

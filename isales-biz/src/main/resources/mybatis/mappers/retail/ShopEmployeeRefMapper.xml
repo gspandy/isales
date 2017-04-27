@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.retail.shopemployeeref.dao.ShopEmployeeRefDAO">
+	
+	<select id="findByCodeAndDate" resultMap="ShopEmployeeRefResultMap">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_shop_employee_ref
+		where user_code = #{entity.userCode}
+		and month = #{entity.month}
+	</select>
+	
+</mapper>

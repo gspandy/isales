@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+ 	<!-- 用户意见反馈的dubbo -->
+    <bean id="feedbackSearchClient" class="com.haier.isales.app.service.impl.FeedbackServiceClientImpl">
+   		 <property name="feedbackService" ref="feedbackService" /> 
+   		 <property name="bpmIssueTypeService" ref="bpmIssueTypeService" /> 
+   		 <property name="omsHandlerService" ref="omsHandlerService" /> 
+    </bean>  
+    <dubbo:service interface="com.haier.isales.app.service.FeedbackSearchClient" owner="isales" ref="feedbackSearchClient" version="${project.version}"  protocol="dubbo" delay="-1" registry="isalesRegistry"/>
+
+</beans>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.prototype.dao.PrototypeDAO">
+	<!-- 查询样机列表 -->
+	<select id="findPrototypePagerLike" resultMap="PrototypeResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_prototype
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="entity.yearMonth!=null">
+			AND DATE_FORMAT(out_date, '%Y-%m') = #{entity.yearMonth}
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+		order by out_date asc,id asc
+		<include refid="pagination_Tail" />
+	</select>
+	
+	
+	<!-- 根据时间段进行样机的查询-->
+	<!-- <select id="findListByDataPeriodCount" resultType="integer">
+		select count(1)
+		from isales_app.t_isales_prototype
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+	</select> -->
+	<!-- <select id="findListByDataPeriodCount" resultType="integer">
+		select count(1)
+		from ( select * from isales_app.t_isales_prototype 
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null and startDate != ''">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null and endDate != ''">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+		GROUP BY product_model_name ) u
+	</select> -->
+	<select id="findListByDataPeriodCount" resultType="integer">
+		select COUNT(barcode) AS total
+		from isales_app.t_isales_prototype 
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			AND
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+	</select>
+	
+	<!-- 根据时间段进行样机的查询-->
+	<!-- <select id="findPrototypePagerLikeListByDataPeriod" resultMap="PrototypeResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_prototype
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+		order by out_date desc,id desc
+		<include refid="pagination_Tail" />
+	</select> -->
+	
+	<!-- <select id="findPrototypePagerLikeListByDataPeriod" resultMap="PrototypeResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_prototype
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+		GROUP BY product_model_name ORDER BY out_date ASC
+		<include refid="pagination_Tail" />
+	</select> -->
+	<select id="findPrototypePagerLikeListByDataPeriod" resultMap="PrototypeResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_prototype
+		where
+		1=1
+		AND status = '101'
+		AND shop_id = #{entity.shopId}
+		<if test="startDate!=null">
+			<![CDATA[ AND out_date >= STR_TO_DATE(#{startDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="endDate!=null">
+			<![CDATA[ AND out_date <= STR_TO_DATE(#{endDate}, '%Y-%m-%d') ]]>
+		</if>
+		<if test="entity.productLineNo!=null">
+			AND product_line REGEXP #{entity.productLineNo}
+		</if>
+		<if test="entity.yjstate!=null">
+			AND yjstate = #{entity.yjstate}
+		</if>
+		<if test="entity.barcode!=null">
+			AND barcode = #{entity.barcode}
+		</if>
+		<if test="proList!=null and proList!=''">
+			and
+			<foreach collection="proList" item="item" index="index" open="(" separator=" and " close=")">
+				 <![CDATA[  UPPER(product_model_name) like UPPER(CONCAT('%', #{item},'%')) ]]>
+			</foreach>
+		</if>
+		<if test="entity.productModelCode!=null and entity.productModelCode!=''">
+			and product_model_code=#{entity.productModelCode}
+		</if>
+		<if test="entity.productModelCode==null || entity.productModelCode==''">
+			GROUP BY product_model_code ORDER BY out_date ASC
+		</if>
+		<include refid="pagination_Tail" />
+	</select>
+	
+	
+	<!-- 查询样机自主经营体产品线对应关系 以及产品图片id -->
+	<select id="findProLineBySortCode"  resultMap="PrototypeResultMap" parameterType="java.lang.String">
+		SELECT zhp.hmms_proline AS product_sort_no
+		     , zhp.zzjyt_proline AS product_line
+		     , zhp.zzjyt_proline_name AS product_line_name
+		     , ppi.img_id AS img_id
+		FROM
+		  isales_app.t_isales_zzjyt_hmms_proline zhp
+		LEFT JOIN isales_app.t_isales_prototype_proline_img ppi
+		ON ppi.proline = zhp.zzjyt_proline
+		WHERE 1 = 1
+		<if test="productSortNo != null and productSortNo != '' ">
+		 	and upper(zhp.hmms_proline) = upper(#{productSortNo})
+		</if>
+		  limit 1
+	</select>
+	
+	
+	<select id="findByBarCode" resultMap="PrototypeResultMap"
+		parameterType="java.lang.String">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_prototype
+		where barcode=#{barcode}
+	</select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.app.mdmhandler.dao.MdmHandlerDAO">
+	<!-- findShopTradeCode -->
+	<select id="findShopTradeCode" resultMap="MdmHandlerResultMap" >
+		SELECT DISTINCT 
+		    s.SHOP_ID as customer_code
+		  , s.org_code as trade_code
+		FROM
+		  isales_sys.t_sys_employee_summary s
+		WHERE
+		  s.org_code IS NOT NULL
+     	 and s.SHOP_ID is not null
+		order by s.SHOP_ID ASC ,s.org_code ASC ,s.operator_id ASC 
+	</select>
+	<!-- 删除所有记录  -->
+	<delete id="deleteAll">
+		delete from isales_temp.t_isales_bpm_handler_mdm_temp;
+	</delete>
+	<!-- 批量保存数据 -->
+	<insert id="saveAfterDeleteMdmHandlerTemp" parameterType="com.haier.isales.app.mdmhandler.domain.MdmHandlerDomain"  >
+		insert into isales_temp.t_isales_bpm_handler_mdm_temp
+			(	ROW_ID	,
+				RN	,
+				ORG_NO	,
+				BIND_ID	,
+				CREATE_DATE	,
+				CREATE_USER	,
+				UPDATE_DATE	,
+				UPDATE_USER	,
+				WORK_FLOW_ID	,
+				WORK_FLOW_STEP_ID	,
+				IS_END	,
+				TRADE_CODE	,
+				TRADE_NAME	,
+				CUST_ROW_ID	,
+				CUSTOMER_CODE	,
+				CUSTOMER_NAME1	,
+				CUSTOMER_CATEGORY	,
+				INDUSTRY_CLASS	,
+				CUSTOMER_NUMBER_SH	,
+				SUB_CUSTOMER_NAME1	,
+				FIRST_AREA_CODE	,
+				FIRST_AREA_NAME	,
+				BRANCH_COMPANY_CODE	,
+				BRANCH_COMPANY_NAME	,
+				BRANCH_CODE	,
+				SMB_MANAGER	,
+				SMB_MANAGER_NAME	,
+				LAST_UPD	,
+				SYNCHRONOUS_TIME	,
+				REMARK		
+			)
+		VALUES
+		<foreach collection="mdmHandlerList" item="item" index="index" open="" separator="," close="">
+       		(
+			<if test="item.rowId!=null">
+				#{item.rowId}	,
+			</if>
+			<if test="item.rn!=null">
+				#{item.rn}	,
+			</if>
+			<if test="item.orgNo!=null">
+				#{item.orgNo}	,
+			</if>
+			<if test="item.bindId!=null">
+				#{item.bindId}	,
+			</if>
+			<if test="item.createDate!=null">
+				#{item.createDate}	,
+			</if>
+			<if test="item.createUser!=null">
+				#{item.createUser}	,
+			</if>
+			<if test="item.updateDate!=null">
+				#{item.updateDate}	,
+			</if>
+			<if test="item.updateUser!=null">
+				#{item.updateUser}	,
+			</if>
+			<if test="item.workFlowId!=null">
+				#{item.workFlowId}	,
+			</if>
+			<if test="item.workFlowStepId!=null">
+				#{item.workFlowStepId}	,
+			</if>
+			<if test="item.isEnd!=null">
+				#{item.isEnd}	,
+			</if>
+			<if test="item.tradeCode!=null">
+				#{item.tradeCode}	,
+			</if>
+			<if test="item.tradeName!=null">
+				#{item.tradeName}	,
+			</if>
+			<if test="item.custRowId!=null">
+				#{item.custRowId}	,
+			</if>
+			<if test="item.customerCode!=null">
+				#{item.customerCode}	,
+			</if>
+			<if test="item.customerName1!=null">
+				#{item.customerName1}	,
+			</if>
+			<if test="item.customerCategory!=null">
+				#{item.customerCategory}	,
+			</if>
+			<if test="item.industryClass!=null">
+				#{item.industryClass}	,
+			</if>
+			<if test="item.customerNumberSh!=null">
+				#{item.customerNumberSh}	,
+			</if>
+			<if test="item.subCustomerName1!=null">
+				#{item.subCustomerName1}	,
+			</if>
+			<if test="item.firstAreaCode!=null">
+				#{item.firstAreaCode}	,
+			</if>
+			<if test="item.firstAreaName!=null">
+				#{item.firstAreaName}	,
+			</if>
+			<if test="item.branchCompanyCode!=null">
+				#{item.branchCompanyCode}	,
+			</if>
+			<if test="item.branchCompanyName!=null">
+				#{item.branchCompanyName}	,
+			</if>
+			<if test="item.branchCode!=null">
+				#{item.branchCode}	,
+			</if>
+			<if test="item.smbManager!=null">
+				#{item.smbManager}	,
+			</if>
+			<if test="item.smbManagerName!=null">
+				#{item.smbManagerName}	,
+			</if>
+			<if test="item.lastUpd!=null">
+				#{item.lastUpd}	,
+			</if>
+				now(),
+				null
+			)
+  		</foreach>
+	</insert>
+</mapper>

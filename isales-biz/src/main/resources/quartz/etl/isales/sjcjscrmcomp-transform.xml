@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_btb_sjcj_scrm_all_temp</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_btb_sjcj_scrm_complete_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="months" dest="months" type="String" />
+		<mapping source="fzxid" dest="org_code" type="String" />
+		<mapping source="fzxname" dest="org_name" type="String" />
+		<mapping source="qdid" dest="chan_code" type="String" />
+		<mapping source="qdname" dest="chan_name" type="String" />
+		<mapping source="mdid" dest="shop_code" type="String" />
+		<mapping source="mdname" dest="shop_name" type="String" />
+		<mapping source="cpxid" dest="proline_code" type="String" />
+		<mapping source="cpxname" dest="proline_name" type="String" />
+		<mapping source="jhe" dest="retail_plan_money" type="String" />
+		<mapping source="qtyjh" dest="retail_plan" type="String" />
+		<mapping source="xl" dest="retail_actual" type="String" />
+		<mapping source="totalmoney" dest="retail_actual_money" type="String" />
+		<mapping source="xhynum" dest="member_new" type="String" />
+		<mapping source="hznum" dest="member_total" type="String" />
+		<mapping source="hzwzcnum" dest="member_diff" type="String" />
+		<mapping source="tc" dest="retail_bonus" type="String" />
+		<mapping source="mem_cnts" dest="mem_cnts" type="String" />
+		<mapping source="lst_day_cnts" dest="lst_day_cnts" type="String" />
+		<mapping source="lst_day_tc" dest="lst_day_tc" type="String" />
+	</mappings>
+	<where>
+		<source>
+			qdid not in ('D', 'E')
+		</source>
+	</where>
+	<procedures>
+		<procedure name="isales_app.p_collect_btb_sjcj_scrm_complete" />
+	</procedures>
+</transform>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+ 	<!-- 使用dubbo协议暴露服务 -->
+ 	<!-- 潜客dubbo -->
+    <bean id="potentialCustomerClient" class="com.haier.isales.customer.service.impl.PotentialCustomerClientImpl">
+   		<property name="potentialCustomerService" ref="potentialCustomerService" />
+    </bean>  
+    <dubbo:service interface="com.haier.isales.customer.service.PotentialCustomerClient" owner="isales" ref="potentialCustomerClient" version="${project.version}"  protocol="dubbo" delay="-1" registry="isalesRegistry"/>
+    
+    <!-- 已购买顾客dubbo -->
+    <bean id="purchasedCustomerClient" class="com.haier.isales.customer.service.impl.PurchasedCustomerClientImpl">
+   		<property name="purchasedCustomerService" ref="purchasedCustomerService" />
+    </bean>  
+    <dubbo:service interface="com.haier.isales.customer.service.PurchasedCustomerClient" owner="isales" ref="purchasedCustomerClient" version="${project.version}"  protocol="dubbo" delay="-1" registry="isalesRegistry"/>
+    
+</beans>

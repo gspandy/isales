@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="500" trancateTable="true" batchSize="500" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">EHUB_SLS</property>
+		<property name="name">VIEW_BTB_GOODBASE</property>
+		<property name="encoding">ISO8859-1</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_pro_model_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="PRODCODE" dest="PRODCODE" type="String" />
+		<mapping source="PRDN" dest="PRDN" type="String" />
+		<mapping source="CATEGORY_E" dest="CATEGORY_E" type="String" />
+		<mapping source="CATEGORY_E_NAME" dest="CATEGORY_E_NAME" type="String" />
+		<mapping source="PRO_BRAND_NAME" dest="PRO_BRAND_NAME" type="String" />
+		<mapping source="MARK_DATE" dest="MARK_DATE" type="Date" />
+	</mappings>
+	<procedures>
+		<procedure name="p_insertdata_from_temp_pro_model"/>
+	</procedures>
+</transform>

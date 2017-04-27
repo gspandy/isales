@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.salerinfo.personalshare.dao.PersonalShareDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="PersonalShareResultMap" type="com.haier.isales.salerinfo.personalshare.domain.PersonalShareDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="title" property="title"  jdbcType="VARCHAR"  />
+		<result column="content" property="content"  />
+		<result column="user_id" property="userId"  jdbcType="BIGINT"  />
+		<result column="login_name" property="loginName"  jdbcType="VARCHAR"  />
+		<result column="user_code" property="userCode"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="need_remind" property="needRemind"  jdbcType="VARCHAR"  />
+		<result column="remind_time" property="remindTime"  jdbcType="TIMESTAMP"  />
+		<result column="status" property="status"  jdbcType="VARCHAR"  />
+		<result column="type" property="type"  jdbcType="VARCHAR"  />
+		<result column="share_type" property="shareType"  jdbcType="VARCHAR"  />
+		<result column="browse_count" property="browseCount"  jdbcType="INTEGER"  />
+		<result column="post_count" property="postCount"  jdbcType="INTEGER"  />
+		<result column="like_count" property="likeCount"  jdbcType="INTEGER"  />
+		<result column="dislike_count" property="dislikeCount"  jdbcType="INTEGER"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	TITLE	,
+	CONTENT	,
+	USER_ID	,
+	LOGIN_NAME	,
+	USER_CODE	,
+	UPDATE_TIME	,
+	CREATE_TIME	,
+	NEED_REMIND	,
+	REMIND_TIME	,
+	STATUS	,
+	TYPE	,
+	SHARE_TYPE	,
+	BROWSE_COUNT	,
+	POST_COUNT	,
+	LIKE_COUNT	,
+	DISLIKE_COUNT		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.title!=null">and title like CONCAT('%',#{entity.title},'%')</if>
+		<if test="entity.content!=null">and content like CONCAT('%',#{entity.content},'%')</if>
+		<if test="entity.userId!=null">and user_id=#{entity.userId}</if>
+		<if test="entity.loginName!=null">and login_name like CONCAT('%',#{entity.loginName},'%')</if>
+		<if test="entity.userCode!=null">and user_code like CONCAT('%',#{entity.userCode},'%')</if>
+		<!-- java.util.Date update_time has been ignored!!! -->
+		<!-- java.util.Date create_time has been ignored!!! -->
+		<if test="entity.needRemind!=null">and need_remind like CONCAT('%',#{entity.needRemind},'%')</if>
+		<!-- java.util.Date remind_time has been ignored!!! -->
+		<if test="entity.status!=null">and status like CONCAT('%',#{entity.status},'%')</if>
+		<if test="entity.type!=null">and type like CONCAT('%',#{entity.type},'%')</if>
+		<if test="entity.shareType!=null">and share_type like CONCAT('%',#{entity.shareType},'%')</if>
+		<if test="entity.browseCount!=null">and browse_count=#{entity.browseCount}</if>
+		<if test="entity.postCount!=null">and post_count=#{entity.postCount}</if>
+		<if test="entity.likeCount!=null">and like_count=#{entity.likeCount}</if>
+		<if test="entity.dislikeCount!=null">and dislike_count=#{entity.dislikeCount}</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="PersonalShareResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_personal_share
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_personal_share
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.salerinfo.personalshare.domain.PersonalShareDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_personal_share
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="title!=null">
+				TITLE	,
+			</if>
+			<if test="content!=null">
+				CONTENT	,
+			</if>
+			<if test="userId!=null">
+				USER_ID	,
+			</if>
+			<if test="loginName!=null">
+				LOGIN_NAME	,
+			</if>
+			<if test="userCode!=null">
+				USER_CODE	,
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME	,
+			</if>
+			<if test="createTime!=null">
+				CREATE_TIME	,
+			</if>
+			<if test="needRemind!=null">
+				NEED_REMIND	,
+			</if>
+			<if test="remindTime!=null">
+				REMIND_TIME	,
+			</if>
+			<if test="status!=null">
+				STATUS	,
+			</if>
+			<if test="type!=null">
+				TYPE	,
+			</if>
+			<if test="shareType!=null">
+				SHARE_TYPE	,
+			</if>
+			<if test="browseCount!=null">
+				BROWSE_COUNT	,
+			</if>
+			<if test="postCount!=null">
+				POST_COUNT	,
+			</if>
+			<if test="likeCount!=null">
+				LIKE_COUNT	,
+			</if>
+			<if test="dislikeCount!=null">
+				DISLIKE_COUNT		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="title!=null">
+				#{title}	,
+			</if>
+			<if test="content!=null">
+				#{content}	,
+			</if>
+			<if test="userId!=null">
+				#{userId}	,
+			</if>
+			<if test="loginName!=null">
+				#{loginName}	,
+			</if>
+			<if test="userCode!=null">
+				#{userCode}	,
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime}	,
+			</if>
+			<if test="createTime!=null">
+				#{createTime}	,
+			</if>
+			<if test="needRemind!=null">
+				#{needRemind}	,
+			</if>
+			<if test="remindTime!=null">
+				#{remindTime}	,
+			</if>
+			<if test="status!=null">
+				#{status}	,
+			</if>
+			<if test="type!=null">
+				#{type}	,
+			</if>
+			<if test="shareType!=null">
+				#{shareType}	,
+			</if>
+			<if test="browseCount!=null">
+				#{browseCount}	,
+			</if>
+			<if test="postCount!=null">
+				#{postCount}	,
+			</if>
+			<if test="likeCount!=null">
+				#{likeCount}	,
+			</if>
+			<if test="dislikeCount!=null">
+				#{dislikeCount}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.salerinfo.personalshare.domain.PersonalShareDomain">
+		update isales_app.t_isales_personal_share
+		<set>
+			TITLE = #{title},
+			CONTENT = #{content},
+			USER_ID = #{userId},
+			LOGIN_NAME = #{loginName},
+			USER_CODE = #{userCode},
+			UPDATE_TIME = #{updateTime},
+			CREATE_TIME = #{createTime},
+			NEED_REMIND = #{needRemind},
+			REMIND_TIME = #{remindTime},
+			STATUS = #{status},
+			TYPE = #{type},
+			SHARE_TYPE = #{shareType},
+			BROWSE_COUNT = #{browseCount},
+			POST_COUNT = #{postCount},
+			LIKE_COUNT = #{likeCount},
+			DISLIKE_COUNT = #{dislikeCount},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_app.t_isales_personal_share 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="PersonalShareResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_personal_share
+		where 1=1
+		<include refid="searchConditions"/>
+		order by UPDATE_TIME DESC,CREATE_TIME DESC , ID asc		
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_personal_share
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

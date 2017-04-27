@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="5000" trancateTable="true" batchSize="5000" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">haiermdm</property>
+		<property name="name">hrzxyapp_cust_sales_template</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_products_sales_template_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="ROW_ID" dest="ROW_ID" type="String" />
+		<mapping source="MATERIAL_CODE" dest="MATERIAL_CODE" type="String" />
+		<mapping source="SALES_ORGANIZATION" dest="SALES_ORGANIZATION" type="String" />
+		<mapping source="SALES_CHANNEL" dest="SALES_CHANNEL" type="String" />
+		<mapping source="SALES_CHANNEL2" dest="SALES_CHANNEL2" type="String" />
+		<mapping source="MARKET_LEVEL" dest="MARKET_LEVEL" type="String" />
+		<mapping source="CUSTOMER_CODE" dest="CUSTOMER_CODE" type="String" />
+		<mapping source="ACTIVE_DATE_BEGIN" dest="ACTIVE_DATE_BEGIN" type="String" />
+		<mapping source="ACTIVE_DATE_END" dest="ACTIVE_DATE_END" type="String" />
+		<mapping source="LAST_UPD" dest="LAST_UPD" type="String" />
+		<mapping source="DELETE_FLAG" dest="DELETE_FLAG" type="String" />
+		<mapping source="DEPARTMENT" dest="DEPARTMENT" type="String" />
+		<mapping source="COMBINE_TYPE" dest="COMBINE_TYPE" type="String" />
+		<mapping source="PUT_METHODS" dest="PUT_METHODS" type="String" />
+	</mappings>
+
+	<!-- <procedures>
+		<procedure name="p_insertdata_from_temp_emp" />
+	</procedures> -->
+</transform>

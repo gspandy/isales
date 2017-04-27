@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.monitor.dao.JobMonitorLogDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="JobMonitorLogResultMap" type="com.haier.isales.system.monitor.domain.JobMonitorLogDomain">
+		<id column="ID" property="id"  jdbcType="BIGINT"  />
+		<result column="execute_class" property="executeClass"  jdbcType="VARCHAR"  />
+		<result column="execute_function" property="executeFunction"  jdbcType="VARCHAR"  />
+		<result column="execute_Params_json" property="executeParamsJson"  />
+		<result column="start_time" property="startTime"  jdbcType="TIMESTAMP"  />
+		<result column="end_time" property="endTime"  jdbcType="TIMESTAMP"  />
+		<result column="start_millisecond" property="startMillisecond"  jdbcType="BIGINT"  />
+		<result column="end_millisecond" property="endMillisecond"  jdbcType="BIGINT"  />
+		<result column="duration" property="duration"  jdbcType="BIGINT"  />
+		<result column="excute_result" property="excuteResult"  />
+		<result column="excute_exception" property="excuteException"  />
+		<result column="REMARK" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	EXECUTE_CLASS	,
+	EXECUTE_FUNCTION	,
+	EXECUTE_PARAMS_JSON	,
+	START_TIME	,
+	END_TIME	,
+	START_MILLISECOND	,
+	END_MILLISECOND	,
+	DURATION	,
+	EXCUTE_RESULT	,
+	EXCUTE_EXCEPTION	,
+	REMARK		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and ID=#{entity.id}</if>
+		<if test="entity.executeClass!=null">and execute_class like CONCAT('%',#{entity.executeClass},'%')</if>
+		<if test="entity.executeFunction!=null">and execute_function like CONCAT('%',#{entity.executeFunction},'%')</if>
+		<if test="entity.executeParamsJson!=null">and execute_Params_json like CONCAT('%',#{entity.executeParamsJson},'%')</if>
+		<!-- java.util.Date start_time has been ignored!!! -->
+		<!-- java.util.Date end_time has been ignored!!! -->
+		<if test="entity.startMillisecond!=null">and start_millisecond=#{entity.startMillisecond}</if>
+		<if test="entity.endMillisecond!=null">and end_millisecond=#{entity.endMillisecond}</if>
+		<if test="entity.duration!=null">and duration=#{entity.duration}</if>
+		<if test="entity.excuteResult!=null">and excute_result like CONCAT('%',#{entity.excuteResult},'%')</if>
+		<if test="entity.excuteException!=null">and excute_exception like CONCAT('%',#{entity.excuteException},'%')</if>
+		<if test="entity.remark!=null">and REMARK like CONCAT('%',#{entity.remark},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="JobMonitorLogResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_log.t_sys_monitor_job
+		where ID = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_log.t_sys_monitor_job
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.monitor.domain.JobMonitorLogDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_log.t_sys_monitor_job
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="executeClass!=null">
+				EXECUTE_CLASS	,
+			</if>
+			<if test="executeFunction!=null">
+				EXECUTE_FUNCTION	,
+			</if>
+			<if test="executeParamsJson!=null">
+				EXECUTE_PARAMS_JSON	,
+			</if>
+			<if test="startTime!=null">
+				START_TIME	,
+			</if>
+			<if test="endTime!=null">
+				END_TIME	,
+			</if>
+			<if test="startMillisecond!=null">
+				START_MILLISECOND	,
+			</if>
+			<if test="endMillisecond!=null">
+				END_MILLISECOND	,
+			</if>
+			<if test="duration!=null">
+				DURATION	,
+			</if>
+			<if test="excuteResult!=null">
+				EXCUTE_RESULT	,
+			</if>
+			<if test="excuteException!=null">
+				EXCUTE_EXCEPTION	,
+			</if>
+			<if test="remark!=null">
+				REMARK		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="executeClass!=null">
+				#{executeClass}	,
+			</if>
+			<if test="executeFunction!=null">
+				#{executeFunction}	,
+			</if>
+			<if test="executeParamsJson!=null">
+				#{executeParamsJson}	,
+			</if>
+			<if test="startTime!=null">
+				#{startTime}	,
+			</if>
+			<if test="endTime!=null">
+				#{endTime}	,
+			</if>
+			<if test="startMillisecond!=null">
+				#{startMillisecond}	,
+			</if>
+			<if test="endMillisecond!=null">
+				#{endMillisecond}	,
+			</if>
+			<if test="duration!=null">
+				#{duration}	,
+			</if>
+			<if test="excuteResult!=null">
+				#{excuteResult}	,
+			</if>
+			<if test="excuteException!=null">
+				#{excuteException}	,
+			</if>
+			<if test="remark!=null">
+				#{remark}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.monitor.domain.JobMonitorLogDomain">
+		update isales_log.t_sys_monitor_job
+		<set>
+			EXECUTE_CLASS = #{executeClass},
+			EXECUTE_FUNCTION = #{executeFunction},
+			EXECUTE_PARAMS_JSON = #{executeParamsJson},
+			START_TIME = #{startTime},
+			END_TIME = #{endTime},
+			START_MILLISECOND = #{startMillisecond},
+			END_MILLISECOND = #{endMillisecond},
+			DURATION = #{duration},
+			EXCUTE_RESULT = #{excuteResult},
+			EXCUTE_EXCEPTION = #{excuteException},
+			REMARK = #{remark},
+		</set>
+		where ID = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Long">
+		delete from isales_log.t_sys_monitor_job 
+		where ID = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="JobMonitorLogResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_log.t_sys_monitor_job
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_log.t_sys_monitor_job
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

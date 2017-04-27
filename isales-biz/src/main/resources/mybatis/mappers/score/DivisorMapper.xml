@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.score.dao.DivisorDAO">
+	<!-- 根据用户id查询对应实体类的方法 -->
+	<select id="findByOperatorId" resultMap="DivisorResultMap"
+		parameterType="Long">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_divisor
+		where operator_id = #{operatorId}
+	</select>
+</mapper>

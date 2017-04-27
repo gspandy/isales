@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.haier.isales.settings.dao.SettingItemsDAO">
+	<select id="findSettingItems" parameterType="long" resultMap="UserSettingItemsResultMap">
+		SELECT u.operator_id
+	     , i.item_name as item_name 
+	     , u.value_id
+	     , v.value_name as value_name 
+		FROM
+		  isales_app.t_isales_setting_items_value_user u
+		LEFT JOIN isales_app.t_isales_setting_items i
+		ON i.id = u.item_id
+		LEFT JOIN isales_app.t_isales_setting_items_value v
+		ON v.id = u.value_id 
+		WHERE u.operator_id = #{operatorId}
+	</select>
+	<select id="findValueById" parameterType="long" resultMap="SettingItemsValueResultMap">
+		select <include refid="Value_Column_List"/> from isales_app.t_isales_setting_items_value
+			 where id = #{newValueId}
+	</select>
+	<select id="findByOperatorId" parameterType="long" resultMap="SettingItemsValueUserResultMap">
+		select <include refid="User_Column_List"/> from isales_app.t_isales_setting_items_value_user 
+			where operator_id = #{operatorId}
+	</select>
+	<update id="updateSettingItemsValueUser" parameterType="com.haier.isales.settings.domain.SettingItemsValueUserDomain">
+		update isales_app.t_isales_setting_items_value_user 
+			set value_id = #{user.valueId}, 
+			value_code = #{user.valueCode} 
+		where operator_id = #{user.operatorId}
+	</update>
+	<insert id="saveSettingItemsValueUser" parameterType="com.haier.isales.settings.domain.SettingItemsValueUserDomain">
+		insert into isales_app.t_isales_setting_items_value_user 
+			values (#{user.itemId},
+			#{user.operatorId},
+			#{user.valueId},
+			#{user.valueCode},
+			#{user.updateTime},
+			#{user.createTime},
+			#{user.remark})
+	</insert>
+</mapper>

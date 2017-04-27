@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.settings.dao.SettingItemsDAO">
+	<resultMap id="UserSettingItemsResultMap" type="com.haier.isales.settings.domain.UserSettingItemsDomain">
+		<result column="operator_id" property="operatorId"  jdbcType="BIGINT"  />
+		<result column="item_name" property="itemName"  jdbcType="VARCHAR"  />
+		<result column="value_id" property="valueId"  jdbcType="BIGINT"  />
+		<result column="value_name" property="valueName"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<resultMap id="SettingItemsValueResultMap" type="com.haier.isales.settings.domain.SettingItemsValueDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="item_id" property="itemId"  jdbcType="VARCHAR"  />
+		<result column="value_code" property="valueCode"  jdbcType="VARCHAR" />
+		<result column="value_name" property="valueName"  jdbcType="VARCHAR"  />
+		<result column="value_desc" property="valueDesc"  jdbcType="VARCHAR"  />
+		<result column="value_status" property="valueStatus"  jdbcType="VARCHAR"  />
+		<result column="value_sort" property="valueSort"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<resultMap id="SettingItemsValueUserResultMap" type="com.haier.isales.settings.domain.SettingItemsValueUserDomain">
+		<result column="item_id" property="itemId"  jdbcType="VARCHAR"  />
+		<result column="operator_id" property="operatorId"  jdbcType="VARCHAR" />
+		<result column="value_id" property="valueId"  jdbcType="VARCHAR"  />
+		<result column="value_code" property="valueCode"  jdbcType="VARCHAR"  />
+		<result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"  />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+		<result column="remark" property="remark"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<sql id="Value_Column_List">
+		id, item_id, value_code, value_name, value_desc, value_status, value_sort, update_time, create_time, remark 
+	</sql>
+	
+	<sql id="User_Column_List">
+		item_id, operator_id, value_id, value_code, update_time, create_time, remark 
+	</sql>
+</mapper>

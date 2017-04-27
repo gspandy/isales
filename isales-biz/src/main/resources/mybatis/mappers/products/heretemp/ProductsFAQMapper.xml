@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.products.heretemp.productsfaq.dao.ProductsFAQDAO">
+	
+	<insert id="saveAllProductsFAQ">
+		INSERT INTO isales_temp.t_isales_products_faq_temp 
+		(
+		faqmetadataid, 
+		metadataid, 
+		fname, 
+		ffilename, 
+		remark
+		) 
+		VALUES
+		<foreach item="item" index="index" collection="list" 
+			separator=",">
+		(	
+			#{item.faqmetadataid} ,
+			#{item.metadataid} ,
+			#{item.fname} ,
+			#{item.ffilename} ,
+			#{item.remark}
+		)
+		</foreach>
+	</insert>
+	<delete id="deleteAllProductsFAQ">
+	delete from isales_temp.t_isales_products_faq_temp
+	</delete>
+	
+</mapper>

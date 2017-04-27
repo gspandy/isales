@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transform fetchSize="2000" trancateTable="true" batchSize="2000" stageCommint="true">
+	<!-- 原表配置 -->
+	<sourceTable>
+		<property name="schama">haier1</property>
+		<property name="name">t_mendian_jwd</property>
+		<property name="encoding">GBK</property>
+	</sourceTable>
+	<!-- 目标表配置 -->
+	<destTable>
+		<property name="schama">isales_temp</property>
+		<property name="name">t_isales_shop_position_temp</property>
+		<property name="encoding">GBK</property>
+	</destTable>
+	<!-- 转换列的对应关系 -->
+	<mappings>
+		<mapping source="CODE" dest="CODE" type="String" />
+		<mapping source="NAME" dest="NAME" type="String" />
+		<mapping source="CUSTOMER_CODE" dest="CUSTOMER_CODE" type="String" />
+		<mapping source="CUSTOMER_NAME" dest="CUSTOMER_NAME" type="String" />
+		<mapping source="LATITUDE" dest="LATITUDE" type="String" />
+		<mapping source="LONGITUDE" dest="LONGITUDE" type="String" />
+		<mapping source="ADDRESS" dest="ADDRESS" type="String" />
+		<mapping source="EMP_CODE" dest="EMP_CODE" type="String" />
+		<mapping source="EMP_NAME" dest="EMP_NAME" type="String" />
+	</mappings>
+
+ 	<procedures>
+		<procedure name="isales_app.p_collect_shop_position" />
+	</procedures> 
+</transform>

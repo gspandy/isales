@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.statistics.emailreceive.dao.RecipientDAO">
+
+	<select id="findAll" resultMap="RecipientResultMap">
+		select
+		<include refid="all_Column_List" />
+		from isales_app.t_isales_data_statistics_email
+	</select>
+
+</mapper>

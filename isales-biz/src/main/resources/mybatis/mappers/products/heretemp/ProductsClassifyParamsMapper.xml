@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.haier.isales.products.heretemp.productsclassifyparams.dao.ProductsClassifyParamsDAO">
+
+	<!-- 删除所有的数据 -->
+	<delete id="deleteAll">
+	DELETE FROM isales_temp.t_isales_products_classify_params_temp
+	</delete>
+	
+	<!-- 插入数据 -->
+	<insert id="saveAllProductsClassifyParams">
+		INSERT INTO isales_temp.t_isales_products_classify_params_temp
+		(viewname, params_code,  params_name, params_enum, remark)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.viewname}, #{item.paramsCode}, #{item.paramsName},
+			#{item.paramsEnum}, #{item.remark})
+		</foreach>
+	</insert>
+	
+	<select id="findParemsCodeByViewName" resultMap="ProductsClassifyParamsResultMap">
+	SELECT <include refid="all_Column_List"/>
+	FROM isales_temp.t_isales_products_classify_params_temp
+	WHERE viewname = #{viewname}
+	</select>
+	
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.behaviour.login.dao.LoginDAO">
+
+	<select id="findBySessionId" resultMap="LoginResultMap"
+		parameterType="String">
+		select
+		ID ,
+		USER_ID ,
+		LOGIN_NAME ,
+		SESSION_ID ,
+		LOGIN_TIME ,
+		USER_IP ,
+		USER_DEVICE ,
+		CLIENT_MAC ,
+		CLIENT_TYPE ,
+		CLIENT_VERSION ,
+		CLIENT_OS_TYPE ,
+		CLIENT_OS_VERSION ,
+		ONLINE_TIME ,
+		LOGOUT_TIME ,
+		LOGOUT_TYPE ,
+		CLIENT_INFO ,
+		REMARK
+		from isales_sys.t_sys_login_behaviour
+		where SESSION_ID = #{sessionId}
+
+	</select>
+
+	<update id="updateLoginOut" parameterType="com.haier.isales.behaviour.login.domain.LoginDomain">
+		update
+		isales_sys.t_sys_login_behaviour
+		set ONLINE_TIME = #{onlineTime},
+		LOGOUT_TYPE = #{logoutType},
+		logout_time = #{logoutTime}
+		WHERE
+		session_id = #{sessionId}
+
+	</update>
+
+</mapper>

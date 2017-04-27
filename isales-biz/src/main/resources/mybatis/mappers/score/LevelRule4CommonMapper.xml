@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.score.dao.LevelRuleDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="LevelRuleResultMap" type="com.haier.isales.score.domain.LevelRuleDomain">
+		<id column="id" property="id"  jdbcType="INTEGER"  />
+		<result column="min_level" property="minLevel"  jdbcType="INTEGER"  />
+		<result column="max_level" property="maxLevel"  jdbcType="INTEGER"  />
+		<result column="level_expression" property="levelExpression"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	ID	,
+	MIN_LEVEL	,
+	MAX_LEVEL	,
+	LEVEL_EXPRESSION		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.id!=null">and id=#{entity.id}</if>
+		<if test="entity.minLevel!=null">and min_level=#{entity.minLevel}</if>
+		<if test="entity.maxLevel!=null">and max_level=#{entity.maxLevel}</if>
+		<if test="entity.levelExpression!=null">and level_expression like CONCAT('%',#{entity.levelExpression},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="LevelRuleResultMap"
+		parameterType="Integer">
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_level
+		where id = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_app.t_isales_score_level
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.score.domain.LevelRuleDomain"  useGeneratedKeys="true" keyProperty="id" >
+		insert into isales_app.t_isales_score_level
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="minLevel!=null">
+				MIN_LEVEL	,
+			</if>
+			<if test="maxLevel!=null">
+				MAX_LEVEL	,
+			</if>
+			<if test="levelExpression!=null">
+				LEVEL_EXPRESSION		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="minLevel!=null">
+				#{minLevel}	,
+			</if>
+			<if test="maxLevel!=null">
+				#{maxLevel}	,
+			</if>
+			<if test="levelExpression!=null">
+				#{levelExpression}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.score.domain.LevelRuleDomain">
+		update isales_app.t_isales_score_level
+		<set>
+			MIN_LEVEL = #{minLevel},
+			MAX_LEVEL = #{maxLevel},
+			LEVEL_EXPRESSION = #{levelExpression},
+		</set>
+		where id = #{id}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="Integer">
+		delete from isales_app.t_isales_score_level 
+		where id = #{id}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="LevelRuleResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_app.t_isales_score_level
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_app.t_isales_score_level
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>

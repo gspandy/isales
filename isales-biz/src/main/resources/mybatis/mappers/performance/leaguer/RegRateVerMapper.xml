@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.leaguer.registrate.dao.RegRateVerDAO">
+	<resultMap id="registInfoResultMap" type="registDTO">
+		<result column="MONTH" property="month"  jdbcType="VARCHAR"  />
+		<result column="SHOP_ID" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="COUNTS" property="counts"  jdbcType="VARCHAR"  />
+		<result column="REGIST_QTY" property="registQty"  jdbcType="VARCHAR"  />
+		<result column="REGIST_RATE" property="registRate"  jdbcType="VARCHAR"  />
+	</resultMap>
+	<!-- 根据     门店id、月份 、产品线   条件查询注册率 -->
+	<select id="findRegistInfoByParam" resultMap="registInfoResultMap"
+		parameterType="registDTO">
+		select max(rrv.MONTH) as MONTH
+		  , max(rrv.SHOP_ID) as SHOP_ID
+		  , truncate(sum(ifnull(rrv.COUNTS,0)),0) as COUNTS
+		  , truncate(sum(ifnull(rrv.REGIST_QTY,0)),0) as REGIST_QTY
+		  , (
+		      case when sum(ifnull(rrv.REGIST_QTY,0))=0 or sum(ifnull(rrv.COUNTS,0)) = 0
+		       then '0'      
+		      else truncate((sum(ifnull(rrv.REGIST_QTY,0))/sum(ifnull(rrv.COUNTS,0))),6)
+		      end 
+		  ) as REGIST_RATE
+		  from isales_app.t_zzjyt_regist_rate_verified rrv
+		where 1 = 1
+		<if test="model.month != null and model.month != '' ">
+			and rrv.MONTH = #{model.month}
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and rrv.SHOP_ID = #{model.shopId}
+		</if>
+		<if test="productLineList != null and productLineList.size() >0 ">
+			and rrv.PRODUCT_LINE_ID in 
+			<foreach collection="productLineList" item="item" index="index" open="(" separator="," close=")">
+			        #{item}
+	  		</foreach>
+		</if>
+		
+	</select>
+	<!-- 返回从现在往前12月的注册率信息   根据     门店id、月份 、产品线   条件-->
+	<select id="findRegistChartByParam" resultMap="registInfoResultMap"
+		parameterType="registDTO">
+		select rrv.MONTH as MONTH
+		  , max(rrv.SHOP_ID) as SHOP_ID
+		  , truncate(sum(ifnull(rrv.COUNTS,0)),0) as COUNTS
+		  , truncate(sum(ifnull(rrv.REGIST_QTY,0)),0) as REGIST_QTY
+		  , (
+		      case when sum(ifnull(rrv.REGIST_QTY,0))=0 or sum(ifnull(rrv.COUNTS,0)) = 0
+		       then '0'      
+		      else truncate((sum(ifnull(rrv.REGIST_QTY,0))/sum(ifnull(rrv.COUNTS,0))),6)
+		      end 
+		  ) as REGIST_RATE
+		  from isales_app.t_zzjyt_regist_rate_verified rrv
+		where 1 = 1
+		<if test="model.month != null and model.month != '' and model.beforeMonth != null and model.beforeMonth != ''">
+			<![CDATA[
+				and (rrv.MONTH between #{model.beforeMonth} and #{model.month})
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and rrv.SHOP_ID = #{model.shopId}
+		</if>
+		<if test="productLineList != null and productLineList.size() >0 ">
+			and rrv.PRODUCT_LINE_ID in 
+			<foreach collection="productLineList" item="item" index="index" open="(" separator="," close=")">
+			        #{item}
+	  		</foreach>
+		</if>
+		 group by rrv.MONTH
+  		 order by rrv.MONTH asc
+	</select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.account.dao.AppVersionIfNeedUpdateDAO">
+	<resultMap id="AppVersionResultMap" type="com.haier.isales.system.account.domain.AppVersionDomain">
+		<id column="id" property="id"  jdbcType="BIGINT"  />
+		<result column="app_Name" property="appName"  jdbcType="VARCHAR"  />
+		<result column="version" property="version"  jdbcType="VARCHAR"  />
+		<result column="createTime" property="createTime"  jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- 根据登录名查询登录信息的方法 -->
+	<select id="checkVersion" 
+		parameterType="String" resultType="String">
+		SELECT version
+		FROM
+		  isales_sys.t_qn_user_version
+		WHERE
+		  version = #{version}  limit 1
+	</select>
+</mapper>

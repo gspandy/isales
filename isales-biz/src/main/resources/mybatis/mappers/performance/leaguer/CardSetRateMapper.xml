@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.performance.leaguer.cardsetrate.dao.CardSetRateDAO">
+	<resultMap id="cardSetRateQueryResultMap" type="registDTO">
+		<result column="MONTH" property="month"  jdbcType="VARCHAR"  />
+		<result column="SHOP_ID" property="shopId"  jdbcType="VARCHAR"  />
+		<result column="COUNTS" property="counts"  jdbcType="VARCHAR"  />
+		<result column="REGIST_QTY" property="registQty"  jdbcType="VARCHAR"  />
+		<result column="REGIST_RATE" property="registRate"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- 套购率信息   根据     门店id、月份 （开始结束时间字符串yyyy-MM）、产品线   条件-->
+	<select id="findCardSetRateByParam" resultMap="cardSetRateQueryResultMap"
+		parameterType="registDTO">
+		select csr.MONTH as MONTH
+		  , max(csr.SHOP_ID) as SHOP_ID
+		  , truncate(sum(ifnull(csr.COUNTS,0)),0) as COUNTS
+		  , truncate(sum(ifnull(csr.REGIST_QTY,0)),0) as REGIST_QTY
+		  , (
+		      case when sum(ifnull(csr.REGIST_QTY,0))=0 or sum(ifnull(csr.COUNTS,0)) = 0
+		       then '0'      
+		      else truncate((sum(ifnull(csr.REGIST_QTY,0))/sum(ifnull(csr.COUNTS,0))),6)
+		      end 
+		  ) as REGIST_RATE
+		  from isales_app.t_zzjyt_card_set_rate csr
+		where 1 = 1
+		<if test="model.month != null and model.month != '' and model.beforeMonth != null and model.beforeMonth != ''">
+			<![CDATA[
+				and (csr.MONTH between #{model.beforeMonth} and #{model.month})
+			]]>
+		</if>
+		<if test="model.shopId != null and model.shopId != '' ">
+			and csr.SHOP_ID = #{model.shopId}
+		</if>
+		<if test="productLineList != null and productLineList.size() >0 ">
+			and csr.PRODUCT_LINE_ID in 
+			<foreach collection="productLineList" item="item" index="index" open="(" separator="," close=")">
+			        #{item}
+	  		</foreach>
+		</if>
+		 group by csr.MONTH
+  		 order by csr.MONTH asc
+	</select>
+</mapper>

@@ -1,0 +1,3 @@
+INSERT INTO isales_app.t_isales_comments 
+  (id, title, content, location, source_id, source_userid, source_username, source_usercode, parent_id, parent_userid, parent_username, parent_usercode, status, label_groups, type, create_id, create_time, create_name, create_usercode, update_id, update_name, update_time, update_usercode) 
+  VALUES (-1, '', '测试评论内容nog', 'testLocation', 1, '-1', 'test_source_username', 'admin', -1, -1, -1, '','101', '', '', -1, now(), '', '', -1, '', now(), '');

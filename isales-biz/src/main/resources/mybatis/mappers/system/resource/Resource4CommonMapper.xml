@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.isales.system.resource.dao.ResourceDAO">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="ResourceResultMap" type="com.haier.isales.system.resource.domain.ResourceDomain">
+		<id column="function_url" property="functionUrl"  jdbcType="VARCHAR"  />
+		<result column="unit_code" property="unitCode"  jdbcType="VARCHAR"  />
+		<result column="function_name" property="functionName"  jdbcType="VARCHAR"  />
+		<result column="is_check" property="isCheck"  jdbcType="CHAR"  />
+		<result column="function_type" property="functionType"  jdbcType="VARCHAR"  />
+	</resultMap>
+	
+	<!-- =========================================================== -->
+	<!-- 一些公共变量设置 -->
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+	FUNCTION_URL	,
+	UNIT_CODE	,
+	FUNCTION_NAME	,
+	IS_CHECK	,
+	FUNCTION_TYPE		
+	</sql>
+	
+	<!-- 分页查询的公共变量 -->
+	<sql id="pagination_Tail">
+	<![CDATA[
+		limit #{pageCond.firstResult},#{pageCond.pageSize}
+	]]>
+	</sql>
+	
+	<!-- 查询的所有变量判断 -->
+	<sql id="searchConditions">
+		<if test="entity.functionUrl!=null">and function_url like CONCAT('%',#{entity.functionUrl},'%')</if>
+		<if test="entity.unitCode!=null">and unit_code like CONCAT('%',#{entity.unitCode},'%')</if>
+		<if test="entity.functionName!=null">and function_name like CONCAT('%',#{entity.functionName},'%')</if>
+		<if test="entity.isCheck!=null">and is_check like CONCAT('%',#{entity.isCheck},'%')</if>
+		<if test="entity.functionType!=null">and function_type like CONCAT('%',#{entity.functionType},'%')</if>
+	</sql>
+	
+	<!-- =========================================================== -->
+	<!-- CommonDao中的dao实现类 -->
+	<!-- =========================================================== -->
+	<!-- 根据主键查询实体类的方法 -->
+	<select id="findById" resultMap="ResourceResultMap"
+		parameterType="String">
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_resource
+		where function_url = #{id}
+	</select>
+	
+	<!-- 查询此实体表中所有数据的数量 -->
+	<select id="count" resultType="long">
+		select count(1) 
+		from isales_sys.t_qn_resource
+	</select>
+	
+	<!-- 实体的保存法方法 -->
+	<insert id="save" parameterType="com.haier.isales.system.resource.domain.ResourceDomain" >
+		insert into isales_sys.t_qn_resource
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="functionUrl!=null">
+				FUNCTION_URL	,
+			</if>
+			<if test="unitCode!=null">
+				UNIT_CODE	,
+			</if>
+			<if test="functionName!=null">
+				FUNCTION_NAME	,
+			</if>
+			<if test="isCheck!=null">
+				IS_CHECK	,
+			</if>
+			<if test="functionType!=null">
+				FUNCTION_TYPE		
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="functionUrl!=null">
+				#{functionUrl}	,
+			</if>
+			<if test="unitCode!=null">
+				#{unitCode}	,
+			</if>
+			<if test="functionName!=null">
+				#{functionName}	,
+			</if>
+			<if test="isCheck!=null">
+				#{isCheck}	,
+			</if>
+			<if test="functionType!=null">
+				#{functionType}		
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 实体的更新方法 -->
+	<update id="update" parameterType="com.haier.isales.system.resource.domain.ResourceDomain">
+		update isales_sys.t_qn_resource
+		<set>
+			UNIT_CODE = #{unitCode},
+			FUNCTION_NAME = #{functionName},
+			IS_CHECK = #{isCheck},
+			FUNCTION_TYPE = #{functionType},
+		</set>
+		where function_url = #{functionUrl}
+	</update>	
+	
+	<!-- 按照ID主键删除一条记录的功能 -->
+	<delete id="delete" parameterType="String">
+		delete from isales_sys.t_qn_resource 
+		where function_url = #{functionUrl}
+	</delete>
+	
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findByParams" resultMap="ResourceResultMap" >
+		select <include refid="all_Column_List"/>
+		from isales_sys.t_qn_resource
+		where 1=1
+		<include refid="searchConditions"/>
+		<include refid="pagination_Tail"/>
+	</select>
+	<!-- 根据参数查询分页查询所有的对象内容 -->
+	<select id="findCountByParams" resultType="integer" >
+		select count(1)
+		from isales_sys.t_qn_resource
+		where 1=1
+		<include refid="searchConditions"/>
+	</select>
+</mapper>
